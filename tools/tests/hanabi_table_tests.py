@@ -46,17 +46,13 @@ class HanabiTableTests(unittest.TestCase):
         
         self.table.play_card(0,1)
         self.assertFalse(self.table.is_game_over())
-        self.assertEqual(self.table.mistakes_left, 3)
-
-        self.table.play_card(1,0)
-        self.assertFalse(self.table.is_game_over())
         self.assertEqual(self.table.mistakes_left, 2)
 
         self.table.play_card(1,0)
         self.assertFalse(self.table.is_game_over())
         self.assertEqual(self.table.mistakes_left, 1)
 
-        self.table.play_card(0,1)
+        self.table.play_card(1,0)
         self.assertTrue(self.table.is_game_over())
         self.assertEqual(self.table.mistakes_left, 0)
 
@@ -131,17 +127,17 @@ class HanabiTableTests(unittest.TestCase):
         self.assertEquals(24, self.table.score())
         self.table.play_card(1,0)
         self.assertEquals(25, self.table.score())
-        self.assertEquals(self.table.mistakes_left, 4)
+        self.assertEquals(self.table.mistakes_left, 3)
         self.assertTrue(self.table.is_game_over())
 
     def test_table_str(self):
-        self.assertEqual("Score: 0, Cards remaining: 40, Discarded: 0, Disclosures left: 8, Mistakes left: 4", str(self.table))
+        self.assertEqual("Score: 0, Cards remaining: 40, Discarded: 0, Disclosures left: 8, Mistakes left: 3", str(self.table))
         self.table.play_card(1,0)
-        self.assertEqual("Score: 0, Cards remaining: 39, Discarded: 1, Disclosures left: 8, Mistakes left: 3", str(self.table))
+        self.assertEqual("Score: 0, Cards remaining: 39, Discarded: 1, Disclosures left: 8, Mistakes left: 2", str(self.table))
         self.table.disclose_color(0, HanabiColor.RED)
-        self.assertEqual("Score: 0, Cards remaining: 39, Discarded: 1, Disclosures left: 7, Mistakes left: 3", str(self.table))
+        self.assertEqual("Score: 0, Cards remaining: 39, Discarded: 1, Disclosures left: 7, Mistakes left: 2", str(self.table))
         self.table.discard_card(0,0)
-        self.assertEqual("Score: 0, Cards remaining: 38, Discarded: 2, Disclosures left: 8, Mistakes left: 3", str(self.table))
+        self.assertEqual("Score: 0, Cards remaining: 38, Discarded: 2, Disclosures left: 8, Mistakes left: 2", str(self.table))
 
     def test_table_info_for_player(self):
         info = self.table.info_for_player(0)
@@ -149,7 +145,7 @@ class HanabiTableTests(unittest.TestCase):
         self.assertEqual(info["deck_size"], 40)
         self.assertEqual(len(info["discarded"]), 0)
         self.assertEqual(info["disclosures"], 8)
-        self.assertEqual(info["mistakes_left"], 4)
+        self.assertEqual(info["mistakes_left"], 3)
         self.assertEqual(info["num_players"], 2)
         self.assertEqual(info["hands"][0], ["??", "??", "??", "??", "??"])
         self.assertEqual(info["hands"][1], ["R2", "W4", "W1", "Y1", "G3"])
@@ -176,6 +172,8 @@ class HanabiTableTests(unittest.TestCase):
         #play a rainbow on a legal pile
         table.play_card(1,3)
         self.assertEqual(2, table.score())
+        #confirm that we are adding to the rainbow pile
+        self.assertEqual(2, table.info_for_player(0)["scored_cards"]["*"])
         
 if __name__ == '__main__':
     unittest.main()

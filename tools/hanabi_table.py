@@ -9,23 +9,25 @@ class HanabiTable:
         self.deck = HanabiDeck(seed, is_rainbow_included)
         self.discard = HanabiDiscard()
         self.disclosures = 8
-        self.mistakes_left = 4
+        self.mistakes_left = 3
         self.hands = [HanabiHand() for _ in range (0,num_players)]
         self.init_hands()
         self.scored_cards = {}
-        self.init_tableau()
+        self.init_tableau(is_rainbow_included)
 
     def init_hands(self):
         for i in range(0, self.num_players):
             for _ in range(0, self.num_cards()):
                 self.hands[i].add(self.deck.draw_card())
 
-    def init_tableau(self):
+    def init_tableau(self, is_rainbow_included):
         self.scored_cards["R"] = 0
         self.scored_cards["B"] = 0
         self.scored_cards["G"] = 0
         self.scored_cards["W"] = 0
         self.scored_cards["Y"] = 0
+        if (is_rainbow_included):
+            self.scored_cards["*"] = 0
 
     def num_cards(self):
         return {
@@ -41,13 +43,7 @@ class HanabiTable:
     def play_card(self, player, card_index):
         card = self.hands[player].pop(card_index)
         if self.can_play(card):
-            if card.color.value in self.scored_cards:
-                self.scored_cards[card.color.value] = card.rank
-            else :
-                for key in self.scored_cards.iterkeys():
-                    if self.scored_cards[key] == card.rank - 1:
-                        self.scored_cards[key] = card.rank
-                        break
+            self.scored_cards[card.color.value] = card.rank
         else:
             self.discard.add(card)
             self.mistakes_left -= 1
@@ -55,13 +51,7 @@ class HanabiTable:
         
 
     def can_play(self, card):
-        if card.color.value in self.scored_cards and self.scored_cards[card.color.value] == card.rank - 1:
-            return True
-        else:
-            for key in self.scored_cards.iterkeys():
-                if self.scored_cards[key] == card.rank - 1:
-                    return True
-        return False
+        return self.scored_cards[card.color.value] == card.rank - 1
 
     def discard_card(self, player, card_index):
         self.disclosures = min(8, self.disclosures+1)
