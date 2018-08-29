@@ -37,5 +37,17 @@ class HanabiHandTests(unittest.TestCase):
         self.hand.disclose_rank(5)
         self.assertEqual(["??", "?5", "??"], self.hand.show_cards(True))
 
+    def test_hand_with_rainbow_cards(self):
+        card1 = HanabiCard(HanabiColor.RED, 2)
+        card2 = HanabiCard(HanabiColor.RAINBOW, 2)
+        hand = HanabiHand()
+        hand.add(card1)
+        hand.add(card2)
+        self.assertEqual(["??", "??"], hand.show_cards(True))
+        hand.disclose_color(HanabiColor.RED)
+        self.assertEqual(["R?", "R?"], hand.show_cards(True))
+        hand.disclose_color(HanabiColor.GREEN)
+        self.assertEqual(["R?", "*?"], hand.show_cards(True))
+
 if __name__ == '__main__':
     unittest.main()

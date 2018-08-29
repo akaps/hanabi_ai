@@ -41,7 +41,13 @@ class HanabiTable:
     def play_card(self, player, card_index):
         card = self.hands[player].pop(card_index)
         if self.can_play(card):
-            self.scored_cards[card.color.value] = card.rank
+            if card.color.value in self.scored_cards:
+                self.scored_cards[card.color.value] = card.rank
+            else :
+                for key in self.scored_cards.iterkeys():
+                    if self.scored_cards[key] == card.rank - 1:
+                        self.scored_cards[key] = card.rank
+                        break
         else:
             self.discard.add(card)
             self.mistakes_left -= 1
@@ -49,7 +55,13 @@ class HanabiTable:
         
 
     def can_play(self, card):
-        return self.scored_cards[card.color.value] == card.rank - 1
+        if card.color.value in self.scored_cards and self.scored_cards[card.color.value] == card.rank - 1:
+            return True
+        else:
+            for key in self.scored_cards.iterkeys():
+                if self.scored_cards[key] == card.rank - 1:
+                    return True
+        return False
 
     def discard_card(self, player, card_index):
         self.disclosures = min(8, self.disclosures+1)
@@ -100,8 +112,7 @@ class HanabiTable:
     def disclose_color(self, playerIndex, color):
         self.disclosures -= 1
         for card in self.hands[playerIndex].hand:
-            if card.color == color:
-                card.disclose_color()
+            card.disclose_color(color)
 
     def __str__(self):
         res = "Score: {score}".format(score = self.score())

@@ -3,6 +3,14 @@ from tools.hanabi_table import HanabiTable
 from tools.hanabi_hand import HanabiHand
 from tools.hanabi_card import HanabiCard, HanabiColor
 
+def diagnose(table):
+    print("Player 0")
+    print(table.info_for_player(1)["hands"][0])
+    print("Player 1")
+    print(table.info_for_player(0)["hands"][1])
+    print(str(table))
+    print(table.scored_cards)
+
 class HanabiTableTests(unittest.TestCase):
     def setUp(self):
         self.table = HanabiTable(2, 1, False)
@@ -156,13 +164,18 @@ class HanabiTableTests(unittest.TestCase):
     def test_table_score(self):
         self.assertEqual(0, self.table.score())
 
-    def diagnose(self):
-        print("Player 0")
-        print(self.table.info_for_player(1)["hands"][0])
-        print("Player 1")
-        print(self.table.info_for_player(0)["hands"][1])
-        print(str(self.table))
-        print(self.table.scored_cards)
-
+    def test_table_with_rainbow_deck(self):
+        table = HanabiTable(2, 1, True)
+        #play a rainbow with no piles ready
+        table.play_card(0,4)
+        self.assertEqual(1, table.score())
+        #play a rainbow with no legal option
+        table.play_card(1,1)
+        self.assertEqual(1, table.score())
+        self.assertEqual(1, len(table.discard))
+        #play a rainbow on a legal pile
+        table.play_card(1,3)
+        self.assertEqual(2, table.score())
+        
 if __name__ == '__main__':
     unittest.main()

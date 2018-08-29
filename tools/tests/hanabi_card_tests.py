@@ -6,7 +6,7 @@ class HanabiCardTests(unittest.TestCase):
     def setUp(self):
         self.unknown_card = HanabiCard(HanabiColor.RED, 5)
         self.known_card = HanabiCard(HanabiColor.BLUE, 1)
-        self.known_card.disclose_color()
+        self.known_card.disclose_color(HanabiColor.BLUE)
         self.known_card.disclose_rank()
         self.rank_known_card = HanabiCard(HanabiColor.GREEN, 3)
         self.rank_known_card.disclose_rank()
@@ -52,6 +52,25 @@ class HanabiCardTests(unittest.TestCase):
 
     def test_ne(self):
         self.assertNotEqual(self.known_card, self.rank_known_card)
+
+    def test_rainbow_card(self):
+        rainbow_card = HanabiCard(HanabiColor.RAINBOW, 2)
+        self.assertEqual("*2", str(rainbow_card))
+        self.assertEqual("??", rainbow_card.known())
+        rainbow_card.disclose_rank()
+        self.assertEqual("?2", rainbow_card.known())
+        rainbow_card.disclose_color(HanabiColor.RED)
+        self.assertEqual("R2", rainbow_card.known())
+        rainbow_card.disclose_color(HanabiColor.GREEN)
+        self.assertEqual("*2", rainbow_card.known())
+
+    def test_rainbow_card_avoid_accidental_reveal(self):
+        rainbow_card = HanabiCard(HanabiColor.RAINBOW, 2)
+        self.assertEqual("??", rainbow_card.known())
+        rainbow_card.disclose_color(HanabiColor.RED)
+        self.assertEqual("R?", rainbow_card.known())
+        rainbow_card.disclose_color(HanabiColor.RED)
+        self.assertEqual("R?", rainbow_card.known())
 
 if __name__ == '__main__':
     unittest.main()

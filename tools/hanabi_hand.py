@@ -29,8 +29,7 @@ class HanabiHand:
 
     def disclose_color(self, color):
         for card in self.hand:
-            if card.color == color:
-                card.disclose_color()
+            card.disclose_color(color)
 
     def pop(self, index):
         return self.hand.pop(index)

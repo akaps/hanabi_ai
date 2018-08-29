@@ -19,21 +19,28 @@ class HanabiCard:
         self.known_info = KnownInfo.NONE_KNOWN
         self.color = color
         self.rank = rank
+        self.told_color = None
 
     def known(self):
         UNKNOWN = '?'
-        return {
-            KnownInfo.NONE_KNOWN : UNKNOWN + UNKNOWN,
-            KnownInfo.RANK_KNOWN : UNKNOWN + str(self.rank),
-            KnownInfo.COLOR_KNOWN : str(self.color.value) + UNKNOWN,
-            KnownInfo.FULLY_KNOWN : str(self),
+        info = {
+            KnownInfo.NONE_KNOWN : (UNKNOWN, UNKNOWN),
+            KnownInfo.RANK_KNOWN : (UNKNOWN, self.rank),
+            KnownInfo.COLOR_KNOWN : (self.told_color, UNKNOWN),
+            KnownInfo.FULLY_KNOWN : (self.told_color, self.rank),
         } [self.known_info]
+        return "{color}{rank}".format(color = info[0], rank = info[1])
 
     def disclose_rank(self):
         self.known_info |= KnownInfo.RANK_KNOWN
 
-    def disclose_color(self):
-        self.known_info |= KnownInfo.COLOR_KNOWN
+    def disclose_color(self, color):
+        if self.color == color or self.color == HanabiColor.RAINBOW:
+            if self.told_color is None:
+                self.told_color = color.value
+            elif self.told_color != color.value:
+                self.told_color = self.color.value
+            self.known_info |= KnownInfo.COLOR_KNOWN
 
     def __str__(self):
         return "{color}{rank}".format(color = self.color.value, rank = self.rank)
