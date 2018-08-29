@@ -10,40 +10,43 @@ class HanabiTable:
         self.discard = HanabiDiscard()
         self.disclosures = 8
         self.mistakes_left = 3
-        self.hands = [HanabiHand() for _ in range (0,num_players)]
+        self.hands = [HanabiHand() for _ in range (0, num_players)]
         self.init_hands()
         self.scored_cards = {}
         self.init_tableau(is_rainbow_included)
 
     def init_hands(self):
         for i in range(0, self.num_players):
-            for _ in range(0, self.num_cards()):
+            for _ in range(0, self.num_cards(self.num_players)):
                 self.hands[i].add(self.deck.draw_card())
 
     def init_tableau(self, is_rainbow_included):
-        self.scored_cards["R"] = 0
-        self.scored_cards["B"] = 0
-        self.scored_cards["G"] = 0
-        self.scored_cards["W"] = 0
-        self.scored_cards["Y"] = 0
+        self.scored_cards[HanabiColor.RED] = 0
+        self.scored_cards[HanabiColor.BLUE] = 0
+        self.scored_cards[HanabiColor.GREEN] = 0
+        self.scored_cards[HanabiColor.WHITE] = 0
+        self.scored_cards[HanabiColor.YELLOW] = 0
         if (is_rainbow_included):
-            self.scored_cards["*"] = 0
+            self.scored_cards[HanabiColor.RAINBOW] = 0
 
-    def num_cards(self):
+    @staticmethod
+    def num_cards(num_players):
         return {
             2: 5,
             3: 5,
             4: 4,
             5: 4,
-        } [self.num_players]
+        } [num_players]
 
     def is_game_over(self):
-        return self.mistakes_left == 0 or (len(self.deck) == 0 and self.lastTurns == 0) or self.score() == 25
+        return self.mistakes_left == 0 or \
+            (len(self.deck) == 0 and self.lastTurns == 0) or \
+            self.score() == 25
 
     def play_card(self, player, card_index):
         card = self.hands[player].pop(card_index)
         if self.can_play(card):
-            self.scored_cards[card.color.value] = card.rank
+            self.scored_cards[card.color] = card.rank
         else:
             self.discard.add(card)
             self.mistakes_left -= 1
@@ -51,10 +54,10 @@ class HanabiTable:
         
 
     def can_play(self, card):
-        return self.scored_cards[card.color.value] == card.rank - 1
+        return self.scored_cards[card.color] == card.rank - 1
 
     def discard_card(self, player, card_index):
-        self.disclosures = min(8, self.disclosures+1)
+        self.disclosures = min(8, self.disclosures + 1)
         card = self.hands[player].pop(card_index)
         self.discard.add(card)
         self.update_hand(player)
