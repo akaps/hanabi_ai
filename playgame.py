@@ -5,7 +5,7 @@ from tools.hanabi_table import HanabiTable
 import sys
 
 def main(argv):
-    usage ="rus a game of Hanabi using the listed bots"
+    usage ="runs a game of Hanabi using the listed bots"
 
     parser = argparse.ArgumentParser(description=usage)
 
@@ -24,7 +24,7 @@ def main(argv):
                         help = 'directory to save results to')
     parser.add_argument("-v", "--verbose", dest="verbose",
                          action='store_true',
-                         help="print out moves as game goes.")
+                         help="print out moves as game goes")
     parser.add_argument('-e', '--log_stderr', dest='log_stderr',
                          action='store_true',
                          help='additionally log bot errors to stderr')
