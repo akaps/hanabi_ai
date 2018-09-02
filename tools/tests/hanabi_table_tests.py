@@ -13,7 +13,7 @@ def diagnose(table):
 
 class HanabiTableTests(unittest.TestCase):
     def setUp(self):
-        self.table = HanabiTable(2, 1, False)
+        self.table = HanabiTable(2, 1, 0)
 
     def test_table_play_card(self):
         self.assertFalse(self.table.is_game_over())
@@ -156,24 +156,10 @@ class HanabiTableTests(unittest.TestCase):
         self.assertEqual(info["scored_cards"]["G"], 0)
         self.assertEqual(info["scored_cards"]["Y"], 0)
         self.assertEqual(info["scored_cards"]["W"], 0)
+        self.assertTrue("*" not in info["scored_cards"])
 
     def test_table_score(self):
         self.assertEqual(0, self.table.score())
-
-    def test_table_with_rainbow_deck(self):
-        table = HanabiTable(2, 1, True)
-        #play a rainbow with no piles ready
-        table.play_card(0,4)
-        self.assertEqual(1, table.score())
-        #play a rainbow with no legal option
-        table.play_card(1,1)
-        self.assertEqual(1, table.score())
-        self.assertEqual(1, len(table.discard))
-        #play a rainbow on a legal pile
-        table.play_card(1,3)
-        self.assertEqual(2, table.score())
-        #confirm that we are adding to the rainbow pile
-        self.assertEqual(2, table.info_for_player(0)["scored_cards"]["*"])
         
 if __name__ == '__main__':
     unittest.main()
