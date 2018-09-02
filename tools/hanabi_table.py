@@ -53,7 +53,7 @@ class HanabiTable:
     def play_card(self, player, card_index):
         card = self.hands[player].pop(card_index)
         if self.can_play(card):
-                self.scored_cards[card.color] = card.rank
+            self.scored_cards[card.color] = card.rank
         else:
             self.discard.add(card)
             self.mistakes_left -= 1
@@ -67,11 +67,10 @@ class HanabiTable:
         return self.disclosures < NUM_DISCLOSURES
 
     def discard_card(self, player, card_index):
-        if self.can_discard:
-            self.disclosures += 1
-            card = self.hands[player].pop(card_index)
-            self.discard.add(card)
-            self.update_hand(player)
+        self.disclosures += 1
+        card = self.hands[player].pop(card_index)
+        self.discard.add(card)
+        self.update_hand(player)
     
     def update_hand(self, player):
         if len(self.deck) != 0:
@@ -111,17 +110,15 @@ class HanabiTable:
         return self.disclosures > 0
 
     def disclose_rank(self, player_index, rank):
-        if self.can_disclose():
-            self.disclosures -= 1
-            for card in self.hands[player_index].hand:
-                if card.rank == rank:
-                    card.disclose_rank()
+        self.disclosures -= 1
+        for card in self.hands[player_index].hand:
+            if card.rank == rank:
+                card.disclose_rank()
 
     def disclose_color(self, playerIndex, color):
-        if self.can_disclose:
-            self.disclosures -= 1
-            for card in self.hands[playerIndex].hand:
-                card.disclose_color(color, self.is_rainbow_wild)
+        self.disclosures -= 1
+        for card in self.hands[playerIndex].hand:
+            card.disclose_color(color, self.is_rainbow_wild)
 
     def __str__(self):
         res = "Score: {score}".format(score = self.score())
