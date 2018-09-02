@@ -81,15 +81,12 @@ class HanabiGame:
                     continue
             elif play["move"] == "disclose":
                 if play["disclose_type"] == "rank" and "rank" in play:
-                    if self.table.can_disclose():
+                    if self.table.can_disclose_rank():
                         self.table.disclose_rank(play["player"], play["rank"])
                     else:
                         continue
                 elif play["disclose_type"] == "color" and "color" in play:
-                    if play["color"] == HanabiColor.RAINBOW and self.variant == self.table.RAINBOW_IS_WILD:
-                        self.disqualify(self.currentPlayer, play)
-                        exit()
-                    if self.table.can_disclose():
+                    if self.table.can_disclose_color(play["color"]):
                         self.table.disclose_color(play["player"], play["color"])
                     else:
                         continue
