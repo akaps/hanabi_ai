@@ -2,6 +2,7 @@ import argparse
 import time
 from pydoc import locate
 from tools.hanabi_table import HanabiTable
+from tools.hanabi_card import HanabiColor
 import sys
 
 def main(argv):
@@ -44,6 +45,7 @@ class HanabiGame:
     def __init__(self, args):
         self.bots = prepBots(args.bots)
         self.table = HanabiTable(len(args.bots), args.seed, args.variant)
+        self.variant = args.variant
         self.currentPlayer = 0
 
     def playGame(self, args):
@@ -73,12 +75,24 @@ class HanabiGame:
             if play["move"] == "play" and "card" in play:
                 self.table.play_card(self.currentPlayer, play["card"])
             elif play["move"] == "discard" and "card" in play:
-                self.table.discard_card(self.currentPlayer, play["card"])
+                if self.table.can_discard():
+                   self.table.discard_card(self.currentPlayer, play["card"])
+                else:
+                    continue
             elif play["move"] == "disclose":
                 if play["disclose_type"] == "rank" and "rank" in play:
-                    self.table.disclose_rank(play["disclose"], play["rank"])
+                    if self.table.can_disclose():
+                        self.table.disclose_rank(play["player"], play["rank"])
+                    else:
+                        continue
                 elif play["disclose_type"] == "color" and "color" in play:
-                    self.table.disclose_color(play["disclose"], play["color"])
+                    if play["color"] == HanabiColor.RAINBOW and self.variant == self.table.RAINBOW_IS_WILD:
+                        self.disqualify(self.currentPlayer, play)
+                        exit()
+                    if self.table.can_disclose():
+                        self.table.disclose_color(play["player"], play["color"])
+                    else:
+                        continue
                 else:
                     self.disqualify(self.currentPlayer, play)
                     exit()
@@ -99,6 +113,7 @@ class HanabiGame:
         
         print("Expected format for disclose color:")
         print("{'play_type':'disclose', 'disclose_type':'color, 'color':<color>}")
+        print("'color' cannot be '*' in a Variant 3 game")
         
         print("Expected format for disclose rank:")
         print("{'play_type':'disclose', 'disclose_type':'rank, 'rank':<number>}")
