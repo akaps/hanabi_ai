@@ -20,7 +20,7 @@ def main(argv):
                         help = 'a specific seed for shuffling the deck')
     parser.add_argument('-r', '--variant', type = int, choices = [1, 2, 3], 
                         dest = 'variant', 
-                        help = 'play the selected variant (see README for variant info)')
+                        help = 'play the selected variant')
     parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None, 
                         help = 'directory to save results to')
     parser.add_argument("-v", "--verbose", dest = "verbose",
