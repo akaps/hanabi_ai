@@ -4,7 +4,8 @@ from hanabi_hand import HanabiHand
 from hanabi_card import HanabiColor
 
 class HanabiTable:
-    def __init__(self, num_players, seed, is_rainbow_included):
+    def __init__(self, num_players, seed, variant):
+        is_rainbow_included = variant > 0
         self.num_players = self.lastTurns = num_players
         self.deck = HanabiDeck(seed, is_rainbow_included)
         self.discard = HanabiDiscard()
