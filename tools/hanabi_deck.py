@@ -28,7 +28,6 @@ class HanabiDeck:
             self.deck.extend([HanabiCard(HanabiColor.RAINBOW, rank) for _ in range (0, num_cards) for rank in range(2, 5)])
             self.deck.append(HanabiCard(HanabiColor.RAINBOW, 5))
 
-
     def is_empty(self):
         return len(self.deck) == 0
 
