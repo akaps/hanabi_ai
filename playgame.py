@@ -39,7 +39,7 @@ def parse_args():
     return parser.parse_args()
 
 def prep_players(player_names):
-    return map(lambda player_name: locate(player_name), player_names)
+    return map(lambda player_name: locate(player_name)(), player_names)
 
 class HanabiGame:
     def __init__(self, args):
@@ -63,7 +63,7 @@ class HanabiGame:
             logging.info("Disclosures left: {disclosures}".format(disclosures = info["disclosures"]))
             logging.info("Mistakes left: {mistakes}".format(mistakes = info["mistakes_left"]))
             logging.info("-----")
-            
+
         while not self.table.is_game_over():
             player = self.players[self.current_player]
             info = self.table.info_for_player(self.current_player)
