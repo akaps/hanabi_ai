@@ -38,11 +38,7 @@ def parse_args():
     return parser.parse_args()
 
 def prep_bots(bot_names):
-    res = []
-    for bot_name in bot_names:
-        bot_class = locate(bot_name)
-        res.append(bot_class())
-    return res
+    return map(lambda: bot_name: locate(bot_name), bot_names)
 
 class HanabiGame:
     def __init__(self, args):
