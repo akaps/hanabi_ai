@@ -11,13 +11,13 @@ def main(argv):
     game.play_game(args)
 
 def parse_args():
-    usage = "runs a game of Hanabi using the listed bots"
+    usage = "runs a game of Hanabi using the listed players"
 
     parser = argparse.ArgumentParser(description = usage)
 
     #Positional arguments
-    parser.add_argument('bots', nargs = '+', 
-                        help = 'the bots that will play Hanabi')
+    parser.add_argument('players', nargs = '+', 
+                        help = 'the players that will play Hanabi')
 
     #Optional arguments
     parser.add_argument('-s', '--seed', 
@@ -33,17 +33,17 @@ def parse_args():
                          help="print out moves as game goes")
     parser.add_argument('-e', '--log_stderr', dest = 'log_stderr',
                          action='store_true',
-                         help='additionally log bot errors to stderr')
+                         help='additionally log players errors to stderr')
 
     return parser.parse_args()
 
-def prep_bots(bot_names):
-    return map(lambda: bot_name: locate(bot_name), bot_names)
+def prep_players(player_names):
+    return map(lambda: player_name: locate(player_name), player_names)
 
 class HanabiGame:
     def __init__(self, args):
-        self.bots = prep_bots(args.bots)
-        self.table = HanabiTable(len(args.bots), args.seed, args.variant)
+        self.players = prep_players(args.players)
+        self.table = HanabiTable(len(args.players), args.seed, args.variant)
         self.variant = args.variant
         self.current_player = 0
 
@@ -62,61 +62,61 @@ class HanabiGame:
             print("-----")
             
         while not self.table.is_game_over():
-            bot = self.bots[self.current_player]
+            player = self.players[self.current_player]
             info = self.table.info_for_player(self.current_player)
-            bot_move = bot.do_turn(self.current_player, info)
+            player_move = player.do_turn(self.current_player, info)
             if args.verbose:
                 pretty_print_info(info)
-                print("Player {player_id} played {move}".format(player_id = self.current_player, move = bot_move))
-            self.parse_turn(bot_move)
+                print("Player {player_id} played {move}".format(player_id = self.current_player, move = player_move))
+            self.parse_turn(player_move)
             self.current_player = (self.current_player + 1) % self.table.num_players
         print("Final score: {score}".format(score = self.table.score()))
 
-    def is_valid_move(self, bot_move):
-        return "play" not in bot_move or \
-            self.is_valid_play_move(bot_move) or \
-            self.is_valid_discard_move(bot_move) or \
-            self.is_valid_disclose_move(bot_move)
+    def is_valid_move(self, player_move):
+        return "play" not in player_move or \
+            self.is_valid_play_move(player_move) or \
+            self.is_valid_discard_move(player_move) or \
+            self.is_valid_disclose_move(player_move)
 
-    def is_valid_play_move(self, bot_move):
-        return bot_move["move"] == "play" and "card" in bot_move
+    def is_valid_play_move(self, player_move):
+        return player_move["move"] == "play" and "card" in player_move
 
-    def is_valid_discard_move(self, bot_move):
-        return self.table.can_discard() and bot_move["move"] == "discard"
+    def is_valid_discard_move(self, player_move):
+        return self.table.can_discard() and player_move["move"] == "discard"
 
-    def is_valid_disclose_move(self, bot_move):
-        if self.table.can_disclose() and bot_move["move"] == "disclose":
-            return self.is_valid_disclose_color(bot_move) or self.is_valid_disclose_rank(bot_move)
+    def is_valid_disclose_move(self, player_move):
+        if self.table.can_disclose() and player_move["move"] == "disclose":
+            return self.is_valid_disclose_color(player_move) or self.is_valid_disclose_rank(player_move)
         else:
             return False
 
-    def is_valid_disclose_color(self, bot_move):
-         return bot_move["disclose_type"] == "rank" and "color" in bot_move
+    def is_valid_disclose_color(self, player_move):
+         return player_move["disclose_type"] == "rank" and "color" in player_move
 
-    def is_valid_disclose_rank(self, bot_move):
-        return bot_move["disclose_type"] == "rank" and "rank" in bot_move
+    def is_valid_disclose_rank(self, player_move):
+        return player_move["disclose_type"] == "rank" and "rank" in player_move
 
-    def parse_turn(self, bot_move):           
-        if not self.is_valid_move(bot_move):
-            self.disqualify_and_exit(bot_move)
-        move = bot_move["move"]
+    def parse_turn(self, player_move):           
+        if not self.is_valid_move(player_move):
+            self.disqualify_and_exit(player_move)
+        move = player_move["move"]
         if move == "play":
-            self.table.play_card(self.current_player, bot_move["card"])
+            self.table.play_card(self.current_player, player_move["card"])
         elif move == "discard":
-            self.table.discard_card(self.current_player, bot_move["card"])
+            self.table.discard_card(self.current_player, player_move["card"])
         elif move == "disclose":
-            self.play_disclose(bot_move)
+            self.play_disclose(player_move)
 
-    def play_disclose(self, bot_move):
-        disclose_type = bot_move["disclose_type"]
+    def play_disclose(self, player_move):
+        disclose_type = player_move["disclose_type"]
         if disclose_type == "color":
-            self.table.disclose_color(self.current_player, bot_move["color"]),
+            self.table.disclose_color(self.current_player, player_move["color"]),
         elif disclose_type == "rank":
-            self.table.disclose_rank(self.current_player, bot_move["rank"])
+            self.table.disclose_rank(self.current_player, player_move["rank"])
 
-    def disqualify_and_exit(self, bot_move):
+    def disqualify_and_exit(self, player_move):
         print("Received invalid move from player {id}".format(id = self.current_player))
-        print(bot_move)
+        print(player_move)
         print("Expected format for play card:")
         print("{'play_type':'play', 'card':<number>}")
 
