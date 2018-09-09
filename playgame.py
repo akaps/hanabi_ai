@@ -4,6 +4,7 @@ from pydoc import locate
 from tools.hanabi_table import HanabiTable
 from tools.hanabi_card import HanabiColor
 import sys
+import logging
 
 def main(argv):
     args = parse_args()
@@ -38,10 +39,12 @@ def parse_args():
     return parser.parse_args()
 
 def prep_players(player_names):
-    return map(lambda: player_name: locate(player_name), player_names)
+    return map(lambda player_name: locate(player_name), player_names)
 
 class HanabiGame:
     def __init__(self, args):
+        logger = logging.getLogger('example')
+        logger.setLevel(logging.INFO)
         self.players = prep_players(args.players)
         self.table = HanabiTable(len(args.players), args.seed, args.variant)
         self.variant = args.variant
@@ -49,17 +52,17 @@ class HanabiGame:
 
     def play_game(self, args):
         def pretty_print_info(info):
-            print("-----")
-            print("Player {player_id} sees:".format(player_id = self.current_player))
-            print("Players: {players}".format(players = info["num_players"]))
-            print("Cards in deck: {deck}".format(deck = info["deck_size"]))
-            print("Discarded: {discard}".format(discard = info["discarded"]))
-            print("Score: {score}, Progress: {scored}".format(score = info["score"], scored = info["scored_cards"]))
-            print("Sees: {visible}".format(visible = info["hands"]))
-            print("Knows: {known}".format(known = info["known_info"]))
-            print("Disclosures left: {disclosures}".format(disclosures = info["disclosures"]))
-            print("Mistakes left: {mistakes}".format(mistakes = info["mistakes_left"]))
-            print("-----")
+            logging.info("-----")
+            logging.info("Player {player_id} sees:".format(player_id = self.current_player))
+            logging.info("Players: {players}".format(players = info["num_players"]))
+            logging.info("Cards in deck: {deck}".format(deck = info["deck_size"]))
+            logging.info("Discarded: {discard}".format(discard = info["discarded"]))
+            logging.info("Score: {score}, Progress: {scored}".format(score = info["score"], scored = info["scored_cards"]))
+            logging.info("Sees: {visible}".format(visible = info["hands"]))
+            logging.info("Knows: {known}".format(known = info["known_info"]))
+            logging.info("Disclosures left: {disclosures}".format(disclosures = info["disclosures"]))
+            logging.info("Mistakes left: {mistakes}".format(mistakes = info["mistakes_left"]))
+            logging.info("-----")
             
         while not self.table.is_game_over():
             player = self.players[self.current_player]
@@ -67,10 +70,10 @@ class HanabiGame:
             player_move = player.do_turn(self.current_player, info)
             if args.verbose:
                 pretty_print_info(info)
-                print("Player {player_id} played {move}".format(player_id = self.current_player, move = player_move))
+                logging.info("Player {player_id} played {move}".format(player_id = self.current_player, move = player_move))
             self.parse_turn(player_move)
             self.current_player = (self.current_player + 1) % self.table.num_players
-        print("Final score: {score}".format(score = self.table.score()))
+        logging.info("Final score: {score}".format(score = self.table.score()))
 
     def is_valid_move(self, player_move):
         return "play" not in player_move or \
@@ -114,21 +117,21 @@ class HanabiGame:
         elif disclose_type == "rank":
             self.table.disclose_rank(self.current_player, player_move["rank"])
 
-    def disqualify_and_exit(self, player_move):
-        print("Received invalid move from player {id}".format(id = self.current_player))
-        print(player_move)
-        print("Expected format for play card:")
-        print("{'play_type':'play', 'card':<number>}")
+    def disqualify_and_exit(self, bot_move):
+        logging.error("Received invalid move from player {id}".format(id = self.current_player))
+        logging.error(bot_move)
+        logging.error("Expected format for play card:")
+        logging.error("{'play_type':'play', 'card':<number>}")
 
-        print("Expected format for discard card:")
-        print("{'play_type':'discard', 'card':<number>}")
+        logging.error("Expected format for discard card:")
+        logging.error("{'play_type':'discard', 'card':<number>}")
         
-        print("Expected format for disclose color:")
-        print("{'play_type':'disclose', 'disclose_type':'color, 'color':<color>}")
-        print("'color' cannot be '*' in a Variant 3 game")
+        logging.error("Expected format for disclose color:")
+        logging.error("{'play_type':'disclose', 'disclose_type':'color, 'color':<color>}")
+        logging.error("'color' cannot be '*' in a Variant 3 game")
         
-        print("Expected format for disclose rank:")
-        print("{'play_type':'disclose', 'disclose_type':'rank, 'rank':<number>}")
+        logging.error("Expected format for disclose rank:")
+        logging.error("{'play_type':'disclose', 'disclose_type':'rank, 'rank':<number>}")
         exit()
 
 if __name__ == "__main__":
