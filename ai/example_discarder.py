@@ -24,18 +24,18 @@ class Discarder:
     @return a dictionary of the command to do. Uses the following formatting:
         {'play_type':'play', 'card':<number>}
         {'play_type':'discard', 'card':<number>}
-        {'play_type':'disclose', 'player':<player_id>, disclose_type':'color, 'color':<color>}
-        {'play_type':'disclose', 'player':<player_id>, disclose_type':'rank, 'rank':<number>}
+        {'play_type':'disclose', 'player':<player_id>, 'disclose_type':'color', 'color':<color>}
+        {'play_type':'disclose', 'player':<player_id>, 'disclose_type':'rank', 'rank':<number>}
     """
     def do_turn(self, player_index, game_info):
         if game_info["disclosures"] < game.NUM_DISCLOSURES:
             return {
-                "move":"discard",
+                "play_type":"discard",
                 "card":0
                 }
         else:
             return {
-                "move":"disclose",
+                "play_type":"disclose",
                 "player":(player_index + 1) % game_info["num_players"],
                 "disclose_type":"rank",
                 "rank":1

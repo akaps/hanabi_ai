@@ -113,7 +113,9 @@ class HanabiTable:
         return self.can_disclose()
     
     def can_disclose_color(self, color):
-        return self.can_disclose() and (color != HanabiColor.RAINBOW or not self.is_rainbow_wild)
+        return self.can_disclose() and \
+            color in "RGBWY*" and\
+            (color != HanabiColor.RAINBOW or not self.is_rainbow_wild)
 
     def disclose_rank(self, player_index, rank):
         self.disclosures -= 1

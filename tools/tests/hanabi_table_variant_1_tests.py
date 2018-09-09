@@ -53,6 +53,15 @@ class HanabiTableVariant1Tests(unittest.TestCase):
         self.assertEqual(info["scored_cards"]["W"], 0)
         self.assertEqual(info["scored_cards"]["*"], 0)
 
+    def test_can_disclose_color(self):
+        self.assertTrue(self.table.can_disclose_color('R'))
+        self.assertTrue(self.table.can_disclose_color('G'))
+        self.assertTrue(self.table.can_disclose_color('B'))
+        self.assertTrue(self.table.can_disclose_color('W'))
+        self.assertTrue(self.table.can_disclose_color('Y'))
+        self.assertTrue(self.table.can_disclose_color('*'))
+        self.assertFalse(self.table.can_disclose_color('A'))
+
     def test_table_with_rainbow_deck(self):
         #play a rainbow onto its own pile
         self.table.play_card(0,0)

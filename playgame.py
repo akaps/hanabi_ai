@@ -76,33 +76,44 @@ class HanabiGame:
         logging.info("Final score: {score}".format(score = self.table.score()))
 
     def is_valid_move(self, player_move):
-        return "play" not in player_move or \
-            self.is_valid_play_move(player_move) or \
+        return self.is_valid_play_move(player_move) or \
             self.is_valid_discard_move(player_move) or \
             self.is_valid_disclose_move(player_move)
 
     def is_valid_play_move(self, player_move):
-        return player_move["move"] == "play" and "card" in player_move
+        return "play_type" in player_move and \
+            player_move["play_type"] == "play" and \
+            "card" in player_move
 
     def is_valid_discard_move(self, player_move):
-        return self.table.can_discard() and player_move["move"] == "discard"
+        return "play_type" in player_move and \
+            self.table.can_discard() and \
+            player_move["play_type"] == "discard" and \
+            "card" in player_move
 
     def is_valid_disclose_move(self, player_move):
-        if self.table.can_disclose() and player_move["move"] == "disclose":
+        if self.table.can_disclose() and \
+            "play_type" in player_move and \
+            player_move["play_type"] == "disclose":
             return self.is_valid_disclose_color(player_move) or self.is_valid_disclose_rank(player_move)
         else:
             return False
 
     def is_valid_disclose_color(self, player_move):
-         return player_move["disclose_type"] == "rank" and "color" in player_move
+        return "disclose_type" in player_move and \
+            player_move["disclose_type"] == "color" and \
+            "color" in player_move and \
+            self.table.can_disclose_color(player_move["color"])
 
     def is_valid_disclose_rank(self, player_move):
-        return player_move["disclose_type"] == "rank" and "rank" in player_move
+        return "disclose_type" in player_move and \
+            player_move["disclose_type"] == "rank" and \
+            "rank" in player_move
 
     def parse_turn(self, player_move):           
         if not self.is_valid_move(player_move):
             self.disqualify_and_exit(player_move)
-        move = player_move["move"]
+        move = player_move["play_type"]
         if move == "play":
             self.table.play_card(self.current_player, player_move["card"])
         elif move == "discard":
