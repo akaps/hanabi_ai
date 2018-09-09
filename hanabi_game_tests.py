@@ -7,13 +7,15 @@ def prep_args():
     args.seed = 0
     args.variant = 0
     args.players = ["ai.example_discarder.Discarder", "ai.example_discarder.Discarder"]
+    args.seed = 0
+    args.variant = 0
     return args
 
 class HanabiGameTests(unittest.TestCase):
 
     def setUp(self):
         args = prep_args()
-        self.game = HanabiGame(args)
+        self.game = HanabiGame(args.players, args.seed, args.variant)
         self.well_formed_play = {'play_type':'play', 'card':0}
         self.malformed_play = {'play_type':'play'}
         self.well_formed_discard = {'play_type':'discard', 'card':0}

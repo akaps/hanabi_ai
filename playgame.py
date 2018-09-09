@@ -8,7 +8,7 @@ import logging
 
 def main(argv):
     args = parse_args()
-    game = HanabiGame(args)
+    game = HanabiGame(args.players, args.seed, args.variant)
     game.play_game(args)
 
 def parse_args():
@@ -42,15 +42,15 @@ def prep_players(player_names):
     return map(lambda player_name: locate(player_name)(), player_names)
 
 class HanabiGame:
-    def __init__(self, args):
+    def __init__(self, players, seed, variant):
         logger = logging.getLogger('example')
         logger.setLevel(logging.INFO)
-        self.players = prep_players(args.players)
-        self.table = HanabiTable(len(args.players), args.seed, args.variant)
-        self.variant = args.variant
+        self.players = prep_players(players)
+        self.table = HanabiTable(len(players), seed, variant)
+        self.variant = variant
         self.current_player = 0
 
-    def play_game(self, args):
+    def play_game(self, verbose):
         def pretty_print_info(info):
             logging.info("-----")
             logging.info("Player {player_id} sees:".format(player_id = self.current_player))
@@ -68,7 +68,7 @@ class HanabiGame:
             player = self.players[self.current_player]
             info = self.table.info_for_player(self.current_player)
             player_move = player.do_turn(self.current_player, info)
-            if args.verbose:
+            if verbose:
                 pretty_print_info(info)
                 logging.info("Player {player_id} played {move}".format(player_id = self.current_player, move = player_move))
             self.parse_turn(player_move)
