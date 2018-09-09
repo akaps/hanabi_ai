@@ -31,8 +31,8 @@ class HanabiCard:
     def disclose_rank(self):
         self.known_info |= self.RANK_KNOWN
 
-    def disclose_color(self, color):
-        if self.color in (color, HanabiColor.RAINBOW):
+    def disclose_color(self, color, is_rainbow_wild = False):
+        if self.color == color or (is_rainbow_wild and self.color == HanabiColor.RAINBOW):
             if self.told_color is None:
                 self.told_color = color
             elif self.told_color != color:

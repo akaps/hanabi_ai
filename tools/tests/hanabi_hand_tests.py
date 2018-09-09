@@ -44,9 +44,9 @@ class HanabiHandTests(unittest.TestCase):
         hand.add(card1)
         hand.add(card2)
         self.assertEqual(["??", "??"], hand.show_cards(True))
-        hand.disclose_color(HanabiColor.RED)
+        hand.disclose_color(HanabiColor.RED, True)
         self.assertEqual(["R?", "R?"], hand.show_cards(True))
-        hand.disclose_color(HanabiColor.GREEN)
+        hand.disclose_color(HanabiColor.GREEN, True)
         self.assertEqual(["R?", "*?"], hand.show_cards(True))
 
 if __name__ == '__main__':
