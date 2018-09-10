@@ -160,7 +160,35 @@ class HanabiTableTests(unittest.TestCase):
 
     def test_table_score(self):
         self.assertEqual(0, self.table.score())
+
+    def test_table_play_5_get_disclosure(self):
+        self.play_to_white_5()
+        self.table.disclose_rank(0, 0)
+        self.assertEquals(7, self.table.disclosures)
+        self.table.play_card(0, 0)
+        self.assertEqual(8, self.table.disclosures)
+
+    def test_table_play_5_no_extra_disclosure(self):
+        self.play_to_white_5()
+        self.assertEquals(8, self.table.disclosures)
+        self.table.play_card(0, 0)
+        self.assertEqual(8, self.table.disclosures)
         
+    def play_to_white_5(self):
+        self.table.play_card(0, 0)
+        self.table.play_card(1, 2)
+        self.table.play_card(1, 4)
+        self.table.play_card(1, 0)
+        self.table.discard_card(0, 3)
+        self.assertEquals(8, self.table.disclosures)
+        self.table.discard_card(0, 3)
+        self.table.discard_card(1, 1)
+        self.table.play_card(0, 4)
+        self.table.play_card(0, 3)
+        self.table.play_card(0, 4)
+        self.table.play_card(1, 4)
+        self.table.play_card(1, 0)
+
 if __name__ == '__main__':
     unittest.main()
    

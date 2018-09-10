@@ -54,6 +54,8 @@ class HanabiTable:
         card = self.hands[player].pop(card_index)
         if self.can_play(card):
             self.scored_cards[card.color] = card.rank
+            if card.rank == 5 and self.can_discard():
+                self.disclosures += 1
         else:
             self.discard.add(card)
             self.mistakes_left -= 1
@@ -67,7 +69,7 @@ class HanabiTable:
         return self.disclosures < NUM_DISCLOSURES
 
     def discard_card(self, player, card_index):
-        self.disclosures += 1
+        self.disclosures = min(NUM_DISCLOSURES, self.disclosures + 1)
         card = self.hands[player].pop(card_index)
         self.discard.add(card)
         self.update_hand(player)
