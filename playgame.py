@@ -124,9 +124,9 @@ class HanabiGame:
     def play_disclose(self, player_move):
         disclose_type = player_move["disclose_type"]
         if disclose_type == "color":
-            self.table.disclose_color(self.current_player, player_move["color"]),
+            self.table.disclose_color(self.current_player, player_move["player"], player_move["color"]),
         elif disclose_type == "rank":
-            self.table.disclose_rank(self.current_player, player_move["rank"])
+            self.table.disclose_rank(self.current_player, player_move["player"], player_move["rank"])
 
     def disqualify_and_exit(self, bot_move):
         logging.error("Received invalid move from player {id}".format(id = self.current_player))

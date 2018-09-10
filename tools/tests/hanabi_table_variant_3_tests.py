@@ -32,9 +32,9 @@ class HanabiTableVariant3Tests(unittest.TestCase):
         self.assertEqual(0, self.table.info_for_player(0)["scored_cards"]["*"])
 
     def test_table_disclose_color(self):
-        self.table.disclose_color(0, HanabiColor.WHITE)
+        self.table.disclose_color(0, 0, HanabiColor.WHITE)
         self.assertEqual(["W?", "W?", "W?", "W?", "??"], self.table.info_for_player(0)["hands"][0])
-        self.table.disclose_color(0, HanabiColor.RED)
+        self.table.disclose_color(0, 0, HanabiColor.RED)
         self.assertEqual(["*?", "W?", "*?", "*?", "R?"], self.table.info_for_player(0)["hands"][0])
 
     def test_table_disclose_color_cannot_choose_rainbow(self):

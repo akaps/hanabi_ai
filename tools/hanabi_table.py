@@ -2,6 +2,7 @@ from hanabi_deck import HanabiDeck
 from hanabi_discard_pile import HanabiDiscard
 from hanabi_hand import HanabiHand
 from hanabi_card import HanabiColor
+from hanabi_moves import *
 
 NUM_DISCLOSURES = 8
 NUM_MISTAKES = 3
@@ -21,6 +22,7 @@ class HanabiTable:
         self.init_hands()
         self.scored_cards = {}
         self.init_tableau(variant)
+        self.history = []
 
     def init_hands(self):
         for i in range(0, self.num_players):
@@ -50,16 +52,17 @@ class HanabiTable:
             (len(self.deck) == 0 and self.lastTurns == 0) or \
             self.score() == 25
 
-    def play_card(self, player, card_index):
-        card = self.hands[player].pop(card_index)
+    def play_card(self, player_id, card_index):
+        card = self.hands[player_id].pop(card_index)
         if self.can_play(card):
             self.scored_cards[card.color] = card.rank
+            self.history.append(HanabiPlayAction(player_id, card))
             if card.rank == 5 and self.can_discard():
                 self.disclosures += 1
         else:
             self.discard.add(card)
             self.mistakes_left -= 1
-        self.update_hand(player)
+        self.update_hand(player_id)
         
 
     def can_play(self, card):
@@ -68,19 +71,20 @@ class HanabiTable:
     def can_discard(self):
         return self.disclosures < NUM_DISCLOSURES
 
-    def discard_card(self, player, card_index):
+    def discard_card(self, player_id, card_index):
         self.disclosures = min(NUM_DISCLOSURES, self.disclosures + 1)
-        card = self.hands[player].pop(card_index)
+        card = self.hands[player_id].pop(card_index)
         self.discard.add(card)
-        self.update_hand(player)
+        self.update_hand(player_id)
+        self.history.append(HanabiDiscardAction(player_id, card))
     
-    def update_hand(self, player):
+    def update_hand(self, player_id):
         if len(self.deck) != 0:
-            self.hands[player].add(self.deck.draw_card())
+            self.hands[player_id].add(self.deck.draw_card())
         else:
             self.lastTurns -= 1
 
-    def info_for_player(self, player_index):
+    def info_for_player(self, player_id):
         res = {}
         res["score"] = self.score()
         res["deck_size"] = len(self.deck)
@@ -88,15 +92,16 @@ class HanabiTable:
         res["disclosures"] = self.disclosures
         res["mistakes_left"] = self.mistakes_left
         res["num_players"] = self.num_players
-        res["hands"] = self.hands_for_player(player_index)
+        res["hands"] = self.hands_for_player(player_id)
         res["known_info"] = self.known_cards()
         res["scored_cards"] = self.scored_cards
+        res["history"] = self.history
         return res
 
-    def hands_for_player(self, player_index):
+    def hands_for_player(self, player_id):
         res = []
         for index in range(0, self.num_players):
-            if index == player_index:
+            if index == player_id:
                 res.append(self.hands[index].show_cards(True))
             else:
                 res.append(self.hands[index].show_cards(False))
@@ -119,16 +124,22 @@ class HanabiTable:
             color in "RGBWY*" and\
             (color != HanabiColor.RAINBOW or not self.is_rainbow_wild)
 
-    def disclose_rank(self, player_index, rank):
+    def disclose_rank(self, player_id, to_whom, rank):
         self.disclosures -= 1
-        for card in self.hands[player_index].hand:
+        count = 0
+        for card in self.hands[to_whom].hand:
             if card.rank == rank:
                 card.disclose_rank()
+                count += 1
+        self.history.append(HanabiRankDiscloseAction(player_id, to_whom, rank, count))
 
-    def disclose_color(self, playerIndex, color):
+    def disclose_color(self, player_id, to_whom, color):
         self.disclosures -= 1
-        for card in self.hands[playerIndex].hand:
+        count = 0
+        for card in self.hands[to_whom].hand:
             card.disclose_color(color, self.is_rainbow_wild)
+            count += 1
+        self.history.append(HanabiColorDiscloseAction(player_id, to_whom, color, count))
 
     def __str__(self):
         res = "Score: {score}".format(score = self.score())

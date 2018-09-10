@@ -33,12 +33,12 @@ class HanabiTableTests(unittest.TestCase):
 
     def test_table_disclose_color(self):
         self.assertEqual(["??", "??", "??", "??", "??"], self.table.info_for_player(0)["hands"][0])
-        self.table.disclose_color(0, HanabiColor.RED)
+        self.table.disclose_color(0, 0, HanabiColor.RED)
         self.assertEqual(["??", "??", "??", "??", "R?"], self.table.info_for_player(0)["hands"][0])
     
     def test_table_disclose_rank(self):
         self.assertEqual(["??", "??", "??", "??", "??"], self.table.info_for_player(0)["hands"][0])
-        self.table.disclose_rank(0,4)
+        self.table.disclose_rank(0, 0, 4)
         self.assertEqual(["??", "??", "?4", "??", "??"], self.table.info_for_player(0)["hands"][0])
 
     def test_table_is_game_over_too_many_mistakes(self):
@@ -134,7 +134,7 @@ class HanabiTableTests(unittest.TestCase):
         self.assertEqual("Score: 0, Cards remaining: 40, Discarded: 0, Disclosures left: 8, Mistakes left: 3", str(self.table))
         self.table.play_card(1,0)
         self.assertEqual("Score: 0, Cards remaining: 39, Discarded: 1, Disclosures left: 8, Mistakes left: 2", str(self.table))
-        self.table.disclose_color(0, HanabiColor.RED)
+        self.table.disclose_color(0, 0, HanabiColor.RED)
         self.assertEqual("Score: 0, Cards remaining: 39, Discarded: 1, Disclosures left: 7, Mistakes left: 2", str(self.table))
         self.table.discard_card(0,0)
         self.assertEqual("Score: 0, Cards remaining: 38, Discarded: 2, Disclosures left: 8, Mistakes left: 2", str(self.table))
@@ -163,7 +163,7 @@ class HanabiTableTests(unittest.TestCase):
 
     def test_table_play_5_get_disclosure(self):
         self.play_to_white_5()
-        self.table.disclose_rank(0, 0)
+        self.table.disclose_rank(0, 0, 0)
         self.assertEquals(7, self.table.disclosures)
         self.table.play_card(0, 0)
         self.assertEqual(8, self.table.disclosures)
