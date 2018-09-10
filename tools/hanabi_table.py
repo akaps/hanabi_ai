@@ -2,14 +2,16 @@ from hanabi_deck import HanabiDeck
 from hanabi_discard_pile import HanabiDiscard
 from hanabi_hand import HanabiHand
 from hanabi_card import HanabiColor
-from hanabi_moves import *
+from hanabi_moves import HanabiPlayAction, \
+    HanabiDiscardAction, \
+    HanabiRankDiscloseAction, \
+    HanabiColorDiscloseAction
 
 NUM_DISCLOSURES = 8
 NUM_MISTAKES = 3
 
 class HanabiTable:
     RAINBOW_IS_WILD = 3
-
 
     def __init__(self, num_players, seed, variant):
         self.is_rainbow_wild = variant == self.RAINBOW_IS_WILD
