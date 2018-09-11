@@ -56,16 +56,17 @@ class HanabiTable:
 
     def play_card(self, player_id, card_index):
         card = self.hands[player_id].pop(card_index)
+        action = HanabiPlayAction(player_id, card)
         if self.can_play(card):
             self.scored_cards[card.color] = card.rank
-            self.history.append(HanabiPlayAction(player_id, card))
+            self.history.append(action)
             if card.rank == 5 and self.can_discard():
                 self.disclosures += 1
         else:
             self.discard.add(card)
             self.mistakes_left -= 1
         self.update_hand(player_id)
-        
+        return action
 
     def can_play(self, card):
         return self.scored_cards[card.color] == card.rank - 1
@@ -78,7 +79,9 @@ class HanabiTable:
         card = self.hands[player_id].pop(card_index)
         self.discard.add(card)
         self.update_hand(player_id)
-        self.history.append(HanabiDiscardAction(player_id, card))
+        action = HanabiDiscardAction(player_id, card)
+        self.history.append(action)
+        return action
     
     def update_hand(self, player_id):
         if len(self.deck) != 0:
@@ -133,15 +136,19 @@ class HanabiTable:
             if card.rank == rank:
                 card.disclose_rank()
                 count += 1
-        self.history.append(HanabiRankDiscloseAction(player_id, to_whom, rank, count))
+        action = HanabiRankDiscloseAction(player_id, to_whom, rank, count)
+        self.history.append(action)
+        return action
 
     def disclose_color(self, player_id, to_whom, color):
         self.disclosures -= 1
         count = 0
         for card in self.hands[to_whom].hand:
-            card.disclose_color(color, self.is_rainbow_wild)
-            count += 1
-        self.history.append(HanabiColorDiscloseAction(player_id, to_whom, color, count))
+            if card.disclose_color(color, self.is_rainbow_wild):
+                count += 1
+        action = HanabiColorDiscloseAction(player_id, to_whom, color, count)
+        self.history.append(action)
+        return action
 
     def __str__(self):
         res = "Score: {score}".format(score = self.score())

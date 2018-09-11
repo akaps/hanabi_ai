@@ -38,6 +38,8 @@ class HanabiCard:
             elif self.told_color != color:
                 self.told_color = self.color
             self.known_info |= self.COLOR_KNOWN
+            return True
+        return False
 
     def __str__(self):
         return "{color}{rank}".format(color = self.color, rank = self.rank)

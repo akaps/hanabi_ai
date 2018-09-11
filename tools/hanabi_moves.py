@@ -63,7 +63,7 @@ class HanabiColorDiscloseAction(HanabiDiscloseAction):
         self.color = color
     
     def disclosure(self):
-        if self.count == 0:
+        if self.count <= 1:
             return self.color
         else:
             return "{color}s".format(color = self.color)
@@ -81,7 +81,7 @@ class HanabiRankDiscloseAction(HanabiDiscloseAction):
         self.rank = rank
 
     def disclosure(self):
-        if self.count == 0:
+        if self.count <= 1:
             return self.rank
         else:
             return "{rank}s".format(rank = self.rank)
