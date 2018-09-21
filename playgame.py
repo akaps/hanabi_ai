@@ -108,7 +108,7 @@ class HanabiGame:
 
     def parse_turn(self, player_move):
         if not self.is_valid_move(player_move):
-                self.disqualify_and_exit(player_move)
+            self.disqualify_and_exit(player_move)
         move = player_move["play_type"]
         if move == "play":
             return self.table.play_card(self.current_player, player_move["card"])
