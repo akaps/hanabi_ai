@@ -22,14 +22,13 @@ def main(argv):
 def prep_logger(log_dir, verbose, log_stderr):
     if verbose:
         logger.setLevel(logging.INFO)
-    ch = logging.StreamHandler()
+    logger.addHandler(logging.StreamHandler())
     if log_dir:
         fh = logging.FileHandler(log_dir)
         logger.addHandler(fh)
     if log_stderr:
         efh = logging.FileHandler(log_stderr)
         logger.addHandler(efh)
-    logger.addHandler(ch)
 
 def parse_args():
     usage = "runs a game of Hanabi using the listed players"
