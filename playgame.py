@@ -93,10 +93,7 @@ class HanabiGame:
         print("Final score: {score}".format(score = self.table.score()))
 
     def game_history(self):
-        res = []
-        for action in self.table.history:
-            res.append(str(action))
-        return res
+        return map(lambda action: str(action), self.table.history)
 
     def is_valid_move(self, player_move):
         return HanabiPlayAction.can_parse_move(player_move) or \
