@@ -5,11 +5,30 @@ from tools.hanabi_table import HanabiTable
 from tools.hanabi_card import HanabiColor
 import sys
 import logging
+from tools.hanabi_moves import \
+    HanabiDiscardAction, \
+    HanabiPlayAction, \
+    HanabiColorDiscloseAction, \
+    HanabiRankDiscloseAction
+
+logger = logging.getLogger(__name__)
 
 def main(argv):
     args = parse_args()
+    prep_logger(args.log_dir, args.verbose, args.log_stderr)
     game = HanabiGame(args.players, args.seed, args.variant)
     game.play_game(args)
+
+def prep_logger(log_dir, verbose, log_stderr):
+    if verbose:
+        logger.setLevel(logging.INFO)
+    logger.addHandler(logging.StreamHandler())
+    if log_dir:
+        fh = logging.FileHandler(log_dir)
+        logger.addHandler(fh)
+    if log_stderr:
+        efh = logging.FileHandler(log_stderr)
+        logger.addHandler(efh)
 
 def parse_args():
     usage = "runs a game of Hanabi using the listed players"
@@ -43,8 +62,6 @@ def prep_players(player_names):
 
 class HanabiGame:
     def __init__(self, players, seed, variant):
-        logger = logging.getLogger('example')
-        logger.setLevel(logging.INFO)
         self.players = prep_players(players)
         self.table = HanabiTable(len(players), seed, variant)
         self.variant = variant
@@ -52,81 +69,56 @@ class HanabiGame:
 
     def play_game(self, verbose):
         def pretty_print_info(info):
-            logging.info("-----")
-            logging.info("Player {player_id} sees:".format(player_id = self.current_player))
-            logging.info("Players: {players}".format(players = info["num_players"]))
-            logging.info("Cards in deck: {deck}".format(deck = info["deck_size"]))
-            logging.info("Discarded: {discard}".format(discard = info["discarded"]))
-            logging.info("Score: {score}, Progress: {scored}".format(score = info["score"], scored = info["scored_cards"]))
-            logging.info("Sees: {visible}".format(visible = info["hands"]))
-            logging.info("Knows: {known}".format(known = info["known_info"]))
-            logging.info("Disclosures left: {disclosures}".format(disclosures = info["disclosures"]))
-            logging.info("Mistakes left: {mistakes}".format(mistakes = info["mistakes_left"]))
-            logging.info("-----")
+            logger.info("-----")
+            logger.info("Player {player_id} sees:".format(player_id = self.current_player))
+            logger.info("Players: {players}".format(players = info["num_players"]))
+            logger.info("Cards in deck: {deck}".format(deck = info["deck_size"]))
+            logger.info("Discarded: {discard}".format(discard = info["discarded"]))
+            logger.info("Score: {score}, Progress: {scored}".format(score = info["score"], scored = info["scored_cards"]))
+            logger.info("Sees: {visible}".format(visible = info["hands"]))
+            logger.info("Knows: {known}".format(known = info["known_info"]))
+            logger.info("Disclosures left: {disclosures}".format(disclosures = info["disclosures"]))
+            logger.info("Mistakes left: {mistakes}".format(mistakes = info["mistakes_left"]))
+            logger.info("-----")
 
         while not self.table.is_game_over():
             player = self.players[self.current_player]
             info = self.table.info_for_player(self.current_player)
             player_move = player.do_turn(self.current_player, info)
-            if verbose:
-                pretty_print_info(info)
-                logging.info("Player {player_id} played {move}".format(player_id = self.current_player, move = player_move))
-            self.parse_turn(player_move)
+            move = self.parse_turn(player_move)
+            pretty_print_info(info)
+            logger.info(str(move))
             self.current_player = (self.current_player + 1) % self.table.num_players
-        logging.info("Final score: {score}".format(score = self.table.score()))
+        logger.info(self.game_history())
+        print("Final score: {score}".format(score = self.table.score()))
+
+    def game_history(self):
+        return map(lambda action: str(action), self.table.history)
 
     def is_valid_move(self, player_move):
-        return self.is_valid_play_move(player_move) or \
-            self.is_valid_discard_move(player_move) or \
-            self.is_valid_disclose_move(player_move)
+        return HanabiPlayAction.can_parse_move(player_move) or \
+            (HanabiDiscardAction.can_parse_move(player_move) and self.table.can_discard()) or \
+            (self.table.can_disclose() and \
+                (HanabiColorDiscloseAction.can_parse_move(player_move) or \
+                HanabiRankDiscloseAction.can_parse_move(player_move)))
 
-    def is_valid_play_move(self, player_move):
-        return "play_type" in player_move and \
-            player_move["play_type"] == "play" and \
-            "card" in player_move
-
-    def is_valid_discard_move(self, player_move):
-        return "play_type" in player_move and \
-            self.table.can_discard() and \
-            player_move["play_type"] == "discard" and \
-            "card" in player_move
-
-    def is_valid_disclose_move(self, player_move):
-        if self.table.can_disclose() and \
-            "play_type" in player_move and \
-            player_move["play_type"] == "disclose":
-            return self.is_valid_disclose_color(player_move) or self.is_valid_disclose_rank(player_move)
-        else:
-            return False
-
-    def is_valid_disclose_color(self, player_move):
-        return "disclose_type" in player_move and \
-            player_move["disclose_type"] == "color" and \
-            "color" in player_move and \
-            self.table.can_disclose_color(player_move["color"])
-
-    def is_valid_disclose_rank(self, player_move):
-        return "disclose_type" in player_move and \
-            player_move["disclose_type"] == "rank" and \
-            "rank" in player_move
-
-    def parse_turn(self, player_move):           
+    def parse_turn(self, player_move):
         if not self.is_valid_move(player_move):
             self.disqualify_and_exit(player_move)
         move = player_move["play_type"]
         if move == "play":
-            self.table.play_card(self.current_player, player_move["card"])
+            return self.table.play_card(self.current_player, player_move["card"])
         elif move == "discard":
-            self.table.discard_card(self.current_player, player_move["card"])
+            return self.table.discard_card(self.current_player, player_move["card"])
         elif move == "disclose":
-            self.play_disclose(player_move)
+            return self.play_disclose(player_move)
 
     def play_disclose(self, player_move):
         disclose_type = player_move["disclose_type"]
         if disclose_type == "color":
-            self.table.disclose_color(self.current_player, player_move["color"]),
+            return self.table.disclose_color(self.current_player, player_move["player"], player_move["color"])
         elif disclose_type == "rank":
-            self.table.disclose_rank(self.current_player, player_move["rank"])
+            return self.table.disclose_rank(self.current_player, player_move["player"], player_move["rank"])
 
     def disqualify_and_exit(self, bot_move):
         logging.error("Received invalid move from player {id}".format(id = self.current_player))

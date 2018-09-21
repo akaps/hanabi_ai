@@ -26,7 +26,7 @@ class HanabiGameTests(unittest.TestCase):
         self.malformed_rank_disclose = {'play_type':'disclose', 'player':0, 'disclose_type':'RANK', 'rank':7}
     
     def test_is_valid_move(self):
-        self.game.table.disclose_rank(0,0)
+        self.game.table.disclose_rank(0, 0, 0)
         self.assertTrue(self.game.is_valid_move(self.well_formed_play))
         self.assertFalse(self.game.is_valid_move(self.malformed_play))
         self.assertTrue(self.game.is_valid_move(self.well_formed_discard))
@@ -37,34 +37,3 @@ class HanabiGameTests(unittest.TestCase):
         self.assertFalse(self.game.is_valid_move(self.malformed_color_disclose))
         self.assertTrue(self.game.is_valid_move(self.well_formed_rank_disclose))
         self.assertFalse(self.game.is_valid_move(self.malformed_rank_disclose))
-
-    def test_is_valid_play_move(self):
-        self.assertTrue(self.game.is_valid_play_move(self.well_formed_play))
-        self.assertFalse(self.game.is_valid_play_move(self.malformed_play))
-        self.assertFalse(self.game.is_valid_play_move(self.well_formed_discard))
-
-    def test_is_valid_discard_move(self):
-        self.assertFalse(self.game.is_valid_discard_move(self.well_formed_discard))
-        self.game.table.disclose_rank(0,0)
-        self.game.table.disclose_rank(0,0)
-        self.game.table.disclose_rank(0,0)
-        self.assertTrue(self.game.is_valid_discard_move(self.well_formed_discard))
-        self.assertFalse(self.game.is_valid_discard_move(self.malformed_discard))
-        self.assertFalse(self.game.is_valid_discard_move(self.well_formed_play))
-
-    def test_is_valid_disclose_move(self):
-        self.assertTrue(self.game.is_valid_disclose_move(self.well_formed_color_disclose))
-        self.assertTrue(self.game.is_valid_disclose_move(self.well_formed_rank_disclose))
-        self.assertFalse(self.game.is_valid_disclose_move(self.malformed_color_disclose))
-        self.assertFalse(self.game.is_valid_disclose_move(self.malformed_rank_disclose))
-        self.assertFalse(self.game.is_valid_disclose_move(self.well_formed_discard))
-
-    def test_is_valid_disclose_color(self):
-        self.assertTrue(self.game.is_valid_disclose_color(self.well_formed_color_disclose))
-        self.assertFalse(self.game.is_valid_disclose_color(self.malformed_color_disclose))
-        self.assertFalse(self.game.is_valid_disclose_color(self.well_formed_rank_disclose))
-
-    def test_is_valid_disclose_rank(self):
-        self.assertTrue(self.game.is_valid_disclose_rank(self.well_formed_rank_disclose))
-        self.assertFalse(self.game.is_valid_disclose_rank(self.malformed_rank_disclose))
-        self.assertFalse(self.game.is_valid_disclose_rank(self.well_formed_color_disclose))

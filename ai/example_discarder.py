@@ -20,6 +20,7 @@ class Discarder:
         "hands": for player_index, all visible and known cards (you can't see your own cards)
         "known_info": all given information about each hand, so you can avoid telling the same info
         "scored_cards": dictionary of highest scored card per pile. Uses first letter of a color as key (i.e. "R")
+        "history": list of moves objects made throughout the game. All are defined in hanabi_moves.py
 
     @return a dictionary of the command to do. Uses the following formatting:
         {'play_type':'play', 'card':<number>}
