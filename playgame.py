@@ -5,6 +5,7 @@ from tools.hanabi_table import HanabiTable
 from tools.hanabi_card import HanabiColor
 import sys
 import logging
+import os
 from tools.hanabi_moves import \
     HanabiDiscardAction, \
     HanabiPlayAction, \
@@ -20,25 +21,73 @@ def main(argv):
     else:
         run_one_game(args)
 
+def generate_pairings(players):
+    res = []
+    for i in range(len(players)):
+        for j in range(i + 1, len(players)):
+            res.append([players[i], players[j]])
+    return res
+
+def friendly_name(player_name):
+    return player_name[player_name.rfind(".") + 1:]
+
+def generate_file_name(base_name, ext):
+    #don't commit until this avoids overwriting previous file
+    file_name = '{base_name}.{ext}'.format(
+                base_name = base_name,
+                ext = ext)
+    #issue: running a tournament with mutliple bots of the same name causes a collision during scoring. Shouldn't be considered?
+    attempt = 1
+    while os.path.isfile(file_name):
+        file_name = '{base_name}_{attempt}.{ext}'.format(
+                base_name = base_name,
+                attempt = attempt,
+                ext = ext)
+        attempt += 1
+    return file_name
+
+def tournament_file_names(args, player1, player2):
+    log_name =  '{base}_{player1}_{player2}'.format(
+                base = args.log_dir.split('.')[0],
+                player1 = friendly_name(player1),
+                player2 = friendly_name(player2))       
+    log_dir = generate_file_name(log_name, args.log_dir.split('.')[1])
+    error_name = '{base}_{player1}_{player2}'.format(
+                base = args.log_stderr.split('.')[0],
+                player1 = friendly_name(player1),
+                player2 = friendly_name(player2))
+    log_stderr = generate_file_name(error_name, args.log_stderr.split('.')[1])
+    return log_dir, log_stderr
+
 def run_tournament(args):
-    #round robin only. currently running n^2 games instead of n^2/2
-    #save scores through each game
-    #run each game in a separate thread (runs faster, avoids an error breaking the tournament)
-    #report winning player based on highest average score
-    scores = {}
-    for player_1 in args.players:
-        for player_2 in args.players:
-            log_dir = '{base_name}_{player_1}_{player_2}.txt'.format(base_name = args.log_dir,
-                player_1 = player_1, player_2 = player_2)
-            log_stderr = '{base_name}_{player_1}_{player_2}.txt'.format(base_name = args.log_stderr,
-                player_1 = player_1, player_2 = player_2)
-            prep_logger(log_dir, args.verbose, log_stderr)
-            game = HanabiGame([player_1, player_2], args.seed, args.variant)
+    tournament_scores = dict.fromkeys(args.players, 0)
+    pairings = generate_pairings(args.players)
+    for player1, player2 in pairings:
+        log_dir, log_stderr = tournament_file_names(args, player1, player2)
+        prep_logger(log_dir, args.verbose, log_stderr)
+        
+        game = HanabiGame([player1, player2], args.seed, args.variant)
+        try:
             game.play_game(args)
-            scores[player_1] += game.table.score()
-            scores[player_2] += game.table.score()
-    scores /= len(args.players)
-    logger.info(scores)
+            score = game.table.score()
+        except:
+            #if a player has messed up, penalize both
+            #could diqualify the failing bot if we can determine who failed
+            score = -25
+        finally:
+            logger.info('results for {player1}-{player2}:'.format(player1 = player1, player2 = player2))
+            logger.info(score)
+
+            tournament_scores[player1] += score
+            tournament_scores[player2] += score
+    tournament_scores = {k: v / len(pairings) for k, v in tournament_scores.iteritems()}
+    logger.info(tournament_scores)
+    winning_score = max(tournament_scores.itervalues())
+    winners = [key for key, value in tournament_scores.items() if value == winning_score]
+    if len(winners) == 1:
+        logger.info('Winner is {winner}'.format(winner = winners[0]))
+    else:
+        logger.info('Winners are {winners}'.format(winners = winners))
 
 def run_one_game(args):
     prep_logger(args.log_dir, args.verbose, args.log_stderr)
@@ -47,7 +96,6 @@ def run_one_game(args):
 
 def prep_logger(log_dir, verbose, log_stderr):
     logger.addHandler(logging.StreamHandler())
-    
     if verbose:
         logger.setLevel(logging.INFO)
     if log_dir:
@@ -58,13 +106,13 @@ def prep_logger(log_dir, verbose, log_stderr):
         logger.addHandler(efh)
 
 def parse_args():
-    usage = 'runs a game of Hanabi using the listed players'
+    usage = 'plays games of Hanabi using the listed players'
 
     parser = argparse.ArgumentParser(description = usage)
 
     #Positional arguments
     parser.add_argument('players', nargs = '+', 
-                        help = 'the players that will play Hanabi')
+                        help = 'the players that will play Hanabi. First 5 will play unless in tournament mode')
 
     #Optional arguments
     parser.add_argument('-s', '--seed', 
@@ -73,16 +121,16 @@ def parse_args():
     parser.add_argument('-r', '--variant', type = int, choices = [1, 2, 3], 
                         dest = 'variant', 
                         help = 'play the selected variant')
-    parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None, 
-                        help = 'directory to save results to')
     parser.add_argument('-v', '--verbose', dest = 'verbose',
                         action = 'store_true',
-                        help = 'print out moves as game goes')
-    parser.add_argument('-e', '--log_stderr', dest = 'log_stderr',
-                        help = 'additionally log players errors to stderr')
+                        help = 'log moves as game is played')
     parser.add_argument('-t', '--tournament', dest = 'is_tournament',
-                       action = 'store_true',
-                       help = 'runs a 2 player round robin tournament with the list of players')
+                        action = 'store_true',
+                        help = 'runs 2 player games for all combinations of players (no repeats)')
+    parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None, 
+                        help = 'file to save results to')
+    parser.add_argument('-e', '--log_stderr', dest = 'log_stderr',
+                        help = 'additionally log player errors')
 
     return parser.parse_args()
 
@@ -103,7 +151,8 @@ class HanabiGame:
             logger.info('Players: {players}'.format(players = info['num_players']))
             logger.info('Cards in deck: {deck}'.format(deck = info['deck_size']))
             logger.info('Discarded: {discard}'.format(discard = info['discarded']))
-            logger.info('Score: {score}, Progress: {scored}'.format(score = info['score'], scored = info['scored_cards']))
+            logger.info('Score: {score}'.format(score = info['score']))
+            logger.info('Progress: {scored}'.format(scored = info['scored_cards']))
             logger.info('Sees: {visible}'.format(visible = info['hands']))
             logger.info('Knows: {known}'.format(known = info['known_info']))
             logger.info('Disclosures left: {disclosures}'.format(disclosures = info['disclosures']))
@@ -118,11 +167,14 @@ class HanabiGame:
             pretty_print_info(info)
             logger.info(str(move))
             self.current_player = (self.current_player + 1) % self.table.num_players
-        logger.info(self.game_history())
-        print('Final score: {score}'.format(score = self.table.score()))
+        logger.info('-----')
+        self.game_history()
+        logger.info('Final score: {score}'.format(score = self.table.score()))
 
     def game_history(self):
-        return map(lambda action: str(action), self.table.history)
+        moves = map(lambda action: str(action), self.table.history)
+        for move in moves:
+            logger.info(move)
 
     def is_valid_move(self, player_move):
         return HanabiPlayAction.can_parse_move(player_move) or \
