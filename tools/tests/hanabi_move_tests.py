@@ -1,9 +1,8 @@
 import unittest
-from tools.hanabi_moves import \
-    HanabiDiscardAction, \
-    HanabiPlayAction, \
-    HanabiColorDiscloseAction, \
-    HanabiRankDiscloseAction
+from tools.hanabi_moves import (HanabiDiscardAction,
+    HanabiPlayAction,
+    HanabiColorDiscloseAction,
+    HanabiRankDiscloseAction)
 
 class HanabiMoveTests(unittest.TestCase):
 

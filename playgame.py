@@ -8,11 +8,10 @@ import sys
 import logging
 from logging.handlers import RotatingFileHandler
 import os
-from tools.hanabi_moves import \
-    HanabiDiscardAction, \
-    HanabiPlayAction, \
-    HanabiColorDiscloseAction, \
-    HanabiRankDiscloseAction
+from tools.hanabi_moves import (HanabiDiscardAction,
+    HanabiPlayAction,
+    HanabiColorDiscloseAction,
+    HanabiRankDiscloseAction)
 
 def main(argv):
     args = parse_args()
@@ -159,11 +158,20 @@ class HanabiGame:
         return moves
 
     def is_valid_move(self, player_move):
-        return HanabiPlayAction.can_parse_move(player_move) or \
-            (HanabiDiscardAction.can_parse_move(player_move) and self.table.can_discard()) or \
-            (self.table.can_disclose() and \
-                (HanabiColorDiscloseAction.can_parse_move(player_move) or \
-                HanabiRankDiscloseAction.can_parse_move(player_move)))
+        return (self.is_valid_play_move(player_move) or
+            self.is_valid_discard_move(player_move) or
+            self.is_valid_disclose_move(player_move))
+
+    def is_valid_play_move(self, player_move):
+        return HanabiPlayAction.can_parse_move(player_move)
+
+    def is_valid_discard_move(self, player_move):
+        return HanabiDiscardAction.can_parse_move(player_move) and self.table.can_discard()
+
+    def is_valid_disclose_move(self, player_move):
+        return (self.table.can_disclose() and
+            (HanabiColorDiscloseAction.can_parse_move(player_move) or
+            HanabiRankDiscloseAction.can_parse_move(player_move)))
 
     def parse_turn(self, player_move, logger):
         if not self.is_valid_move(player_move):

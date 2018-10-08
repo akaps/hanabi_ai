@@ -25,8 +25,8 @@ class HanabiPlayAction(HanabiCardAction):
 
     @staticmethod
     def can_parse_move(move):
-        return all(key in move for key in ("play_type", "card")) and \
-            move["play_type"] is "play" 
+        return (all(key in move for key in ("play_type", "card")) and
+            move["play_type"] is "play") 
 
 class HanabiDiscardAction(HanabiCardAction):
     def __init__(self, player_id, card):
@@ -38,8 +38,8 @@ class HanabiDiscardAction(HanabiCardAction):
 
     @staticmethod
     def can_parse_move(move):
-        return all(key in move for key in ("play_type", "card")) and \
-            move["play_type"] is "discard"
+        return (all(key in move for key in ("play_type", "card")) and
+            move["play_type"] is "discard")
 
 class HanabiDiscloseAction(object):
     def __init__(self, player_id, to_whom, count):
@@ -48,10 +48,10 @@ class HanabiDiscloseAction(object):
         self.count = count
 
     def __str__(self):
-        return "Player {id} told {whom} about {count} {disclosure} in their hand".format( \
-            id = self.player_id, \
-            whom = self.to_whom, \
-            count = self.count, \
+        return "Player {id} told {whom} about {count} {disclosure} in their hand".format(
+            id = self.player_id,
+            whom = self.to_whom,
+            count = self.count,
             disclosure = self.disclosure())
 
     def disclosure(self):
@@ -70,10 +70,10 @@ class HanabiColorDiscloseAction(HanabiDiscloseAction):
 
     @staticmethod
     def can_parse_move(move):
-        return all(key in move for key in ("play_type", "player", "disclose_type", "color")) and \
-            move["play_type"] is "disclose" and \
-            move["disclose_type"] is "color" and \
-            move["color"] in "RWBGY*"
+        return (all(key in move for key in ("play_type", "player", "disclose_type", "color")) and
+            move["play_type"] is "disclose" and
+            move["disclose_type"] is "color" and
+            move["color"] in "RWBGY*")
 
 class HanabiRankDiscloseAction(HanabiDiscloseAction):
     def __init__(self, player_id, to_whom, count, rank):
@@ -88,7 +88,7 @@ class HanabiRankDiscloseAction(HanabiDiscloseAction):
 
     @staticmethod
     def can_parse_move(move):
-        return all(key in move for key in ("play_type", "player", "disclose_type", "rank")) and \
-            move["play_type"] is "disclose" and \
-            move["disclose_type"] is "rank" and \
-            move["rank"] in range (1,6)
+        return (all(key in move for key in ("play_type", "player", "disclose_type", "rank")) and
+            move["play_type"] is "disclose" and
+            move["disclose_type"] is "rank" and
+            move["rank"] in range (1,6))
