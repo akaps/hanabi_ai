@@ -2,6 +2,7 @@ import unittest
 from tools.hanabi_table import HanabiTable
 from tools.hanabi_hand import HanabiHand
 from tools.hanabi_card import HanabiCard, HanabiColor
+from tools.hanabi_deck import HanabiVariant
 
 def diagnose(table):
     print("Player 0")
@@ -13,7 +14,7 @@ def diagnose(table):
 
 class HanabiTableTests(unittest.TestCase):
     def setUp(self):
-        self.table = HanabiTable(2, 1, 0)
+        self.table = HanabiTable(2, 1, HanabiVariant.basic)
 
     def test_table_play_card(self):
         self.assertFalse(self.table.is_game_over())

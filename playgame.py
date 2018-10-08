@@ -3,6 +3,7 @@ import time
 from pydoc import locate
 from tools.hanabi_table import HanabiTable
 from tools.hanabi_card import HanabiColor
+from tools.hanabi_deck import HanabiVariant
 import sys
 import logging
 from logging.handlers import RotatingFileHandler
@@ -33,7 +34,7 @@ def run_tournament(args, logger):
     pairings = generate_pairings(args.players)
     for player1, player2 in pairings:
         try:
-            game = HanabiGame([player1, player2], args.seed, args.variant)
+            game = HanabiGame([player1, player2], args.seed, HanabiVariant(args.variant))
             game.play_game(args, logger)
             score = game.table.score()
         except:
@@ -60,7 +61,7 @@ def run_tournament(args, logger):
         logger.info('Winners are {winners}'.format(winners = winners))
 
 def run_one_game(args, logger):
-    game = HanabiGame(args.players, args.seed, args.variant)
+    game = HanabiGame(args.players, args.seed, HanabiVariant(args.variant))
     game.play_game(args, logger)
 
 def prep_logger(log_dir, verbose, log_stderr, count):
@@ -97,7 +98,8 @@ def parse_args():
     parser.add_argument('-s', '--seed', 
                         default = int(round(time.time()*1000)), type = int, 
                         help = 'a specific seed for shuffling the deck')
-    parser.add_argument('-r', '--variant', type = int, choices = [1, 2, 3], 
+    parser.add_argument('-r', '--variant', type = int, choices = [1, 2, 3],
+                        default = 0, 
                         dest = 'variant', 
                         help = 'plays the selected variant')
     parser.add_argument('-t', '--tournament', dest = 'is_tournament',

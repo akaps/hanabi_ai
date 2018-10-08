@@ -1,4 +1,4 @@
-from hanabi_deck import HanabiDeck
+from hanabi_deck import HanabiDeck, HanabiVariant
 from hanabi_discard_pile import HanabiDiscard
 from hanabi_hand import HanabiHand
 from hanabi_card import HanabiColor
@@ -11,10 +11,9 @@ NUM_DISCLOSURES = 8
 NUM_MISTAKES = 3
 
 class HanabiTable:
-    RAINBOW_IS_WILD = 3
 
     def __init__(self, num_players, seed, variant):
-        self.is_rainbow_wild = variant == self.RAINBOW_IS_WILD
+        self.is_rainbow_wild = variant == HanabiVariant.rainbow_wild
         self.num_players = self.lastTurns = num_players
         self.deck = HanabiDeck(seed, variant)
         self.discard = HanabiDiscard()
@@ -37,7 +36,7 @@ class HanabiTable:
         self.scored_cards[HanabiColor.GREEN] = 0
         self.scored_cards[HanabiColor.WHITE] = 0
         self.scored_cards[HanabiColor.YELLOW] = 0
-        if variant > 0:
+        if variant is not HanabiVariant.basic:
             self.scored_cards[HanabiColor.RAINBOW] = 0
 
     @staticmethod
