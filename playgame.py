@@ -89,15 +89,15 @@ def parse_args():
                         help = 'a specific seed for shuffling the deck')
     parser.add_argument('-r', '--variant', type = int, choices = [1, 2, 3], 
                         dest = 'variant', 
-                        help = 'plays the selected variant')
+                        help = 'play the selected variant')
     parser.add_argument('-t', '--tournament', dest = 'is_tournament',
                         action = 'store_true',
-                        help = 'runs 2 player games for all combinations of players (no repeats)')
+                        help = 'run 2 player games for all combinations of players (no repeats)')
     parser.add_argument('-v', '--verbose', dest = 'verbose',
                         action = 'store_true',
-                        help = 'logs moves and game state as game is played')
+                        help = 'log moves and game state as game is played')
     parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None, 
-                        help = 'saves logs to file')
+                        help = 'save logs to file')
     parser.add_argument('-e', '--log_stderr', dest = 'log_stderr',
                         help = 'log errors to file')
 
