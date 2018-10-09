@@ -154,7 +154,7 @@ class HanabiGame:
 
     def parse_turn(self, player_move):
         if not self.is_valid_move(player_move):
-            self.disqualify_and_exit(player_move)
+            self.disqualify(player_move)
         move = player_move['play_type']
         if move == 'play':
             return self.table.play_card(self.current_player, player_move['card'])
@@ -170,22 +170,20 @@ class HanabiGame:
         elif disclose_type == 'rank':
             return self.table.disclose_rank(self.current_player, player_move['player'], player_move['rank'])
 
-    def disqualify_and_exit(self, bot_move):
-        logger.error('Received invalid move from player {id}'.format(id = self.current_player))
-        logger.error(bot_move)
-        logger.error('Expected format for play card:')
-        logger.error('{"play_type":"play", "card":<number>}')
+    def disqualify(self, bot_move):
+        logger.warning('Expected format for play card:')
+        logger.warning('{"play_type":"play", "card":<number>}')
 
-        logger.error('Expected format for discard card:')
-        logger.error('{"play_type":"discard", "card":<number>}')
+        logger.warning('Expected format for discard card:')
+        logger.warning('{"play_type":"discard", "card":<number>}')
         
-        logger.error('Expected format for disclose color:')
-        logger.error('{"play_type":"disclose", "disclose_type":"color, "color":<color>}')
-        logger.error('"color" cannot be "*" in a Variant 3 game')
+        logger.warning('Expected format for disclose color:')
+        logger.warning('{"play_type":"disclose", "disclose_type":"color, "color":<color>}')
+        logger.warning('"color" cannot be "*" in a Variant 3 game')
         
-        logger.error('Expected format for disclose rank:')
-        logger.error('{"play_type":"disclose", "disclose_type":"rank, "rank":<number>}')
-        exit(1)
+        logger.warning('Expected format for disclose rank:')
+        logger.warning('{"play_type":"disclose", "disclose_type":"rank, "rank":<number>}')
+        raise Exception('Received invalid move from player {id}: {move}'.format(id = self.current_player, move = bot_move))
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
