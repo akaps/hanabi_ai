@@ -143,8 +143,7 @@ class HanabiGame:
         logger.info('Final score: {score}'.format(score = self.table.score()))
 
     def game_history(self):
-        moves = map(lambda action: str(action), self.table.history)
-        return moves
+        return map(lambda action: str(action), self.table.history)
 
     def is_valid_move(self, player_move):
         return HanabiPlayAction.can_parse_move(player_move) or \
