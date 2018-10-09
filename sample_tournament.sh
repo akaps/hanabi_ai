@@ -1,0 +1,1 @@
+python playgame.py "ai.example_discarder.Discarder" "ai.example_discarder.Discarder" "ai.example_discarder.Discarder" --log_dir "tournament_results.txt" --log_stderr "tournament_errors.txt" --verbose --tournament
