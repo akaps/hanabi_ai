@@ -47,10 +47,7 @@ def run_tournament(args, logger):
     logger.info('Scores: {scores}'.format(scores = tournament_scores))
     winning_score = max(tournament_scores.itervalues())
     winners = [key for key, value in tournament_scores.items() if value == winning_score]
-    if len(winners) == 1:
-        logger.info('Winner is {winner}'.format(winner = winners[0]))
-    else:
-        logger.info('Winners are {winners}'.format(winners = winners))
+    logger.info('Winner(s): {winners}'.format(winners = winners))
 
 def run_one_game(args, logger):
     game = HanabiGame(args.players, args.seed, args.variant)
