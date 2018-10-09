@@ -5,6 +5,7 @@ from tools.hanabi_table import HanabiTable
 from tools.hanabi_card import HanabiColor
 import sys
 import logging
+import itertools
 from logging.handlers import RotatingFileHandler
 from tools.hanabi_moves import \
     HanabiDiscardAction, \
@@ -20,16 +21,9 @@ def main(argv):
     else:
         run_one_game(args, logger)
 
-def generate_pairings(players):
-    res = []
-    for i in range(len(players)):
-        for j in range(i + 1, len(players)):
-            res.append([players[i], players[j]])
-    return res
-
 def run_tournament(args, logger):
     tournament_scores = dict.fromkeys(args.players, 0)
-    pairings = generate_pairings(args.players)
+    pairings = itertools.combinations(args.players, 2)
     for player1, player2 in pairings:
         try:
             game = HanabiGame([player1, player2], args.seed, args.variant)
