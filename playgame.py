@@ -6,7 +6,6 @@ from tools.hanabi_card import HanabiColor
 import sys
 import logging
 from logging.handlers import RotatingFileHandler
-import os
 from tools.hanabi_moves import \
     HanabiDiscardAction, \
     HanabiPlayAction, \
