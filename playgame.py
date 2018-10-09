@@ -32,7 +32,7 @@ def run_tournament(args, logger):
         except:
             #if a player has messed up, penalize both
             #could diqualify the failing bot if we can determine who failed
-            logger.warning("{player1} or {player2} failed to complete a game".format(
+            logger.warning('{player1} or {player2} failed to complete a game'.format(
                 player1 = player1,
                 player2 = player2
                 ))
@@ -44,7 +44,7 @@ def run_tournament(args, logger):
             tournament_scores[player1] += score
             tournament_scores[player2] += score
     tournament_scores = {k: v / len(pairings) for k, v in tournament_scores.iteritems()}
-    logger.info("Scores: {scores}".format(scores = tournament_scores))
+    logger.info('Scores: {scores}'.format(scores = tournament_scores))
     winning_score = max(tournament_scores.itervalues())
     winners = [key for key, value in tournament_scores.items() if value == winning_score]
     if len(winners) == 1:
