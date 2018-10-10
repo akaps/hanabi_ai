@@ -1,14 +1,14 @@
 import unittest
 from playgame import HanabiGame
 from argparse import Namespace
+from tools.hanabi_deck import HanabiVariant
 
 def prep_args():
     args = Namespace()
     args.seed = 0
-    args.variant = 0
+    args.variant = HanabiVariant.basic
     args.players = ["ai.example_discarder.Discarder", "ai.example_discarder.Discarder"]
     args.seed = 0
-    args.variant = 0
     return args
 
 class HanabiGameTests(unittest.TestCase):

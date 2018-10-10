@@ -3,15 +3,15 @@ import time
 from pydoc import locate
 from tools.hanabi_table import HanabiTable
 from tools.hanabi_card import HanabiColor
+from tools.hanabi_deck import HanabiVariant
 import sys
 import logging
 import itertools
 from logging.handlers import RotatingFileHandler
-from tools.hanabi_moves import \
-    HanabiDiscardAction, \
-    HanabiPlayAction, \
-    HanabiColorDiscloseAction, \
-    HanabiRankDiscloseAction
+from tools.hanabi_moves import (HanabiDiscardAction,
+    HanabiPlayAction,
+    HanabiColorDiscloseAction,
+    HanabiRankDiscloseAction)
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ def run_tournament(args):
     pairings = itertools.combinations(args.players, 2)
     for player1, player2 in pairings:
         try:
-            game = HanabiGame([player1, player2], args.seed, args.variant)
+            game = HanabiGame([player1, player2], args.seed, HanabiVariant(args.variant))
             game.play_game(args)
             score = game.table.score()
         except:
@@ -53,7 +53,7 @@ def run_tournament(args):
     logger.info('Winner(s): {winners}'.format(winners = winners))
 
 def run_one_game(args):
-    game = HanabiGame(args.players, args.seed, args.variant)
+    game = HanabiGame(args.players, args.seed, HanabiVariant(args.variant))
     game.play_game(args)
 
 def prep_logger(log_dir, verbose, log_stderr, count):
@@ -87,7 +87,8 @@ def parse_args():
     parser.add_argument('-s', '--seed', 
                         default = int(round(time.time()*1000)), type = int, 
                         help = 'a specific seed for shuffling the deck')
-    parser.add_argument('-r', '--variant', type = int, choices = [1, 2, 3], 
+    parser.add_argument('-r', '--variant', type = int, choices = [1, 2, 3],
+                        default = 0, 
                         dest = 'variant', 
                         help = 'play the selected variant')
     parser.add_argument('-t', '--tournament', dest = 'is_tournament',
@@ -146,11 +147,20 @@ class HanabiGame:
         return map(lambda action: str(action), self.table.history)
 
     def is_valid_move(self, player_move):
-        return HanabiPlayAction.can_parse_move(player_move) or \
-            (HanabiDiscardAction.can_parse_move(player_move) and self.table.can_discard()) or \
-            (self.table.can_disclose() and \
-                (HanabiColorDiscloseAction.can_parse_move(player_move) or \
-                HanabiRankDiscloseAction.can_parse_move(player_move)))
+        return (self.is_valid_play_move(player_move) or
+            self.is_valid_discard_move(player_move) or
+            self.is_valid_disclose_move(player_move))
+
+    def is_valid_play_move(self, player_move):
+        return HanabiPlayAction.can_parse_move(player_move)
+
+    def is_valid_discard_move(self, player_move):
+        return HanabiDiscardAction.can_parse_move(player_move) and self.table.can_discard()
+
+    def is_valid_disclose_move(self, player_move):
+        return (self.table.can_disclose() and
+            (HanabiColorDiscloseAction.can_parse_move(player_move) or
+            HanabiRankDiscloseAction.can_parse_move(player_move)))
 
     def parse_turn(self, player_move):
         if not self.is_valid_move(player_move):

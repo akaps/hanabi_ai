@@ -3,10 +3,11 @@ from tools.hanabi_table import HanabiTable
 from tools.hanabi_hand import HanabiHand
 from tools.hanabi_card import HanabiCard, HanabiColor
 from hanabi_table_tests import diagnose
+from tools.hanabi_deck import HanabiVariant
 
 class HanabiTableVariant1Tests(unittest.TestCase):
     def setUp(self):
-        self.table = HanabiTable(2, 1, 1)
+        self.table = HanabiTable(2, 1, HanabiVariant.sixth_suit)
 
     def test_table_play_card_correct_rainbow(self):
         self.table.play_card(0,0)

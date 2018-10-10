@@ -1,20 +1,19 @@
-from hanabi_deck import HanabiDeck
+from hanabi_deck import HanabiDeck, HanabiVariant
 from hanabi_discard_pile import HanabiDiscard
 from hanabi_hand import HanabiHand
 from hanabi_card import HanabiColor
-from hanabi_moves import HanabiPlayAction, \
-    HanabiDiscardAction, \
-    HanabiRankDiscloseAction, \
-    HanabiColorDiscloseAction
+from hanabi_moves import (HanabiPlayAction,
+    HanabiDiscardAction,
+    HanabiRankDiscloseAction,
+    HanabiColorDiscloseAction)
 
 NUM_DISCLOSURES = 8
 NUM_MISTAKES = 3
 
 class HanabiTable:
-    RAINBOW_IS_WILD = 3
 
     def __init__(self, num_players, seed, variant):
-        self.is_rainbow_wild = variant == self.RAINBOW_IS_WILD
+        self.is_rainbow_wild = variant == HanabiVariant.rainbow_wild
         self.num_players = self.lastTurns = num_players
         self.deck = HanabiDeck(seed, variant)
         self.discard = HanabiDiscard()
@@ -37,7 +36,7 @@ class HanabiTable:
         self.scored_cards[HanabiColor.GREEN] = 0
         self.scored_cards[HanabiColor.WHITE] = 0
         self.scored_cards[HanabiColor.YELLOW] = 0
-        if variant > 0:
+        if variant is not HanabiVariant.basic:
             self.scored_cards[HanabiColor.RAINBOW] = 0
 
     @staticmethod
@@ -50,9 +49,9 @@ class HanabiTable:
         } [num_players]
 
     def is_game_over(self):
-        return self.mistakes_left == 0 or \
-            (len(self.deck) == 0 and self.lastTurns == 0) or \
-            self.score() == 25
+        return (self.mistakes_left == 0 or
+            (len(self.deck) == 0 and self.lastTurns == 0) or
+            self.score() == 25)
 
     def play_card(self, player_id, card_index):
         card = self.hands[player_id].pop(card_index)
@@ -125,9 +124,9 @@ class HanabiTable:
         return self.can_disclose()
     
     def can_disclose_color(self, color):
-        return self.can_disclose() and \
-            color in "RGBWY*" and\
-            (color != HanabiColor.RAINBOW or not self.is_rainbow_wild)
+        return (self.can_disclose() and
+            color in "RGBWY*" and
+            (color != HanabiColor.RAINBOW or not self.is_rainbow_wild))
 
     def disclose_rank(self, player_id, to_whom, rank):
         self.disclosures -= 1
