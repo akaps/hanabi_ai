@@ -16,13 +16,23 @@ from tools.hanabi_moves import (HanabiDiscardAction,
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 
+class InvalidHanabiMoveException(Exception):
+    def __init__(self, message, move, player_id):
+        self.message = message
+        self.move = move
+        self.player_id = player_id
+
 def main(argv):
     args = parse_args()
     prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players))
+    args.players = validate_players(args.players)
     if args.is_tournament:
         run_tournament(args)
     else:
         run_one_game(args)
+
+def validate_players(players):
+    return [player for player in players if locate(player) is not None]
 
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, 0)
@@ -32,20 +42,18 @@ def run_tournament(args):
             game = HanabiGame([player1, player2], args.seed, HanabiVariant(args.variant))
             game.play_game(args)
             score = game.table.score()
-        except:
-            #if a player has messed up, penalize both
-            #could diqualify the failing bot if we can determine who failed
-            logger.warning('{player1} or {player2} failed to complete a game'.format(
-                player1 = player1,
-                player2 = player2
-                ))
-            score = -25
-        finally:
             for handler in logger.handlers:
                 if handler.__class__ is RotatingFileHandler:
                     handler.doRollover()
             tournament_scores[player1] += score
             tournament_scores[player2] += score
+        except InvalidHanabiMoveException as err:
+            logger.error(err.message)
+            disqualified = args.players[err.player_id]
+            pairings = filter(lambda a: a != disqualified, pairings)
+            tournament_scores = filter(lambda a: a != disqualified, tournament_scores)
+            args.players.remove(disqualified)
+            logger.warning('removed player {player} from tournament'.format(player = disqualified))
     tournament_scores = {k: v / len(pairings) for k, v in tournament_scores.iteritems()}
     logger.info('Scores: {scores}'.format(scores = tournament_scores))
     winning_score = max(tournament_scores.itervalues())
@@ -129,7 +137,6 @@ class HanabiGame:
 
         player_details = "Game with {players}".format(players = map(lambda(player): player.__class__.__name__, self.players))
         logger.info(player_details)
-        logger.debug(player_details)
 
         while not self.table.is_game_over():
             player = self.players[self.current_player]
@@ -193,7 +200,7 @@ class HanabiGame:
         
         logger.warning('Expected format for disclose rank:')
         logger.warning('{"play_type":"disclose", "disclose_type":"rank, "rank":<number>}')
-        raise Exception('Received invalid move from player {id}: {move}'.format(id = self.current_player, move = bot_move))
+        raise InvalidHanabiMoveException('Received invalid move from player', bot_move, self.current_player)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
