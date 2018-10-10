@@ -37,23 +37,23 @@ def validate_players(players):
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, 0)
     pairings = list(itertools.combinations(args.players, 2))
+    disqualified = []
     for player1, player2 in pairings:
-        try:
-            game = HanabiGame([player1, player2], args.seed, HanabiVariant(args.variant))
-            game.play_game(args)
-            score = game.table.score()
-            for handler in logger.handlers:
-                if handler.__class__ is RotatingFileHandler:
-                    handler.doRollover()
-            tournament_scores[player1] += score
-            tournament_scores[player2] += score
-        except InvalidHanabiMoveException as err:
-            logger.error(err.message)
-            disqualified = args.players[err.player_id]
-            pairings = filter(lambda a: a != disqualified, pairings)
-            tournament_scores = filter(lambda a: a != disqualified, tournament_scores)
-            args.players.remove(disqualified)
-            logger.warning('removed player {player} from tournament'.format(player = disqualified))
+        if player1 and player2 not in disqualified:
+            try:
+                game = HanabiGame([player1, player2], args.seed, HanabiVariant(args.variant))
+                game.play_game(args)
+                score = game.table.score()
+                for handler in logger.handlers:
+                    if handler.__class__ is RotatingFileHandler:
+                        handler.doRollover()
+                tournament_scores[player1] += score
+                tournament_scores[player2] += score
+            except InvalidHanabiMoveException as err:
+                logger.error(err.message)
+                disqualified.append(player1 if err.player_id == 0 else player2)
+                tournament_scores = {k : v for k, v in tournament_scores.iteritems() if k not in disqualified}
+                logger.warning('removed player {player} from tournament'.format(player = disqualified))
     tournament_scores = {k: v / len(pairings) for k, v in tournament_scores.iteritems()}
     logger.info('Scores: {scores}'.format(scores = tournament_scores))
     winning_score = max(tournament_scores.itervalues())
@@ -141,6 +141,8 @@ class HanabiGame:
         while not self.table.is_game_over():
             player = self.players[self.current_player]
             info = self.table.info_for_player(self.current_player)
+            if getattr(player, 'do_turn', None) is None:
+                raise InvalidHanabiMoveException('player has no do_turn method', None, self.current_player)
             player_move = player.do_turn(self.current_player, info)
             move = self.parse_turn(player_move)
             pretty_print_info(info)
@@ -187,7 +189,7 @@ class HanabiGame:
         elif disclose_type == 'rank':
             return self.table.disclose_rank(self.current_player, player_move['player'], player_move['rank'])
 
-    def disqualify(self, bot_move):
+    def disqualify(self, player_move):
         logger.warning('Expected format for play card:')
         logger.warning('{"play_type":"play", "card":<number>}')
 
@@ -200,7 +202,7 @@ class HanabiGame:
         
         logger.warning('Expected format for disclose rank:')
         logger.warning('{"play_type":"disclose", "disclose_type":"rank, "rank":<number>}')
-        raise InvalidHanabiMoveException('Received invalid move from player', bot_move, self.current_player)
+        raise InvalidHanabiMoveException('Received invalid move from player', player_move, self.current_player)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
