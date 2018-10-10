@@ -4,6 +4,7 @@ from pydoc import locate
 from tools.hanabi_table import HanabiTable
 from tools.hanabi_card import HanabiColor
 from tools.hanabi_deck import HanabiVariant
+from ai.hanabi_player import HanabiPlayer
 import sys
 import logging
 import itertools
@@ -32,7 +33,8 @@ def main(argv):
         run_one_game(args)
 
 def validate_players(players):
-    return [player for player in players if locate(player) is not None]
+    return [player for player in players if locate(player) is not None and
+            isinstance(locate(player)(), HanabiPlayer)]
 
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, 0)
@@ -141,8 +143,6 @@ class HanabiGame:
         while not self.table.is_game_over():
             player = self.players[self.current_player]
             info = self.table.info_for_player(self.current_player)
-            if getattr(player, 'do_turn', None) is None:
-                raise InvalidHanabiMoveException('player has no do_turn method', None, self.current_player)
             player_move = player.do_turn(self.current_player, info)
             move = self.parse_turn(player_move)
             pretty_print_info(info)
@@ -156,7 +156,8 @@ class HanabiGame:
         return map(lambda action: str(action), self.table.history)
 
     def is_valid_move(self, player_move):
-        return (self.is_valid_play_move(player_move) or
+        return player_move is not None and (
+            self.is_valid_play_move(player_move) or
             self.is_valid_discard_move(player_move) or
             self.is_valid_disclose_move(player_move))
 
