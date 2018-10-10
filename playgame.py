@@ -26,7 +26,7 @@ def main(argv):
 
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, 0)
-    pairings = itertools.combinations(args.players, 2)
+    pairings = list(itertools.combinations(args.players, 2))
     for player1, player2 in pairings:
         try:
             game = HanabiGame([player1, player2], args.seed, HanabiVariant(args.variant))
