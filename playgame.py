@@ -8,6 +8,7 @@ from ai.hanabi_player import HanabiPlayer
 import sys
 import logging
 import itertools
+import numpy
 from logging.handlers import RotatingFileHandler
 from tools.hanabi_moves import (HanabiDiscardAction,
     HanabiPlayAction,
@@ -37,7 +38,7 @@ def validate_players(players):
             isinstance(locate(player)(), HanabiPlayer)]
 
 def run_tournament(args):
-    tournament_scores = dict.fromkeys(args.players, 0)
+    tournament_scores = dict.fromkeys(args.players, [])
     pairings = list(itertools.combinations(args.players, 2))
     disqualified = []
     for player1, player2 in pairings:
@@ -49,17 +50,20 @@ def run_tournament(args):
                 for handler in logger.handlers:
                     if handler.__class__ is RotatingFileHandler:
                         handler.doRollover()
-                tournament_scores[player1] += score
-                tournament_scores[player2] += score
+                tournament_scores[player1].append(score)
+                tournament_scores[player2].append(score)
             except InvalidHanabiMoveException as err:
                 logger.error(err.message)
                 disqualified.append(player1 if err.player_id == 0 else player2)
                 tournament_scores = {k : v for k, v in tournament_scores.iteritems() if k not in disqualified}
                 logger.warning('removed player {player} from tournament'.format(player = disqualified))
-    tournament_scores = {k: v / len(pairings) for k, v in tournament_scores.iteritems()}
+    tournament_results = {key: [numpy.mean(val), numpy.var(val)] for key, val in tournament_scores.iteritems()}
     logger.info('Scores: {scores}'.format(scores = tournament_scores))
-    winning_score = max(tournament_scores.itervalues())
-    winners = [key for key, value in tournament_scores.items() if value == winning_score]
+    logger.info('Results: {results}'.format(results = tournament_results))
+    winning_average = max(tournament_results.itervalues())
+    average_winners = {key: val for key, val in tournament_results.items() if val == winning_average}
+    winning_score = min(average_winners.itervalues())
+    winners = [key for key, val in tournament_results.items() if val == winning_score]
     logger.info('Winner(s): {winners}'.format(winners = winners))
 
 def run_one_game(args):
