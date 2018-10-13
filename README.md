@@ -2,7 +2,7 @@
 
 Runner for an AI competition based on the card game Hanabi
 
-##Status of Master
+## Status of Master
 
 [![Build Status](https://travis-ci.com/akaps/hanabi_ai.svg?branch=master)](https://travis-ci.com/akaps/hanabi_ai)
 
