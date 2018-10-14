@@ -1,5 +1,6 @@
 import argparse
 import time
+import os
 from pydoc import locate
 from tools.hanabi_table import HanabiTable
 from tools.hanabi_card import HanabiColor
@@ -24,6 +25,24 @@ def main(argv):
     else:
         run_one_game(args)
 
+def create_dirs(default,path):
+    default_file = default
+    path = path
+    # add path provvided to default directory
+    path = default_file +"/" + path
+    # break the string into a list
+    list = path.split("/")
+    directory = ""
+    # for all element in the list, except the last one, because it is the filename, not a directory
+    for dirs in list[:-1]:
+        #to be able to create subdirectories 
+        directory += dirs
+        #if directory does not exitst, create one
+        if not os.path.exists(directory):
+            os.mkdir(directory)
+        #to be able to create subdirectories
+        directory+="/"
+        
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, 0)
     pairings = list(itertools.combinations(args.players, 2))
@@ -59,6 +78,10 @@ def run_one_game(args):
 def prep_logger(log_dir, verbose, log_stderr, count):
     formatter = logging.Formatter('[%(asctime)s] %(levelname)8s --- %(message)s ' +
                                   '(%(filename)s:%(lineno)s)',datefmt='%Y-%m-%d %H:%M:%S')
+
+    create_dirs("results",log_dir)
+    create_dirs("results",log_stderr)
+    
     if verbose:
         logger.setLevel(logging.DEBUG)
     else:
@@ -98,9 +121,9 @@ def parse_args():
                         action = 'store_true',
                         help = 'log moves and game state as game is played')
     parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None, 
-                        help = 'save logs to file')
+                        help = 'save logs to file (results/PATH_PROVIDED)')
     parser.add_argument('-e', '--log_stderr', dest = 'log_stderr',
-                        help = 'log errors to file')
+                        help = 'log errors to file (results/PATH_PROVIDED)')
 
     return parser.parse_args()
 
