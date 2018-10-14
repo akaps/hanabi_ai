@@ -19,7 +19,6 @@ logger = logging.getLogger(__name__)
 
 def main(argv):
     args = parse_args()
-    print ("asd")
     prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players))
     if args.is_tournament:
         run_tournament(args)
