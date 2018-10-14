@@ -1,5 +1,6 @@
 import argparse
 import time
+import os
 from pydoc import locate
 from tools.hanabi_table import HanabiTable
 from tools.hanabi_card import HanabiColor
@@ -18,12 +19,25 @@ logger = logging.getLogger(__name__)
 
 def main(argv):
     args = parse_args()
+    print ("asd")
     prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players))
     if args.is_tournament:
         run_tournament(args)
     else:
         run_one_game(args)
 
+def create_dirs(default,path):
+    default_file = default
+    path = path
+    path = default_file +"/" + path
+    list = path.split("/")
+    directory = ""
+    for dirs in list[:-1]:
+        directory += dirs
+        if not os.path.exists(directory):
+            os.mkdir(directory)
+        directory+="/"
+        
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, 0)
     pairings = list(itertools.combinations(args.players, 2))
@@ -59,6 +73,10 @@ def run_one_game(args):
 def prep_logger(log_dir, verbose, log_stderr, count):
     formatter = logging.Formatter('[%(asctime)s] %(levelname)8s --- %(message)s ' +
                                   '(%(filename)s:%(lineno)s)',datefmt='%Y-%m-%d %H:%M:%S')
+
+    create_dirs("results",log_dir)
+    create_dirs("results",log_stderr)
+    
     if verbose:
         logger.setLevel(logging.DEBUG)
     else:
