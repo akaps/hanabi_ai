@@ -35,10 +35,11 @@ Python 2.7
 
 A step by step series of examples that tell you how to get a development env running
 
-Install nose
+Install nose and enum34
 
 ```
 pip install nose
+pip install enum34
 ```
 
 ## Running the tests
