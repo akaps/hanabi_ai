@@ -57,7 +57,12 @@ def run_tournament(args):
                 disqualified.append(player1 if err.player_id == 0 else player2)
                 tournament_scores = {k : v for k, v in tournament_scores.iteritems() if k not in disqualified}
                 logger.warning('removed player {player} from tournament'.format(player = disqualified))
-    tournament_results = {key: [numpy.mean(val), numpy.var(val)] for key, val in tournament_scores.iteritems()}
+    tournament_results = {
+        key: {
+            'mean': numpy.mean(val), 
+            'variance' : numpy.var(val)
+            }
+        for key, val in tournament_scores.iteritems()}
     logger.info('Scores: {scores}'.format(scores = tournament_scores))
     logger.info('Results: {results}'.format(results = tournament_results))
     winning_average = max(tournament_results.itervalues())
