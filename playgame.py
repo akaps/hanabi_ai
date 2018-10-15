@@ -28,7 +28,7 @@ def main(argv):
 def create_dirs(path):
     list = path.split("/")
     if list[0] == path:
-        return path
+        return
     directory = ""
     for dirs in list[:-1]:
         directory += dirs
