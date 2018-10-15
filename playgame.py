@@ -25,24 +25,18 @@ def main(argv):
     else:
         run_one_game(args)
 
-def create_dirs(default,path):
-    default_file = default
-    path = path
-    # add path provvided to default directory
-    path = default_file +"/" + path
-    # break the string into a list
+def create_dirs(path):
     list = path.split("/")
+    if list[0] == path:
+        return path
     directory = ""
-    # for all element in the list, except the last one, because it is the filename, not a directory
     for dirs in list[:-1]:
-        #to be able to create subdirectories 
         directory += dirs
-        #if directory does not exitst, create one
         if not os.path.exists(directory):
             os.mkdir(directory)
-        #to be able to create subdirectories
         directory+="/"
-        
+
+
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, 0)
     pairings = list(itertools.combinations(args.players, 2))
@@ -78,21 +72,20 @@ def run_one_game(args):
 def prep_logger(log_dir, verbose, log_stderr, count):
     formatter = logging.Formatter('[%(asctime)s] %(levelname)8s --- %(message)s ' +
                                   '(%(filename)s:%(lineno)s)',datefmt='%Y-%m-%d %H:%M:%S')
-
-    create_dirs("results",log_dir)
-    create_dirs("results",log_stderr)
     
     if verbose:
         logger.setLevel(logging.DEBUG)
     else:
         logger.setLevel(logging.INFO)
     if log_dir:
-        fh = RotatingFileHandler('results/{dir}'.format(dir = log_dir), mode = 'w', backupCount = count)
+        create_dirs(log_dir)
+        fh = RotatingFileHandler('{dir}'.format(dir = log_dir), mode = 'w', backupCount = count)
         fh.setLevel(logging.DEBUG)
         logger.addHandler(fh)
         fh.setFormatter(formatter)
     if log_stderr:
-        efh = RotatingFileHandler('results/{dir}'.format(dir = log_stderr), mode = 'w', backupCount = count)
+        create_dirs(log_stderr)
+        efh = RotatingFileHandler('{dir}'.format(dir = log_stderr), mode = 'w', backupCount = count)
         efh.setLevel(logging.ERROR)
         logger.addHandler(efh)
         efh.setFormatter(formatter)
@@ -121,9 +114,9 @@ def parse_args():
                         action = 'store_true',
                         help = 'log moves and game state as game is played')
     parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None, 
-                        help = 'save logs to file (results/PATH_PROVIDED)')
+                        help = 'save logs to file (default: results/results.txt)')
     parser.add_argument('-e', '--log_stderr', dest = 'log_stderr',
-                        help = 'log errors to file (results/PATH_PROVIDED)')
+                        help = 'log errors to file (default: results/error.txt)')
 
     return parser.parse_args()
 
