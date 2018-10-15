@@ -36,7 +36,6 @@ def create_dirs(path):
             os.mkdir(directory)
         directory+="/"
 
-
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, 0)
     pairings = list(itertools.combinations(args.players, 2))
