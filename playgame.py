@@ -113,9 +113,9 @@ def parse_args():
                         action = 'store_true',
                         help = 'log moves and game state as game is played')
     parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None, 
-                        help = 'save logs to file (default: results/results.txt)')
+                        help = 'save logs to file')
     parser.add_argument('-e', '--log_stderr', dest = 'log_stderr',
-                        help = 'log errors to file (default: results/error.txt)')
+                        help = 'log errors to file')
 
     return parser.parse_args()
 
