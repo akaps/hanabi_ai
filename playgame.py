@@ -25,16 +25,10 @@ def main(argv):
     else:
         run_one_game(args)
 
-def create_dirs(path):
-    list = path.split("/")
-    if list[0] == path:
-        return
-    directory = ""
-    for dirs in list[:-1]:
-        directory += dirs
-        if not os.path.exists(directory):
-            os.mkdir(directory)
-        directory+="/"
+def ensure_path(path):
+    directories_from_path = "/".join(path.split("/")[:-1])
+    if os.path.isdir(directories_from_path) is False and directories_from_path != '':
+        os.makedirs(directories_from_path)
 
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, 0)
@@ -77,13 +71,13 @@ def prep_logger(log_dir, verbose, log_stderr, count):
     else:
         logger.setLevel(logging.INFO)
     if log_dir:
-        create_dirs(log_dir)
+        ensure_path(log_dir)
         fh = RotatingFileHandler('{dir}'.format(dir = log_dir), mode = 'w', backupCount = count)
         fh.setLevel(logging.DEBUG)
         logger.addHandler(fh)
         fh.setFormatter(formatter)
     if log_stderr:
-        create_dirs(log_stderr)
+        ensure_path(log_stderr)
         efh = RotatingFileHandler('{dir}'.format(dir = log_stderr), mode = 'w', backupCount = count)
         efh.setLevel(logging.ERROR)
         logger.addHandler(efh)
