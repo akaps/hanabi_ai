@@ -25,15 +25,9 @@ def main(argv):
     else:
         run_one_game(args)
 
-def isdir(dir_path):
-    if os.path.isdir(dir_path) is False and dir_path != '':
-        return False
-    else:
-        return True
-
 def ensure_path(path):
     directories_from_path = os.path.dirname(path)
-    if not isdir(directories_from_path):
+    if directories_from_path and not os.path.isdir(directories_from_path):
         os.makedirs(directories_from_path)
 
 def run_tournament(args):
