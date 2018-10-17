@@ -26,7 +26,7 @@ def main(argv):
         run_one_game(args)
 
 def ensure_path(path):
-    directories_from_path = "/".join(path.split("/")[:-1])
+    directories_from_path = os.path.dirname(path)
     if os.path.isdir(directories_from_path) is False and directories_from_path != '':
         os.makedirs(directories_from_path)
 
