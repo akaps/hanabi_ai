@@ -72,7 +72,7 @@ def prep_logger(log_dir, verbose, log_stderr, count):
         logger.setLevel(logging.INFO)
     if log_dir:
         ensure_path(log_dir)
-        fh = RotatingFileHandler('{dir}'.format(dir = log_dir), mode = 'w', backupCount = count)
+        fh = RotatingFileHandler(log_dir, mode = 'w', backupCount = count)
         fh.setLevel(logging.DEBUG)
         logger.addHandler(fh)
         fh.setFormatter(formatter)
