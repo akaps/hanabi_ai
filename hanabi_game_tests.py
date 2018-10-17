@@ -24,15 +24,13 @@ class HanabiGameTests(unittest.TestCase):
         self.malformed_color_disclose = {'play_type':'disclose', 'player':0, 'disclose_type':'color', 'color':'S'}
         self.well_formed_rank_disclose = {'play_type':'disclose', 'player':0, 'disclose_type':'rank', 'rank':2}
         self.malformed_rank_disclose = {'play_type':'disclose', 'player':0, 'disclose_type':'RANK', 'rank':7}
-    
+
     def test_is_valid_move(self):
         self.game.table.disclose_rank(0, 0, 0)
         self.assertTrue(self.game.is_valid_move(self.well_formed_play))
         self.assertFalse(self.game.is_valid_move(self.malformed_play))
         self.assertTrue(self.game.is_valid_move(self.well_formed_discard))
-        print("compare")
         self.assertFalse(self.game.is_valid_move(self.malformed_discard))
-        print("compare")
         self.assertTrue(self.game.is_valid_move(self.well_formed_color_disclose))
         self.assertFalse(self.game.is_valid_move(self.malformed_color_disclose))
         self.assertTrue(self.game.is_valid_move(self.well_formed_rank_disclose))
