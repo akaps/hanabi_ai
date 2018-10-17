@@ -65,7 +65,6 @@ def run_one_game(args):
 def prep_logger(log_dir, verbose, log_stderr, count):
     formatter = logging.Formatter('[%(asctime)s] %(levelname)8s --- %(message)s ' +
                                   '(%(filename)s:%(lineno)s)',datefmt='%Y-%m-%d %H:%M:%S')
-    
     if verbose:
         logger.setLevel(logging.DEBUG)
     else:
