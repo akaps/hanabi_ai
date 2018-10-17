@@ -77,7 +77,7 @@ def prep_logger(log_dir, verbose, log_stderr, count):
         fh.setFormatter(formatter)
     if log_stderr:
         ensure_path(log_stderr)
-        efh = RotatingFileHandler('{dir}'.format(dir = log_stderr), mode = 'w', backupCount = count)
+        efh = RotatingFileHandler(log_stderr, mode = 'w', backupCount = count)
         efh.setLevel(logging.ERROR)
         logger.addHandler(efh)
         efh.setFormatter(formatter)
