@@ -1,5 +1,6 @@
 import argparse
 import time
+import os
 from pydoc import locate
 from tools.hanabi_table import HanabiTable
 from tools.hanabi_card import HanabiColor
@@ -48,6 +49,11 @@ def disqualify_player(disqualified, tournament_scores, player):
             del tournament_scores[disqualify]
     logger.warning('removed player {player} from tournament'.format(player = disqualified))
 
+def ensure_path(path):
+    directories_from_path = os.path.dirname(path)
+    if directories_from_path and not os.path.isdir(directories_from_path):
+        os.makedirs(directories_from_path)
+
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, [])
     pairings = list(itertools.combinations(args.players, 2))
@@ -91,12 +97,14 @@ def prep_logger(log_dir, verbose, log_stderr, count):
     else:
         logger.setLevel(logging.INFO)
     if log_dir:
-        fh = RotatingFileHandler('results/{dir}'.format(dir = log_dir), mode = 'w', backupCount = count)
+        ensure_path(log_dir)
+        fh = RotatingFileHandler(log_dir, mode = 'w', backupCount = count)
         fh.setLevel(logging.DEBUG)
         logger.addHandler(fh)
         fh.setFormatter(formatter)
     if log_stderr:
-        efh = RotatingFileHandler('results/{dir}'.format(dir = log_stderr), mode = 'w', backupCount = count)
+        ensure_path(log_stderr)
+        efh = RotatingFileHandler(log_stderr, mode = 'w', backupCount = count)
         efh.setLevel(logging.ERROR)
         logger.addHandler(efh)
         efh.setFormatter(formatter)
