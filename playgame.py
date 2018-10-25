@@ -48,6 +48,7 @@ def disqualify_player(disqualified, tournament_scores, player):
         if disqualify in tournament_scores:
             del tournament_scores[disqualify]
     logger.warning('removed player {player} from tournament'.format(player = disqualified))
+
 def ensure_path(path):
     directories_from_path = os.path.dirname(path)
     if directories_from_path and not os.path.isdir(directories_from_path):
@@ -71,7 +72,14 @@ def run_tournament(args):
                     player1 if err.player_id == 0 else player2)
             finally:
                 rotate_logs()
-    tournament_results = {key: [numpy.mean(val), numpy.var(val)] for key, val in tournament_scores.iteritems()}
+    tournament_results = {
+        key: {
+            'mean': numpy.mean(val),
+            'variance' : numpy.var(val)
+            }
+        for key, val in tournament_scores.iteritems()
+        }
+
     logger.info('Scores: {scores}'.format(scores = tournament_scores))
     logger.info('Results: {results}'.format(results = tournament_results))
     determine_winner(tournament_results)
