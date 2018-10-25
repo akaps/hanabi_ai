@@ -72,7 +72,14 @@ def run_tournament(args):
                     player1 if err.player_id == 0 else player2)
             finally:
                 rotate_logs()
-    tournament_results = {key: [numpy.mean(val), numpy.var(val)] for key, val in tournament_scores.iteritems()}
+    tournament_results = {
+        key: {
+            'mean': numpy.mean(val),
+            'variance' : numpy.var(val)
+            }
+        for key, val in tournament_scores.iteritems()
+        }
+
     logger.info('Scores: {scores}'.format(scores = tournament_scores))
     logger.info('Results: {results}'.format(results = tournament_results))
     determine_winner(tournament_results)
