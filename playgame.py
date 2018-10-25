@@ -127,21 +127,35 @@ def parse_args():
 
     #Optional arguments
     parser.add_argument('-s', '--seed',
-                        default = int(round(time.time()*1000)), type = int,
+                        default = int(round(time.time()*1000)),
+                        type = int,
                         help = 'a specific seed for shuffling the deck')
-    parser.add_argument('-r', '--variant', type = int, choices = [1, 2, 3],
+    parser.add_argument('-r', '--variant',
+                        type = int,
+                        choices = [1, 2, 3],
                         default = 0,
                         dest = 'variant',
                         help = 'play the selected variant')
-    parser.add_argument('-t', '--tournament', dest = 'is_tournament',
+    parser.add_argument('-t', '--tournament',
+                        dest = 'is_tournament',
                         action = 'store_true',
                         help = 'run 2 player games for all combinations of players (no repeats)')
-    parser.add_argument('-v', '--verbose', dest = 'verbose',
+    parser.add_argument('-n', '--players_per_game',
+                        dest = 'per_round',
+                        type = int,
+                        choices = [2, 3, 4, 5],
+                        default = 2,
+                        help = 'number of players per game in the tournament')
+    parser.add_argument('-v', '--verbose',
+                        dest = 'verbose',
                         action = 'store_true',
                         help = 'log moves and game state as game is played')
-    parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None,
+    parser.add_argument('-l', '--log_dir',
+                        dest = 'log_dir',
+                        default = None,
                         help = 'save logs to file')
-    parser.add_argument('-e', '--log_stderr', dest = 'log_stderr',
+    parser.add_argument('-e', '--log_stderr',
+                        dest = 'log_stderr',
                         help = 'log errors to file')
 
     return parser.parse_args()
