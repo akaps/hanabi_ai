@@ -19,9 +19,8 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 class InvalidHanabiMoveException(Exception):
-    def __init__(self, message, move, player_id):
+    def __init__(self, message, player_id):
         self.message = message
-        self.move = move
         self.player_id = player_id
 
 def main(argv):
@@ -37,6 +36,18 @@ def validate_players(players):
     return [player for player in players if locate(player) is not None and
             isinstance(locate(player)(), HanabiPlayer)]
 
+def rotate_logs():
+    for handler in logger.handlers:
+        if handler.__class__ is RotatingFileHandler:
+            handler.doRollover()
+
+def disqualify_player(disqualified, tournament_scores, player):
+    disqualified.append(player)
+    for disqualify in disqualified:
+        if disqualify in tournament_scores:
+            del tournament_scores[disqualify]
+    logger.warning('removed player {player} from tournament'.format(player = disqualified))
+
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, [])
     pairings = list(itertools.combinations(args.players, 2))
@@ -47,29 +58,33 @@ def run_tournament(args):
                 game = HanabiGame([player1, player2], args.seed, HanabiVariant(args.variant))
                 game.play_game(args)
                 score = game.table.score()
-                for handler in logger.handlers:
-                    if handler.__class__ is RotatingFileHandler:
-                        handler.doRollover()
                 tournament_scores[player1].append(score)
                 tournament_scores[player2].append(score)
             except InvalidHanabiMoveException as err:
-                logger.error(err.message)
-                disqualified.append(player1 if err.player_id == 0 else player2)
-                tournament_scores = {k : v for k, v in tournament_scores.iteritems() if k not in disqualified}
-                logger.warning('removed player {player} from tournament'.format(player = disqualified))
+                disqualify_player(disqualified,
+                    tournament_scores,
+                    player1 if err.player_id == 0 else player2)
+            finally:
+                rotate_logs()
     tournament_results = {
         key: {
-            'mean': numpy.mean(val), 
+            'mean': numpy.mean(val),
             'variance' : numpy.var(val)
             }
-        for key, val in tournament_scores.iteritems()}
+        for key, val in tournament_scores.iteritems()
+        }
+
     logger.info('Scores: {scores}'.format(scores = tournament_scores))
     logger.info('Results: {results}'.format(results = tournament_results))
-    winning_average = max(tournament_results.itervalues())
-    average_winners = {key: val for key, val in tournament_results.items() if val == winning_average}
-    winning_score = min(average_winners.itervalues())
-    winners = [key for key, val in tournament_results.items() if val == winning_score]
+    determine_winner(tournament_results)
+
+def determine_winner(results):
+    winning_average = max(results.itervalues())[0]
+    average_winners = {key: val for key, val in results.items() if val[0] is winning_average}
+    winning_variance = min(average_winners.itervalues())[1]
+    winners = [key for key, val in average_winners.items() if val[1] is winning_variance]
     logger.info('Winner(s): {winners}'.format(winners = winners))
+    return winners
 
 def run_one_game(args):
     game = HanabiGame(args.players, args.seed, HanabiVariant(args.variant))
@@ -99,16 +114,16 @@ def parse_args():
     parser = argparse.ArgumentParser(description = usage)
 
     #Positional arguments
-    parser.add_argument('players', nargs = '+', 
+    parser.add_argument('players', nargs = '+',
                         help = 'the players that will play Hanabi. First 5 will play unless in tournament mode')
 
     #Optional arguments
-    parser.add_argument('-s', '--seed', 
-                        default = int(round(time.time()*1000)), type = int, 
+    parser.add_argument('-s', '--seed',
+                        default = int(round(time.time()*1000)), type = int,
                         help = 'a specific seed for shuffling the deck')
     parser.add_argument('-r', '--variant', type = int, choices = [1, 2, 3],
-                        default = 0, 
-                        dest = 'variant', 
+                        default = 0,
+                        dest = 'variant',
                         help = 'play the selected variant')
     parser.add_argument('-t', '--tournament', dest = 'is_tournament',
                         action = 'store_true',
@@ -116,7 +131,7 @@ def parse_args():
     parser.add_argument('-v', '--verbose', dest = 'verbose',
                         action = 'store_true',
                         help = 'log moves and game state as game is played')
-    parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None, 
+    parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None,
                         help = 'save logs to file')
     parser.add_argument('-e', '--log_stderr', dest = 'log_stderr',
                         help = 'log errors to file')
@@ -205,14 +220,18 @@ class HanabiGame:
 
         logger.warning('Expected format for discard card:')
         logger.warning('{"play_type":"discard", "card":<number>}')
-        
+
         logger.warning('Expected format for disclose color:')
         logger.warning('{"play_type":"disclose", "disclose_type":"color, "color":<color>}')
         logger.warning('"color" cannot be "*" in a Variant 3 game')
-        
+
         logger.warning('Expected format for disclose rank:')
         logger.warning('{"play_type":"disclose", "disclose_type":"rank, "rank":<number>}')
-        raise InvalidHanabiMoveException('Received invalid move from player', player_move, self.current_player)
+        logger.error('Received invalid move from player {player}: {move}'.format(
+            player = self.current_player,
+            move = player_move
+        ))
+        raise InvalidHanabiMoveException('Received invalid move from player', self.current_player)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv[1:]))
