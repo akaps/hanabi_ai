@@ -160,7 +160,7 @@ def parse_args(args):
                         choices = [2, 3, 4, 5],
                         default = 2,
                         help = 'number of players per game in the tournament')
-    return parser.parse_args()
+    return parser.parse_args(args)
 
 def prep_players(player_names):
     return map(lambda player_name: locate(player_name)(), player_names)

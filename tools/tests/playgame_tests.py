@@ -5,6 +5,57 @@ from argparse import Namespace
 from tools.hanabi_deck import HanabiVariant
 from ai.hanabi_player import HanabiPlayer
 
+class PlayGameparserTests(unittest.TestCase):
+
+    def test_game_simple(self):
+        args = ["Discarder"]
+        parsed = playgame.parse_args(args)
+        self.assertEqual(1, len(parsed.players))
+        self.assertEquals(0, parsed.variant)
+        self.assertFalse(parsed.verbose)
+        self.assertEquals(None, parsed.log_dir)
+        self.assertEquals(None, parsed.log_stderr)
+        self.assertFalse(parsed.is_tournament)
+        #default even if not in tournament mode. Unused, but icky
+        self.assertEquals(2, parsed.per_round)
+
+    def test_game_variant(self):
+        args = ["Discarder", '-r', '3']
+        parsed = playgame.parse_args(args)
+        self.assertEquals(3, parsed.variant)
+
+    def test_game_verbose(self):
+        args = ["Discarder", '-v']
+        parsed = playgame.parse_args(args)
+        self.assertTrue(parsed.verbose)
+
+    def test_game_log_dir(self):
+        args = ["Discarder", '-l', 'results.txt']
+        parsed = playgame.parse_args(args)
+        self.assertEquals("results.txt", parsed.log_dir)
+
+    def test_game_log_stderr(self):
+        args = ["Discarder", '-e', 'errors.txt']
+        parsed = playgame.parse_args(args)
+        self.assertEquals("errors.txt", parsed.log_stderr)
+
+    def test_game_seed(self):
+        args = ["Discarder", '-s', '76']
+        parsed = playgame.parse_args(args)
+        self.assertEquals(76, parsed.seed)
+
+    def test_tournament_simple(self):
+        args = ["Discarder", '-t']
+        parsed = playgame.parse_args(args)
+        self.assertTrue(parsed.is_tournament)
+        self.assertEquals(2, parsed.per_round)
+
+    def test_tournament_per_round(self):
+        args = ["Discarder", '-t', '-p', '4']
+        parsed = playgame.parse_args(args)
+        self.assertTrue(parsed.is_tournament)
+        self.assertEquals(4, parsed.per_round)
+
 class MockBadPlayer:
     pass
 
@@ -62,12 +113,12 @@ class PlayGameTests(unittest.TestCase):
 
     def test_determine_winner_one_winner(self):
         results = {
-            'A' : [20, 2],
-            'B' : [22, 7],
-            'C' : [25, 25],
-            'D' : [25, 4],
-            'E' : [25, 1],
-            'F' : [1, 1]
+            'A' : {'mean': 20, 'variance': 2},
+            'B' : {'mean': 22, 'variance': 7},
+            'C' : {'mean': 25, 'variance': 25},
+            'D' : {'mean': 25, 'variance': 4},
+            'E' : {'mean': 25, 'variance': 1},
+            'F' : {'mean': 1, 'variance': 1}
         }
         winners = playgame.determine_winner(results)
         self.assertTrue('A' not in winners)
@@ -79,11 +130,11 @@ class PlayGameTests(unittest.TestCase):
 
     def test_determine_winner_tie(self):
         results = {
-            'A' : [20, 2],
-            'B' : [22, 7],
-            'C' : [25, 25],
-            'D' : [25, 4],
-            'E' : [25, 4]
+            'A' : {'mean': 20, 'variance': 2},
+            'B' : {'mean': 22, 'variance': 7},
+            'C' : {'mean': 25, 'variance': 25},
+            'D' : {'mean': 25, 'variance': 4},
+            'E' : {'mean': 25, 'variance': 4}
         }
         winners = playgame.determine_winner(results)
         self.assertTrue('A' not in winners)
