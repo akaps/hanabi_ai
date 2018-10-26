@@ -85,10 +85,10 @@ def run_tournament(args):
     determine_winner(tournament_results)
 
 def determine_winner(results):
-    winning_average = max(results.itervalues())[0]
-    average_winners = {key: val for key, val in results.items() if val[0] is winning_average}
-    winning_variance = min(average_winners.itervalues())[1]
-    winners = [key for key, val in average_winners.items() if val[1] is winning_variance]
+    winning_average = max(results.itervalues())['mean']
+    average_winners = {key: val for key, val in results.items() if val['mean'] is winning_average}
+    winning_variance = min(average_winners.itervalues())['variance']
+    winners = [key for key, val in average_winners.items() if val['variance'] is winning_variance]
     logger.info('Winner(s): {winners}'.format(winners = winners))
     return winners
 
