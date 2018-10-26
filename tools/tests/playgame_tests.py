@@ -62,12 +62,12 @@ class PlayGameTests(unittest.TestCase):
 
     def test_determine_winner_one_winner(self):
         results = {
-            'A' : [20, 2],
-            'B' : [22, 7],
-            'C' : [25, 25],
-            'D' : [25, 4],
-            'E' : [25, 1],
-            'F' : [1, 1]
+            'A' : {'mean': 20, 'variance': 2},
+            'B' : {'mean': 22, 'variance': 7},
+            'C' : {'mean': 25, 'variance': 25},
+            'D' : {'mean': 25, 'variance': 4},
+            'E' : {'mean': 25, 'variance': 1},
+            'F' : {'mean': 1, 'variance': 1}
         }
         winners = playgame.determine_winner(results)
         self.assertTrue('A' not in winners)
@@ -79,11 +79,11 @@ class PlayGameTests(unittest.TestCase):
 
     def test_determine_winner_tie(self):
         results = {
-            'A' : [20, 2],
-            'B' : [22, 7],
-            'C' : [25, 25],
-            'D' : [25, 4],
-            'E' : [25, 4]
+            'A' : {'mean': 20, 'variance': 2},
+            'B' : {'mean': 22, 'variance': 7},
+            'C' : {'mean': 25, 'variance': 25},
+            'D' : {'mean': 25, 'variance': 4},
+            'E' : {'mean': 25, 'variance': 4}
         }
         winners = playgame.determine_winner(results)
         self.assertTrue('A' not in winners)
