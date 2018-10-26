@@ -25,7 +25,7 @@ class InvalidHanabiMoveException(Exception):
         self.player_id = player_id
 
 def main(argv):
-    args = parse_args()
+    args = parse_args(argv)
     prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players))
     args.players = validate_players(args.players)
     if args.is_tournament:
@@ -56,20 +56,20 @@ def ensure_path(path):
 
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, [])
-    pairings = list(itertools.combinations(args.players, 2))
+    pairings = list(itertools.combinations(args.players, args.per_round))
     disqualified = []
-    for player1, player2 in pairings:
-        if player1 and player2 not in disqualified:
+    for players in pairings:
+        if set(players) != set(disqualified):
             try:
-                game = HanabiGame([player1, player2], args.seed, HanabiVariant(args.variant))
+                game = HanabiGame(players, args.seed, HanabiVariant(args.variant))
                 game.play_game(args)
                 score = game.table.score()
-                tournament_scores[player1].append(score)
-                tournament_scores[player2].append(score)
+                for player in players:
+                    tournament_scores[player].append(score)
             except InvalidHanabiMoveException as err:
                 disqualify_player(disqualified,
                     tournament_scores,
-                    player1 if err.player_id == 0 else player2)
+                    players[err.player_id])
             finally:
                 rotate_logs()
     tournament_results = {
@@ -85,10 +85,10 @@ def run_tournament(args):
     determine_winner(tournament_results)
 
 def determine_winner(results):
-    winning_average = max(results.itervalues())[0]
-    average_winners = {key: val for key, val in results.items() if val[0] is winning_average}
-    winning_variance = min(average_winners.itervalues())[1]
-    winners = [key for key, val in average_winners.items() if val[1] is winning_variance]
+    winning_average = max(results.itervalues())['mean']
+    average_winners = {key: val for key, val in results.items() if val['mean'] is winning_average}
+    winning_variance = min(average_winners.itervalues())['variance']
+    winners = [key for key, val in average_winners.items() if val['variance'] is winning_variance]
     logger.info('Winner(s): {winners}'.format(winners = winners))
     return winners
 
@@ -116,13 +116,14 @@ def prep_logger(log_dir, verbose, log_stderr, count):
         logger.addHandler(efh)
         efh.setFormatter(formatter)
 
-def parse_args():
+def parse_args(args):
     usage = 'plays games of Hanabi using the listed players'
 
     parser = argparse.ArgumentParser(description = usage)
 
     #Positional arguments
-    parser.add_argument('players', nargs = '+',
+    parser.add_argument('players',
+                        nargs = '+',
                         help = 'the players that will play Hanabi. First 5 will play unless in tournament mode')
 
     #Optional arguments
@@ -136,16 +137,6 @@ def parse_args():
                         default = 0,
                         dest = 'variant',
                         help = 'play the selected variant')
-    parser.add_argument('-t', '--tournament',
-                        dest = 'is_tournament',
-                        action = 'store_true',
-                        help = 'run 2 player games for all combinations of players (no repeats)')
-    parser.add_argument('-n', '--players_per_game',
-                        dest = 'per_round',
-                        type = int,
-                        choices = [2, 3, 4, 5],
-                        default = 2,
-                        help = 'number of players per game in the tournament')
     parser.add_argument('-v', '--verbose',
                         dest = 'verbose',
                         action = 'store_true',
@@ -158,6 +149,17 @@ def parse_args():
                         dest = 'log_stderr',
                         help = 'log errors to file')
 
+    tournament_group = parser.add_argument_group('tournament arguments')
+    tournament_group.add_argument('-t', '--tournament',
+                        dest = 'is_tournament',
+                        action = 'store_true',
+                        help = 'run 2 player games for all combinations of players (no repeats)')
+    tournament_group.add_argument('-p', '--players_per_game',
+                        dest = 'per_round',
+                        type = int,
+                        choices = [2, 3, 4, 5],
+                        default = 2,
+                        help = 'number of players per game in the tournament')
     return parser.parse_args()
 
 def prep_players(player_names):
