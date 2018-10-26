@@ -21,7 +21,7 @@ class PlayGameparserTests(unittest.TestCase):
         self.assertEquals(1, parsed.iterations)
 
     def test_game_iterations(self):
-        args = ["Discarder", 'i', '10']
+        args = ["Discarder", '-i', '10']
         parsed = playgame.parse_args(args)
         self.assertEquals(10, parsed.iterations)
 

@@ -26,7 +26,7 @@ class InvalidHanabiMoveException(Exception):
 
 def main(argv):
     args = parse_args(argv)
-    prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players))
+    prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players)*args.iterations)
     args.players = validate_players(args.players)
     if args.is_tournament:
         run_tournament(args)
@@ -60,18 +60,19 @@ def run_tournament(args):
     disqualified = []
     for players in pairings:
         if set(players) != set(disqualified):
-            try:
-                game = HanabiGame(players, args.seed, HanabiVariant(args.variant))
-                game.play_game(args)
-                score = game.table.score()
-                for player in players:
-                    tournament_scores[player].append(score)
-            except InvalidHanabiMoveException as err:
-                disqualify_player(disqualified,
-                    tournament_scores,
-                    players[err.player_id])
-            finally:
-                rotate_logs()
+            for _ in range(args.iterations):
+                try:
+                    game = HanabiGame(players, args.seed, HanabiVariant(args.variant))
+                    game.play_game(args)
+                    score = game.table.score()
+                    for player in players:
+                        tournament_scores[player].append(score)
+                except InvalidHanabiMoveException as err:
+                    disqualify_player(disqualified,
+                        tournament_scores,
+                        players[err.player_id])
+                finally:
+                    rotate_logs()
     tournament_results = {
         key: {
             'mean': numpy.mean(val),
@@ -93,8 +94,10 @@ def determine_winner(results):
     return winners
 
 def run_one_game(args):
-    game = HanabiGame(args.players, args.seed, HanabiVariant(args.variant))
-    game.play_game(args)
+    for _ in range(args.iterations):
+        game = HanabiGame(args.players, args.seed, HanabiVariant(args.variant))
+        game.play_game(args)
+        rotate_logs()
 
 def prep_logger(log_dir, verbose, log_stderr, count):
     formatter = logging.Formatter('[%(asctime)s] %(levelname)8s --- %(message)s ' +
@@ -137,7 +140,7 @@ def parse_args(args):
                         default = 0,
                         dest = 'variant',
                         help = 'play the selected variant')
-    parser.add_argument('-i', 'game_iterations',
+    parser.add_argument('-i', '--game_iterations',
                         type = int,
                         default = 1,
                         dest = 'iterations',
