@@ -137,6 +137,11 @@ def parse_args(args):
                         default = 0,
                         dest = 'variant',
                         help = 'play the selected variant')
+    parser.add_argument('-i', 'game_iterations',
+                        type = int,
+                        default = 1,
+                        dest = 'iterations',
+                        help = 'number of times to play each game')
     parser.add_argument('-v', '--verbose',
                         dest = 'verbose',
                         action = 'store_true',

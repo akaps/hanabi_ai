@@ -18,6 +18,12 @@ class PlayGameparserTests(unittest.TestCase):
         self.assertFalse(parsed.is_tournament)
         #default even if not in tournament mode. Unused, but icky
         self.assertEquals(2, parsed.per_round)
+        self.assertEquals(1, parsed.iterations)
+
+    def test_game_iterations(self):
+        args = ["Discarder", 'i', '10']
+        parsed = playgame.parse_args(args)
+        self.assertEquals(10, parsed.iterations)
 
     def test_game_variant(self):
         args = ["Discarder", '-r', '3']
