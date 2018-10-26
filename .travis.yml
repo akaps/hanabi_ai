@@ -8,5 +8,5 @@ install:
 # command to run tests
 script:
   - nosetests
-  - sample.sh
-  - sample_tournament.sh
+  - python playgame.py "ai.example_discarder.Discarder" "ai.example_discarder.Discarder"
+  - python playgame.py "ai.example_discarder.Discarder" "ai.example_discarder.Discarder" -t
