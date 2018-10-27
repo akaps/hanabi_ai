@@ -17,6 +17,13 @@ class PlayGameparserTests(unittest.TestCase):
         self.assertFalse(parsed.verbose)
         self.assertEquals(None, parsed.log_dir)
         self.assertEquals(None, parsed.log_stderr)
+        self.assertEquals(1, parsed.iterations)
+        self.assertEquals(parsed.command, 'single')
+
+    def test_game_iterations(self):
+        args = ['single', 'Discarder', '-i', '10']
+        parsed = playgame.parse_args(args)
+        self.assertEquals(10, parsed.iterations)
         self.assertEquals(parsed.command, 'single')
 
     def test_game_variant(self):
@@ -49,6 +56,7 @@ class PlayGameparserTests(unittest.TestCase):
         parsed = playgame.parse_args(args)
         self.assertEquals(2, parsed.per_round)
         self.assertEquals(parsed.command, 'tournament')
+        self.assertEquals(1, parsed.iterations)
 
     def test_tournament_per_round(self):
         args = ['tournament', 'Discarder', '-p', '4']
