@@ -152,7 +152,8 @@ def parse_args(args):
                         help = 'log errors to file')
 
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(help = 'commands',
+                        dest = 'command')
 
     #single game-specific arguments
     subparsers.add_parser('single',
