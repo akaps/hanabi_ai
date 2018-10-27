@@ -16,7 +16,7 @@ from tools.hanabi_moves import (HanabiDiscardAction,
     HanabiPlayAction,
     HanabiColorDiscloseAction,
     HanabiRankDiscloseAction)
-from tools.analysis import HanabiResults
+from tools.hanabi_results import HanabiResults
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
