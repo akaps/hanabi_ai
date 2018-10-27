@@ -143,6 +143,11 @@ def parse_args(args):
                         default = 0,
                         dest = 'variant',
                         help = 'play the selected variant')
+    parent_parser.add_argument('-i', '--game_iterations',
+                        type = int,
+                        default = 1,
+                        dest = 'iterations',
+                        help = 'number of times to play each game')
     parent_parser.add_argument('-v', '--verbose',
                         dest = 'verbose',
                         action = 'store_true',
@@ -160,14 +165,9 @@ def parse_args(args):
                         dest = 'command')
 
     #single game-specific arguments
-    single = subparsers.add_parser('single',
+    subparsers.add_parser('single',
                         help = 'run a single game of Hanabi',
                         parents = [parent_parser])
-    single.add_argument('-i', '--game_iterations',
-                        type = int,
-                        default = 1,
-                        dest = 'iterations',
-                        help = 'number of times to play each game')
 
     #tournament mode-specific arguments
     tournament = subparsers.add_parser('tournament',
