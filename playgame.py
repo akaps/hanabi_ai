@@ -16,6 +16,7 @@ from tools.hanabi_moves import (HanabiDiscardAction,
     HanabiPlayAction,
     HanabiColorDiscloseAction,
     HanabiRankDiscloseAction)
+from tools.analysis import HanabiResults
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -29,7 +30,7 @@ def main(argv):
     args = parse_args(argv)
     prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players)*args.iterations)
     args.players = validate_players(args.players)
-    if args.command is 'tournament':
+    if args.command == 'tournament':
         run_tournament(args)
     else:
         run_one_configuration(args)
@@ -83,6 +84,7 @@ def run_tournament(args):
     logger.info('Scores: {scores}'.format(scores = tournament_scores))
     logger.info('Results: {results}'.format(results = tournament_results))
     determine_winner(tournament_results)
+    HanabiResults(tournament_scores).show_plot()
 
 def determine_winner(results):
     winning_average = max(results.itervalues())['mean']
