@@ -27,12 +27,12 @@ class InvalidHanabiMoveException(Exception):
 
 def main(argv):
     args = parse_args(argv)
-    prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players))
+    prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players)*args.iterations)
     args.players = validate_players(args.players)
     if args.command is 'tournament':
         run_tournament(args)
     else:
-        run_one_game(args)
+        run_one_configuration(args)
 
 def validate_players(players):
     return [player for player in players if locate(player) is not None and
@@ -63,9 +63,7 @@ def run_tournament(args):
         if set(players).issubset(disqualified):
             continue
         try:
-            game = HanabiGame(players, args.seed, HanabiVariant(args.variant))
-            game.play_game(args)
-            score = game.table.score()
+            score = run_one_game(args)
             for player in players:
                 tournament_scores[player].append(score)
         except InvalidHanabiMoveException as err:
@@ -94,9 +92,15 @@ def determine_winner(results):
     logger.info('Winner(s): {winners}'.format(winners = winners))
     return winners
 
+def run_one_configuration(args):
+    for _ in range(args.iterations):
+        run_one_game(args)
+        rotate_logs()
+
 def run_one_game(args):
     game = HanabiGame(args.players, args.seed, HanabiVariant(args.variant))
     game.play_game(args)
+    return game.table.score()
 
 def prep_logger(log_dir, verbose, log_stderr, count):
     formatter = logging.Formatter('[%(asctime)s] %(levelname)8s --- %(message)s ' +
@@ -139,6 +143,11 @@ def parse_args(args):
                         default = 0,
                         dest = 'variant',
                         help = 'play the selected variant')
+    parent_parser.add_argument('-i', '--game_iterations',
+                        type = int,
+                        default = 1,
+                        dest = 'iterations',
+                        help = 'number of times to play each game')
     parent_parser.add_argument('-v', '--verbose',
                         dest = 'verbose',
                         action = 'store_true',
