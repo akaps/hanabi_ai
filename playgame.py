@@ -29,7 +29,7 @@ def main(argv):
     args = parse_args(argv)
     prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players)*args.iterations)
     args.players = validate_players(args.players)
-    if args.command is 'tournament':
+    if args.command == 'tournament':
         run_tournament(args)
     else:
         run_one_configuration(args)
