@@ -10,6 +10,7 @@ import sys
 import logging
 import itertools
 import numpy
+from sets import Set
 from logging.handlers import RotatingFileHandler
 from tools.hanabi_moves import (HanabiDiscardAction,
     HanabiPlayAction,
@@ -25,10 +26,10 @@ class InvalidHanabiMoveException(Exception):
         self.player_id = player_id
 
 def main(argv):
-    args = parse_args()
+    args = parse_args(argv)
     prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players))
     args.players = validate_players(args.players)
-    if args.is_tournament:
+    if args.command is 'tournament':
         run_tournament(args)
     else:
         run_one_game(args)
@@ -43,7 +44,7 @@ def rotate_logs():
             handler.doRollover()
 
 def disqualify_player(disqualified, tournament_scores, player):
-    disqualified.append(player)
+    disqualified.add(player)
     for disqualify in disqualified:
         if disqualify in tournament_scores:
             del tournament_scores[disqualify]
@@ -56,22 +57,23 @@ def ensure_path(path):
 
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, [])
-    pairings = list(itertools.combinations(args.players, 2))
-    disqualified = []
-    for player1, player2 in pairings:
-        if player1 and player2 not in disqualified:
-            try:
-                game = HanabiGame([player1, player2], args.seed, HanabiVariant(args.variant))
-                game.play_game(args)
-                score = game.table.score()
-                tournament_scores[player1].append(score)
-                tournament_scores[player2].append(score)
-            except InvalidHanabiMoveException as err:
-                disqualify_player(disqualified,
-                    tournament_scores,
-                    player1 if err.player_id == 0 else player2)
-            finally:
-                rotate_logs()
+    pairings = list(itertools.combinations(args.players, args.per_round))
+    disqualified = Set()
+    for players in pairings:
+        if set(players).issubset(disqualified):
+            continue
+        try:
+            game = HanabiGame(players, args.seed, HanabiVariant(args.variant))
+            game.play_game(args)
+            score = game.table.score()
+            for player in players:
+                tournament_scores[player].append(score)
+        except InvalidHanabiMoveException as err:
+            disqualify_player(disqualified,
+                tournament_scores,
+                players[err.player_id])
+        finally:
+            rotate_logs()
     tournament_results = {
         key: {
             'mean': numpy.mean(val),
@@ -116,35 +118,59 @@ def prep_logger(log_dir, verbose, log_stderr, count):
         logger.addHandler(efh)
         efh.setFormatter(formatter)
 
-def parse_args():
+def parse_args(args):
     usage = 'plays games of Hanabi using the listed players'
 
-    parser = argparse.ArgumentParser(description = usage)
+    parent_parser = argparse.ArgumentParser(add_help=False)
 
     #Positional arguments
-    parser.add_argument('players', nargs = '+',
+    parent_parser.add_argument('players',
+                        nargs = '+',
                         help = 'the players that will play Hanabi. First 5 will play unless in tournament mode')
 
     #Optional arguments
-    parser.add_argument('-s', '--seed',
-                        default = int(round(time.time()*1000)), type = int,
+    parent_parser.add_argument('-s', '--seed',
+                        default = int(round(time.time()*1000)),
+                        type = int,
                         help = 'a specific seed for shuffling the deck')
-    parser.add_argument('-r', '--variant', type = int, choices = [1, 2, 3],
+    parent_parser.add_argument('-r', '--variant',
+                        type = int,
+                        choices = [1, 2, 3],
                         default = 0,
                         dest = 'variant',
                         help = 'play the selected variant')
-    parser.add_argument('-t', '--tournament', dest = 'is_tournament',
-                        action = 'store_true',
-                        help = 'run 2 player games for all combinations of players (no repeats)')
-    parser.add_argument('-v', '--verbose', dest = 'verbose',
+    parent_parser.add_argument('-v', '--verbose',
+                        dest = 'verbose',
                         action = 'store_true',
                         help = 'log moves and game state as game is played')
-    parser.add_argument('-l', '--log_dir', dest = 'log_dir', default = None,
+    parent_parser.add_argument('-l', '--log_dir',
+                        dest = 'log_dir',
+                        default = None,
                         help = 'save logs to file')
-    parser.add_argument('-e', '--log_stderr', dest = 'log_stderr',
+    parent_parser.add_argument('-e', '--log_stderr',
+                        dest = 'log_stderr',
                         help = 'log errors to file')
 
-    return parser.parse_args()
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(help = usage,
+                        dest = 'command')
+
+    #single game-specific arguments
+    subparsers.add_parser('single',
+                        help = 'run a single game of Hanabi',
+                        parents = [parent_parser])
+
+    #tournament mode-specific arguments
+    tournament = subparsers.add_parser('tournament',
+                        parents = [parent_parser],
+                        help = 'run games for all combinations of players (no repeats)')
+    tournament.add_argument('-p', '--players_per_game',
+                        dest = 'per_round',
+                        type = int,
+                        choices = [2, 3, 4, 5],
+                        default = 2,
+                        help = 'number of players per game in the tournament')
+    return parser.parse_args(args)
 
 def prep_players(player_names):
     return map(lambda player_name: locate(player_name)(), player_names)
@@ -169,7 +195,7 @@ class HanabiGame:
             logger.debug('Disclosures left: {disclosures}'.format(disclosures = info['disclosures']))
             logger.debug('Mistakes left: {mistakes}'.format(mistakes = info['mistakes_left']))
 
-        player_details = "Game with {players}".format(players = map(lambda(player): player.__class__.__name__, self.players))
+        player_details = 'Game with {players}'.format(players = map(lambda(player): player.__class__.__name__, self.players))
         logger.info(player_details)
 
         while not self.table.is_game_over():
