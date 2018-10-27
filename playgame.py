@@ -10,6 +10,7 @@ import sys
 import logging
 import itertools
 import numpy
+import matplotlib.pyplot as plt
 from sets import Set
 from logging.handlers import RotatingFileHandler
 from tools.hanabi_moves import (HanabiDiscardAction,
@@ -84,7 +85,21 @@ def run_tournament(args):
     logger.info('Scores: {scores}'.format(scores = tournament_scores))
     logger.info('Results: {results}'.format(results = tournament_results))
     determine_winner(tournament_results)
-    HanabiResults(tournament_scores).show_plot()
+    if args.show_graphs:
+        show_plot(tournament_scores)
+
+def show_plot(scores):
+    means = [numpy.mean(score) for score in scores.values()]
+    std = [numpy.std(score) for score in scores.values()]
+    labels = [name for name in scores.keys()]
+    ind = numpy.arange(len(labels))
+    width = 0.35
+    plt.bar(ind, means, width, yerr = std)
+    plt.ylabel('scores')
+    plt.title('Scores by player')
+    plt.xticks(ind, labels)
+    plt.yticks(numpy.arange(0, 26, 5))
+    plt.show()
 
 def determine_winner(results):
     winning_average = max(results.itervalues())['mean']
@@ -181,6 +196,10 @@ def parse_args(args):
                         choices = [2, 3, 4, 5],
                         default = 2,
                         help = 'number of players per game in the tournament')
+    tournament.add_argument('-g', '--graphs',
+                        dest = 'show_graphs',
+                        action  = 'store_true',
+                        help = 'show graphical results of tournament')
     return parser.parse_args(args)
 
 def prep_players(player_names):
