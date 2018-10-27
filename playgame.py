@@ -31,7 +31,7 @@ def main(argv):
     if args.is_tournament:
         run_tournament(args)
     else:
-        run_one_game(args)
+        run_one_configuration(args)
 
 def validate_players(players):
     return [player for player in players if locate(player) is not None and
@@ -62,9 +62,7 @@ def run_tournament(args):
         if set(players) != set(disqualified):
             for _ in range(args.iterations):
                 try:
-                    game = HanabiGame(players, args.seed, HanabiVariant(args.variant))
-                    game.play_game(args)
-                    score = game.table.score()
+                    score = run_one_game(args)
                     for player in players:
                         tournament_scores[player].append(score)
                 except InvalidHanabiMoveException as err:
@@ -93,11 +91,15 @@ def determine_winner(results):
     logger.info('Winner(s): {winners}'.format(winners = winners))
     return winners
 
-def run_one_game(args):
+def run_one_configuration(args):
     for _ in range(args.iterations):
-        game = HanabiGame(args.players, args.seed, HanabiVariant(args.variant))
-        game.play_game(args)
+        run_one_game(args)
         rotate_logs()
+
+def run_one_game(args):
+    game = HanabiGame(args.players, args.seed, HanabiVariant(args.variant))
+    game.play_game(args)
+    return game.table.score()
 
 def prep_logger(log_dir, verbose, log_stderr, count):
     formatter = logging.Formatter('[%(asctime)s] %(levelname)8s --- %(message)s ' +
