@@ -1,5 +1,6 @@
 import playgame
 import unittest
+from sets import Set
 from playgame import HanabiGame
 from argparse import Namespace
 from tools.hanabi_deck import HanabiVariant
@@ -78,7 +79,7 @@ class PlayGameTests(unittest.TestCase):
             'D' : 50,
             'E' : 20
         }
-        disqualified = []
+        disqualified = Set()
         playgame.disqualify_player(disqualified, scores, 'D')
         self.assertTrue('D' in disqualified)
         self.assertEqual(1, len(disqualified))
@@ -91,7 +92,7 @@ class PlayGameTests(unittest.TestCase):
             'D' : 50,
             'E' : 20
         }
-        disqualified = []
+        disqualified = Set()
         playgame.disqualify_player(disqualified, scores, 'C')
         self.assertTrue('C' in disqualified)
         self.assertEqual(1, len(disqualified))
@@ -104,7 +105,7 @@ class PlayGameTests(unittest.TestCase):
             'D' : 50,
             'E' : 20
         }
-        disqualified = []
+        disqualified = Set()
         playgame.disqualify_player(disqualified, scores, 'A')
         playgame.disqualify_player(disqualified, scores, 'E')
         self.assertTrue('E', 'A' in disqualified)

@@ -10,6 +10,7 @@ import sys
 import logging
 import itertools
 import numpy
+from sets import Set
 from logging.handlers import RotatingFileHandler
 from tools.hanabi_moves import (HanabiDiscardAction,
     HanabiPlayAction,
@@ -43,7 +44,7 @@ def rotate_logs():
             handler.doRollover()
 
 def disqualify_player(disqualified, tournament_scores, player):
-    disqualified.append(player)
+    disqualified.add(player)
     for disqualify in disqualified:
         if disqualify in tournament_scores:
             del tournament_scores[disqualify]
@@ -57,21 +58,22 @@ def ensure_path(path):
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, [])
     pairings = list(itertools.combinations(args.players, args.per_round))
-    disqualified = []
+    disqualified = Set()
     for players in pairings:
-        if set(players) != set(disqualified):
-            try:
-                game = HanabiGame(players, args.seed, HanabiVariant(args.variant))
-                game.play_game(args)
-                score = game.table.score()
-                for player in players:
-                    tournament_scores[player].append(score)
-            except InvalidHanabiMoveException as err:
-                disqualify_player(disqualified,
-                    tournament_scores,
-                    players[err.player_id])
-            finally:
-                rotate_logs()
+        if set(players).issubset(disqualified):
+            continue
+        try:
+            game = HanabiGame(players, args.seed, HanabiVariant(args.variant))
+            game.play_game(args)
+            score = game.table.score()
+            for player in players:
+                tournament_scores[player].append(score)
+        except InvalidHanabiMoveException as err:
+            disqualify_player(disqualified,
+                tournament_scores,
+                players[err.player_id])
+        finally:
+            rotate_logs()
     tournament_results = {
         key: {
             'mean': numpy.mean(val),
