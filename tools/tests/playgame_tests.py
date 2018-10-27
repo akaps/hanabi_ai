@@ -9,7 +9,7 @@ from ai.hanabi_player import HanabiPlayer
 class PlayGameparserTests(unittest.TestCase):
 
     def test_game_simple(self):
-        args = ["single", "Discarder"]
+        args = ['single', 'Discarder']
         parsed = playgame.parse_args(args)
         print(parsed)
         self.assertEqual(1, len(parsed.players))
@@ -20,38 +20,38 @@ class PlayGameparserTests(unittest.TestCase):
         self.assertEquals(parsed.command, 'single')
 
     def test_game_variant(self):
-        args = ["single", "Discarder", '-r', '3']
+        args = ['single', 'Discarder', '-r', '3']
         parsed = playgame.parse_args(args)
         self.assertEquals(3, parsed.variant)
 
     def test_game_verbose(self):
-        args = ["single", "Discarder", '-v']
+        args = ['single', 'Discarder', '-v']
         parsed = playgame.parse_args(args)
         self.assertTrue(parsed.verbose)
 
     def test_game_log_dir(self):
-        args = ["single", "Discarder", '-l', 'results.txt']
+        args = ['single', 'Discarder', '-l', 'results.txt']
         parsed = playgame.parse_args(args)
-        self.assertEquals("results.txt", parsed.log_dir)
+        self.assertEquals('results.txt', parsed.log_dir)
 
     def test_game_log_stderr(self):
-        args = ["single", "Discarder", '-e', 'errors.txt']
+        args = ['single', 'Discarder', '-e', 'errors.txt']
         parsed = playgame.parse_args(args)
-        self.assertEquals("errors.txt", parsed.log_stderr)
+        self.assertEquals('errors.txt', parsed.log_stderr)
 
     def test_game_seed(self):
-        args = ["single", "Discarder", '-s', '76']
+        args = ['single', 'Discarder', '-s', '76']
         parsed = playgame.parse_args(args)
         self.assertEquals(76, parsed.seed)
 
     def test_tournament_simple(self):
-        args = ["tournament", "Discarder",]
+        args = ['tournament', 'Discarder',]
         parsed = playgame.parse_args(args)
         self.assertEquals(2, parsed.per_round)
         self.assertEquals(parsed.command, 'tournament')
 
     def test_tournament_per_round(self):
-        args = ["tournament", "Discarder", '-p', '4']
+        args = ['tournament', 'Discarder', '-p', '4']
         parsed = playgame.parse_args(args)
         self.assertEquals(parsed.command, 'tournament')
         self.assertEquals(4, parsed.per_round)

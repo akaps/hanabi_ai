@@ -29,7 +29,7 @@ def main(argv):
     args = parse_args(argv)
     prep_logger(args.log_dir, args.verbose, args.log_stderr, len(args.players))
     args.players = validate_players(args.players)
-    if args.is_tournament:
+    if args.command is 'tournament':
         run_tournament(args)
     else:
         run_one_game(args)
@@ -152,7 +152,7 @@ def parse_args(args):
                         help = 'log errors to file')
 
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(help = 'commands',
+    subparsers = parser.add_subparsers(help = usage,
                         dest = 'command')
 
     #single game-specific arguments
@@ -195,7 +195,7 @@ class HanabiGame:
             logger.debug('Disclosures left: {disclosures}'.format(disclosures = info['disclosures']))
             logger.debug('Mistakes left: {mistakes}'.format(mistakes = info['mistakes_left']))
 
-        player_details = "Game with {players}".format(players = map(lambda(player): player.__class__.__name__, self.players))
+        player_details = 'Game with {players}'.format(players = map(lambda(player): player.__class__.__name__, self.players))
         logger.info(player_details)
 
         while not self.table.is_game_over():
