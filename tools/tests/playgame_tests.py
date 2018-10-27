@@ -1,5 +1,6 @@
 import playgame
 import unittest
+from sets import Set
 from playgame import HanabiGame
 from argparse import Namespace
 from tools.hanabi_deck import HanabiVariant
@@ -8,58 +9,58 @@ from ai.hanabi_player import HanabiPlayer
 class PlayGameparserTests(unittest.TestCase):
 
     def test_game_simple(self):
-        args = ["Discarder"]
+        args = ['single', 'Discarder']
         parsed = playgame.parse_args(args)
+        print(parsed)
         self.assertEqual(1, len(parsed.players))
         self.assertEquals(0, parsed.variant)
         self.assertFalse(parsed.verbose)
         self.assertEquals(None, parsed.log_dir)
         self.assertEquals(None, parsed.log_stderr)
-        self.assertFalse(parsed.is_tournament)
-        #default even if not in tournament mode. Unused, but icky
-        self.assertEquals(2, parsed.per_round)
         self.assertEquals(1, parsed.iterations)
+        self.assertEquals(parsed.command, 'single')
 
     def test_game_iterations(self):
-        args = ["Discarder", '-i', '10']
+        args = ['single', 'Discarder', '-i', '10']
         parsed = playgame.parse_args(args)
         self.assertEquals(10, parsed.iterations)
+        self.assertEquals(parsed.command, 'single')
 
     def test_game_variant(self):
-        args = ["Discarder", '-r', '3']
+        args = ['single', 'Discarder', '-r', '3']
         parsed = playgame.parse_args(args)
         self.assertEquals(3, parsed.variant)
 
     def test_game_verbose(self):
-        args = ["Discarder", '-v']
+        args = ['single', 'Discarder', '-v']
         parsed = playgame.parse_args(args)
         self.assertTrue(parsed.verbose)
 
     def test_game_log_dir(self):
-        args = ["Discarder", '-l', 'results.txt']
+        args = ['single', 'Discarder', '-l', 'results.txt']
         parsed = playgame.parse_args(args)
-        self.assertEquals("results.txt", parsed.log_dir)
+        self.assertEquals('results.txt', parsed.log_dir)
 
     def test_game_log_stderr(self):
-        args = ["Discarder", '-e', 'errors.txt']
+        args = ['single', 'Discarder', '-e', 'errors.txt']
         parsed = playgame.parse_args(args)
-        self.assertEquals("errors.txt", parsed.log_stderr)
+        self.assertEquals('errors.txt', parsed.log_stderr)
 
     def test_game_seed(self):
-        args = ["Discarder", '-s', '76']
+        args = ['single', 'Discarder', '-s', '76']
         parsed = playgame.parse_args(args)
         self.assertEquals(76, parsed.seed)
 
     def test_tournament_simple(self):
-        args = ["Discarder", '-t']
+        args = ['tournament', 'Discarder',]
         parsed = playgame.parse_args(args)
-        self.assertTrue(parsed.is_tournament)
         self.assertEquals(2, parsed.per_round)
+        self.assertEquals(parsed.command, 'tournament')
 
     def test_tournament_per_round(self):
-        args = ["Discarder", '-t', '-p', '4']
+        args = ['tournament', 'Discarder', '-p', '4']
         parsed = playgame.parse_args(args)
-        self.assertTrue(parsed.is_tournament)
+        self.assertEquals(parsed.command, 'tournament')
         self.assertEquals(4, parsed.per_round)
 
 class MockBadPlayer:
@@ -84,7 +85,7 @@ class PlayGameTests(unittest.TestCase):
             'D' : 50,
             'E' : 20
         }
-        disqualified = []
+        disqualified = Set()
         playgame.disqualify_player(disqualified, scores, 'D')
         self.assertTrue('D' in disqualified)
         self.assertEqual(1, len(disqualified))
@@ -97,7 +98,7 @@ class PlayGameTests(unittest.TestCase):
             'D' : 50,
             'E' : 20
         }
-        disqualified = []
+        disqualified = Set()
         playgame.disqualify_player(disqualified, scores, 'C')
         self.assertTrue('C' in disqualified)
         self.assertEqual(1, len(disqualified))
@@ -110,7 +111,7 @@ class PlayGameTests(unittest.TestCase):
             'D' : 50,
             'E' : 20
         }
-        disqualified = []
+        disqualified = Set()
         playgame.disqualify_player(disqualified, scores, 'A')
         playgame.disqualify_player(disqualified, scores, 'E')
         self.assertTrue('E', 'A' in disqualified)
