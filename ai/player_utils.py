@@ -61,3 +61,14 @@ def tell_randomly(player_id, game_info, seed=None):
         return result
     else:
         return None
+
+def discard_randomly(player_id, game_info, seed=None):
+    if can_discard(game_info):
+        limit = len(player_hand(player_id, game_info)) - 1
+        random.seed(seed)
+        return {
+            'play_type' : 'discard',
+            'card' : random.randint(0, limit)
+        }
+    else:
+        return None

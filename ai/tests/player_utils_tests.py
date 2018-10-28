@@ -76,3 +76,15 @@ class PlayerUtilsTests(unittest.TestCase):
         }
         actual = utils.tell_randomly(0, self.info_player_0, 26)
         self.assertEquals(expected, actual)
+
+    def test_discard_randomly_cannot_discard(self):
+        self.info_player_0['disclosures'] = 8
+        self.assertIsNone(utils.discard_randomly(0, self.info_player_0, 26))
+
+    def test_discard_randomly(self):
+        expected = {
+            'play_type' : 'discard',
+            'card' : 3
+        }
+        actual = utils.discard_randomly(0, self.info_player_0, 26)
+        self.assertEquals(expected, actual)
