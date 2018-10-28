@@ -40,6 +40,7 @@ Install nose and enum34
 ```
 pip install nose
 pip install enum34
+pip install matplotlib
 ```
 
 ## Running the tests
