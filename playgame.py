@@ -64,7 +64,7 @@ def run_tournament(args):
         if set(players).issubset(disqualified):
             continue
         try:
-            for _ in args.iterations:
+            for _ in range(args.iterations):
                 score = run_one_game(players, args.seed, args.variant)
                 for player in players:
                     tournament_scores[player].append(score)
