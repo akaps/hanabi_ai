@@ -3,7 +3,7 @@ import ai.player_utils as utils
 
 class PlayerUtilsTests(unittest.TestCase):
     def setUp(self):
-        #a made-up game state 7 turns in
+        #a simulated game state 7 turns in
         self.info_player_0 = {
             'score' : 2,
             'deck_size' : 36,
@@ -40,3 +40,15 @@ class PlayerUtilsTests(unittest.TestCase):
     def test_discard_oldest_cannot_discard(self):
         self.info_player_0['disclosures'] = 8
         self.assertIsNone(utils.discard_oldest_first(0, self.info_player_0))
+
+    def test_play_safe_card_can_play(self):
+        self.info_player_0['known_info'][0][2] = 'R1'
+        expected = {
+            'play_type' : 'play',
+            'card' : 2
+        }
+        actual = utils.play_safe_card(0, self.info_player_0)
+        self.assertEquals(expected, actual)
+
+    def test_play_safe_card_cannot_play(self):
+        self.assertIsNone(utils.play_safe_card(0, self.info_player_0))
