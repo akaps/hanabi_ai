@@ -52,3 +52,27 @@ class PlayerUtilsTests(unittest.TestCase):
 
     def test_play_safe_card_cannot_play(self):
         self.assertIsNone(utils.play_safe_card(0, self.info_player_0))
+
+    def test_tell_randomly_cannot_tell(self):
+        self.info_player_0['disclosures'] = 0
+        self.assertIsNone(utils.tell_randomly(0, self.info_player_0, 12))
+
+    def test_tell_randomly_color(self):
+        expected = {
+            'play_type' : 'disclose',
+            'player' : 1,
+            'disclose_type' : 'color',
+            'color' : 'W'
+        }
+        actual = utils.tell_randomly(0, self.info_player_0, 12)
+        self.assertEquals(expected, actual)
+
+    def test_tell_randomly_rank(self):
+        expected = {
+            'play_type' : 'disclose',
+            'player' : 1,
+            'disclose_type' : 'rank',
+            'rank' : 5
+        }
+        actual = utils.tell_randomly(0, self.info_player_0, 26)
+        self.assertEquals(expected, actual)
