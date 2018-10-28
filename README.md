@@ -14,7 +14,20 @@ sample.sh
 ```
 To get help info for running your own simulations
 ```
-python 'playgame.py -h
+python playgame.py -h
+python playgame.py single -h
+```
+
+### Tournament Mode
+
+Hanabi has a tournament mode, which runs combinations of all listed players.
+To run the example tournament
+```
+sample_tournament.sh
+```
+to get help info for setting up your own tournament
+```
+python playgame.py tournament -h
 ```
 
 ### Variants
