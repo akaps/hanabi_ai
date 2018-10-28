@@ -64,9 +64,10 @@ def run_tournament(args):
         if set(players).issubset(disqualified):
             continue
         try:
-            score = run_one_game(args)
-            for player in players:
-                tournament_scores[player].append(score)
+            for _ in args.iterations:
+                score = run_one_game(players, args.seed, args.variant)
+                for player in players:
+                    tournament_scores[player].append(score)
         except InvalidHanabiMoveException as err:
             disqualify_player(disqualified,
                 tournament_scores,
@@ -110,12 +111,12 @@ def determine_winner(results):
 
 def run_one_configuration(args):
     for _ in range(args.iterations):
-        run_one_game(args)
+        run_one_game(args.players, args.seed, args.variant)
         rotate_logs()
 
-def run_one_game(args):
-    game = HanabiGame(args.players, args.seed, HanabiVariant(args.variant))
-    game.play_game(args)
+def run_one_game(players, seed, variant):
+    game = HanabiGame(players, seed, HanabiVariant(variant))
+    game.play_game()
     return game.table.score()
 
 def prep_logger(log_dir, verbose, log_stderr, count):
@@ -211,7 +212,7 @@ class HanabiGame:
         self.variant = variant
         self.current_player = 0
 
-    def play_game(self, verbose):
+    def play_game(self):
         def pretty_print_info(info):
             logger.debug('Player {player_id} sees:'.format(player_id = self.current_player))
             logger.debug('Players: {players}'.format(players = info['num_players']))
