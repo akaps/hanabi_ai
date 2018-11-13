@@ -2,6 +2,7 @@ from hanabi_deck import HanabiDeck, HanabiVariant
 from hanabi_discard_pile import HanabiDiscard
 from hanabi_hand import HanabiHand
 from hanabi_card import HanabiColor
+from hanabi_game_info import GameInfo
 from hanabi_moves import (HanabiPlayAction,
     HanabiDiscardAction,
     HanabiDiscloseRankAction,
@@ -130,22 +131,20 @@ class HanabiTable:
 
     def disclose_rank(self, player_id, to_whom, rank):
         self.disclosures -= 1
-        count = 0
+        action = HanabiDiscloseRankAction(player_id, to_whom, rank)
         for card in self.hands[to_whom].hand:
             if card.rank == rank:
                 card.disclose_rank()
-                count += 1
-        action = HanabiDiscloseRankAction(player_id, to_whom, rank, count)
+                action.count += 1
         self.history.append(action)
         return action
 
     def disclose_color(self, player_id, to_whom, color):
         self.disclosures -= 1
-        count = 0
+        action = HanabiDiscloseColorAction(player_id, to_whom, color)
         for card in self.hands[to_whom].hand:
             if card.disclose_color(color, self.is_rainbow_wild):
-                count += 1
-        action = HanabiDiscloseColorAction(player_id, to_whom, color, count)
+                action.count += 1
         self.history.append(action)
         return action
 
