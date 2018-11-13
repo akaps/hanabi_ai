@@ -8,10 +8,13 @@ class HanabiCardAction(object):
 
     @classmethod
     def action(self):
-        return "N/A"
+        raise Exception('Cannot call superclass implementation of action')
+
+    def validate(self, game_info):
+        raise Exception('Cannot call superclass implementation of validate')
 
 class HanabiPlayAction(HanabiCardAction):
-    
+
     def __init__(self, player_id, card):
         super(HanabiPlayAction, self).__init__(player_id, card)
 
@@ -23,10 +26,8 @@ class HanabiPlayAction(HanabiCardAction):
     def action(self):
         return "played"
 
-    @staticmethod
-    def can_parse_move(move):
-        return (all(key in move for key in ("play_type", "card")) and
-            move["play_type"] is "play") 
+    def validate(self, game_info):
+        return True
 
 class HanabiDiscardAction(HanabiCardAction):
     def __init__(self, player_id, card):
@@ -36,10 +37,8 @@ class HanabiDiscardAction(HanabiCardAction):
     def action(self):
         return "discarded"
 
-    @staticmethod
-    def can_parse_move(move):
-        return (all(key in move for key in ("play_type", "card")) and
-            move["play_type"] is "discard")
+    def validate(self, game_info):
+        return game_info.can_discard()
 
 class HanabiDiscloseAction(object):
     def __init__(self, player_id, to_whom, count):
@@ -55,25 +54,22 @@ class HanabiDiscloseAction(object):
             disclosure = self.disclosure())
 
     def disclosure(self):
-        return "N/A"
+        raise Exception('Cannot call superclass implementation of validate')
 
 class HanabiColorDiscloseAction(HanabiDiscloseAction):
     def __init__(self, player_id, to_whom, count, color):
         super(HanabiColorDiscloseAction, self).__init__(player_id, to_whom, count)
         self.color = color
-    
+
     def disclosure(self):
         if self.count <= 1:
             return self.color
         else:
             return "{color}s".format(color = self.color)
 
-    @staticmethod
-    def can_parse_move(move):
-        return (all(key in move for key in ("play_type", "player", "disclose_type", "color")) and
-            move["play_type"] is "disclose" and
-            move["disclose_type"] is "color" and
-            move["color"] in "RWBGY*")
+    def validate(self, game_info):
+        return game_info.can_disclose() and
+            self.color in 'RWBGY*'
 
 class HanabiRankDiscloseAction(HanabiDiscloseAction):
     def __init__(self, player_id, to_whom, count, rank):
@@ -86,9 +82,6 @@ class HanabiRankDiscloseAction(HanabiDiscloseAction):
         else:
             return "{rank}s".format(rank = self.rank)
 
-    @staticmethod
-    def can_parse_move(move):
-        return (all(key in move for key in ("play_type", "player", "disclose_type", "rank")) and
-            move["play_type"] is "disclose" and
-            move["disclose_type"] is "rank" and
-            move["rank"] in range (1,6))
+    def validate(self, game_info):
+        return game_info.can_disclose() and
+            self.rank in range(1,6)
