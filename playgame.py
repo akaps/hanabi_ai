@@ -248,14 +248,14 @@ class HanabiGame:
             return self.table.play_card(self.current_player, player_move.card)
         elif isinstance(player_move, moves.HanabiDiscardAction):
             return self.table.discard_card(self.current_player, player_move.card)
-        elif issubclass(player_move, moves.HanabiDiscloseAction):
+        elif issubclass(player_move.__class__, moves.HanabiDiscloseAction):
             return self.play_disclose(player_move)
 
     def play_disclose(self, player_move):
         if isinstance(player_move, moves.HanabiDiscloseColorAction):
-            return self.table.disclose_color(self.current_player, player_move.player, player_move.color)
+            return self.table.disclose_color(self.current_player, player_move.player_id, player_move.color)
         elif isinstance(player_move, moves.HanabiDiscloseRankAction):
-            return self.table.disclose_rank(self.current_player, player_move.player, player_move.rank)
+            return self.table.disclose_rank(self.current_player, player_move.player_id, player_move.rank)
 
     def disqualify(self, player_move):
         logger.warning('Expected format for play card:')
