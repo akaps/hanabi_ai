@@ -11,7 +11,7 @@ class HanabiCardAction(object):
         return "N/A"
 
 class HanabiPlayAction(HanabiCardAction):
-    
+
     def __init__(self, player_id, card):
         super(HanabiPlayAction, self).__init__(player_id, card)
 
@@ -26,7 +26,7 @@ class HanabiPlayAction(HanabiCardAction):
     @staticmethod
     def can_parse_move(move):
         return (all(key in move for key in ("play_type", "card")) and
-            move["play_type"] is "play") 
+            move["play_type"] is "play")
 
 class HanabiDiscardAction(HanabiCardAction):
     def __init__(self, player_id, card):
@@ -57,11 +57,11 @@ class HanabiDiscloseAction(object):
     def disclosure(self):
         return "N/A"
 
-class HanabiColorDiscloseAction(HanabiDiscloseAction):
+class HanabiDiscloseColorAction(HanabiDiscloseAction):
     def __init__(self, player_id, to_whom, count, color):
-        super(HanabiColorDiscloseAction, self).__init__(player_id, to_whom, count)
+        super(HanabiDiscloseColorAction, self).__init__(player_id, to_whom, count)
         self.color = color
-    
+
     def disclosure(self):
         if self.count <= 1:
             return self.color
@@ -75,9 +75,9 @@ class HanabiColorDiscloseAction(HanabiDiscloseAction):
             move["disclose_type"] is "color" and
             move["color"] in "RWBGY*")
 
-class HanabiRankDiscloseAction(HanabiDiscloseAction):
+class HanabiDiscloseRankAction(HanabiDiscloseAction):
     def __init__(self, player_id, to_whom, count, rank):
-        super(HanabiRankDiscloseAction, self).__init__(player_id, to_whom, count)
+        super(HanabiDiscloseRankAction, self).__init__(player_id, to_whom, count)
         self.rank = rank
 
     def disclosure(self):

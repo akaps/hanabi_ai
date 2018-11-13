@@ -1,8 +1,8 @@
 import unittest
 from tools.hanabi_moves import (HanabiDiscardAction,
     HanabiPlayAction,
-    HanabiColorDiscloseAction,
-    HanabiRankDiscloseAction)
+    HanabiDiscloseColorAction,
+    HanabiDiscloseRankAction)
 
 class HanabiMoveTests(unittest.TestCase):
 
@@ -28,18 +28,18 @@ class HanabiMoveTests(unittest.TestCase):
         self.assertFalse(HanabiDiscardAction.can_parse_move(self.well_formed_play))
 
     def test_is_valid_disclose_move(self):
-        self.assertTrue(HanabiColorDiscloseAction.can_parse_move(self.well_formed_color_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.well_formed_rank_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.malformed_color_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.malformed_rank_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.well_formed_discard))
+        self.assertTrue(HanabiDiscloseColorAction.can_parse_move(self.well_formed_color_disclose))
+        self.assertFalse(HanabiDiscloseColorAction.can_parse_move(self.well_formed_rank_disclose))
+        self.assertFalse(HanabiDiscloseColorAction.can_parse_move(self.malformed_color_disclose))
+        self.assertFalse(HanabiDiscloseColorAction.can_parse_move(self.malformed_rank_disclose))
+        self.assertFalse(HanabiDiscloseColorAction.can_parse_move(self.well_formed_discard))
 
     def test_is_valid_disclose_color(self):
-        self.assertTrue(HanabiColorDiscloseAction.can_parse_move(self.well_formed_color_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.malformed_color_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.well_formed_rank_disclose))
+        self.assertTrue(HanabiDiscloseColorAction.can_parse_move(self.well_formed_color_disclose))
+        self.assertFalse(HanabiDiscloseColorAction.can_parse_move(self.malformed_color_disclose))
+        self.assertFalse(HanabiDiscloseColorAction.can_parse_move(self.well_formed_rank_disclose))
 
     def test_is_valid_disclose_rank(self):
-        self.assertTrue(HanabiRankDiscloseAction.can_parse_move(self.well_formed_rank_disclose))
-        self.assertFalse(HanabiRankDiscloseAction.can_parse_move(self.malformed_rank_disclose))
-        self.assertFalse(HanabiRankDiscloseAction.can_parse_move(self.well_formed_color_disclose))
+        self.assertTrue(HanabiDiscloseRankAction.can_parse_move(self.well_formed_rank_disclose))
+        self.assertFalse(HanabiDiscloseRankAction.can_parse_move(self.malformed_rank_disclose))
+        self.assertFalse(HanabiDiscloseRankAction.can_parse_move(self.well_formed_color_disclose))
