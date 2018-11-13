@@ -31,28 +31,28 @@ class HanabiTableVariant1Tests(unittest.TestCase):
         self.assertTrue(HanabiCard(HanabiColor.RAINBOW, 3) in self.table.discard.discarded())
 
     def test_table_disclose_color(self):
-        self.assertEqual(["??", "??", "??", "??", "??"], self.table.info_for_player(0)["hands"][0])
+        self.assertEqual(["??", "??", "??", "??", "??"], self.table.info_for_player(0).hands[0])
         self.table.disclose_color(0, 0, HanabiColor.RAINBOW)
-        self.assertEqual(["*?", "??", "*?", "*?", "??"], self.table.info_for_player(0)["hands"][0])
+        self.assertEqual(["*?", "??", "*?", "*?", "??"], self.table.info_for_player(0).hands[0])
 
     def test_table_info_for_player(self):
         info = self.table.info_for_player(0)
-        self.assertEqual(info["score"], 0)
-        self.assertEqual(info["deck_size"], 50)
-        self.assertEqual(len(info["discarded"]), 0)
-        self.assertEqual(info["disclosures"], 8)
-        self.assertEqual(info["mistakes_left"], 3)
-        self.assertEqual(info["num_players"], 2)
-        self.assertEqual(info["hands"][0], ["??", "??", "??", "??", "??"])
-        self.assertEqual(info["hands"][1], ["B2", "*5", "Y3", "R3", "Y3"])
-        self.assertEqual(info["known_info"][0], ["??", "??", "??", "??", "??"])
-        self.assertEqual(info["known_info"][1], ["??", "??", "??", "??", "??"])
-        self.assertEqual(info["scored_cards"]["R"], 0)
-        self.assertEqual(info["scored_cards"]["B"], 0)
-        self.assertEqual(info["scored_cards"]["G"], 0)
-        self.assertEqual(info["scored_cards"]["Y"], 0)
-        self.assertEqual(info["scored_cards"]["W"], 0)
-        self.assertEqual(info["scored_cards"]["*"], 0)
+        self.assertEqual(info.score, 0)
+        self.assertEqual(info.deck_size, 50)
+        self.assertEqual(len(info.discarded), 0)
+        self.assertEqual(info.disclosures, 8)
+        self.assertEqual(info.mistakes_left, 3)
+        self.assertEqual(info.num_players, 2)
+        self.assertEqual(info.hands[0], ["??", "??", "??", "??", "??"])
+        self.assertEqual(info.hands[1], ["B2", "*5", "Y3", "R3", "Y3"])
+        self.assertEqual(info.known_info[0], ["??", "??", "??", "??", "??"])
+        self.assertEqual(info.known_info[1], ["??", "??", "??", "??", "??"])
+        self.assertEqual(info.scored_cards["R"], 0)
+        self.assertEqual(info.scored_cards["B"], 0)
+        self.assertEqual(info.scored_cards["G"], 0)
+        self.assertEqual(info.scored_cards["Y"], 0)
+        self.assertEqual(info.scored_cards["W"], 0)
+        self.assertEqual(info.scored_cards["*"], 0)
 
     def test_can_disclose_color(self):
         self.assertTrue(self.table.can_disclose_color('R'))
@@ -72,7 +72,7 @@ class HanabiTableVariant1Tests(unittest.TestCase):
         self.assertEqual(1, self.table.score())
         self.assertEqual(1, len(self.table.discard))
         #confirm that we are adding to the rainbow pile
-        self.assertEqual(1, self.table.info_for_player(0)["scored_cards"]["*"])
+        self.assertEqual(1, self.table.info_for_player(0).scored_cards["*"])
 
 if __name__ == '__main__':
     unittest.main()
