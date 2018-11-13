@@ -4,9 +4,8 @@ from hanabi_hand import HanabiHand
 from hanabi_card import HanabiColor
 from hanabi_moves import (HanabiPlayAction,
     HanabiDiscardAction,
-    HanabiRankDiscloseAction,
-    HanabiColorDiscloseAction)
-from hanabi_game_info import GameInfo
+    HanabiDiscloseRankAction,
+    HanabiDiscloseColorAction)
 
 NUM_DISCLOSURES = 8
 NUM_MISTAKES = 3
@@ -136,7 +135,7 @@ class HanabiTable:
             if card.rank == rank:
                 card.disclose_rank()
                 count += 1
-        action = HanabiRankDiscloseAction(player_id, to_whom, rank, count)
+        action = HanabiDiscloseRankAction(player_id, to_whom, rank, count)
         self.history.append(action)
         return action
 
@@ -146,7 +145,7 @@ class HanabiTable:
         for card in self.hands[to_whom].hand:
             if card.disclose_color(color, self.is_rainbow_wild):
                 count += 1
-        action = HanabiColorDiscloseAction(player_id, to_whom, color, count)
+        action = HanabiDiscloseColorAction(player_id, to_whom, color, count)
         self.history.append(action)
         return action
 

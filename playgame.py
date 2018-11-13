@@ -15,8 +15,8 @@ from sets import Set
 from logging.handlers import RotatingFileHandler
 from tools.hanabi_moves import (HanabiDiscardAction,
     HanabiPlayAction,
-    HanabiColorDiscloseAction,
-    HanabiRankDiscloseAction)
+    HanabiDiscloseColorAction,
+    HanabiDiscloseRankAction)
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -257,8 +257,8 @@ class HanabiGame:
 
     def is_valid_disclose_move(self, player_move):
         return (self.table.can_disclose() and
-            (HanabiColorDiscloseAction.can_parse_move(player_move) or
-            HanabiRankDiscloseAction.can_parse_move(player_move)))
+            (HanabiDiscloseColorAction.can_parse_move(player_move) or
+            HanabiDiscloseRankAction.can_parse_move(player_move)))
 
     def parse_turn(self, player_move):
         if not self.is_valid_move(player_move):
