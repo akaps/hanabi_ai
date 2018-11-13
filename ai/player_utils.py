@@ -1,28 +1,5 @@
 import random
 
-#helper methods
-def can_disclose(game_info):
-    return game_info['disclosures'] > 0
-
-def can_discard(game_info):
-    return game_info['disclosures'] < 8
-
-def player_hand(player_id, game_info):
-    return game_info['hands'][player_id]
-
-def player_info(player_id, game_info):
-    return game_info['known_info'][player_id]
-
-def is_safe(card, game_info):
-    scored = game_info['scored_cards']
-    for key in scored:
-        if card[0] == key and (int)(card[1]) == scored[key] + 1:
-            return True
-    return False
-
-def next_player(player_id, game_info):
-    return (player_id + 1) % game_info['num_players']
-
 #actions
 def discard_oldest_first(player_id, game_info):
     if can_discard(game_info):

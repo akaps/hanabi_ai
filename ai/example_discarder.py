@@ -8,15 +8,15 @@ class Discarder(HanabiPlayer):
         pass
 
     def do_turn(self, player_index, game_info):
-        if game_info.disclosures < game.NUM_DISCLOSURES:
+        if game_info.can_discard():
             return {
-                "play_type":"discard",
-                "card":0
+                'play_type' : 'discard',
+                'card' : 0
                 }
         else:
             return {
-                "play_type":"disclose",
-                "player":(player_index + 1) % game_info.num_players,
-                "disclose_type":"rank",
-                "rank":1
+                'play_type':'disclose',
+                'player' : game_info.next_player(player_index),
+                'disclose_type' : 'rank',
+                'rank' : 1
             }
