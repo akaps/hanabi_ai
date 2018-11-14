@@ -1,12 +1,22 @@
 class GameInfo:
-    def __init__(self):
-        self.score = 0
-        self.deck_size = 0
-        self.discarded = None
-        self.disclosures = 0
-        self.mistakes_left = 0
-        self.num_players = 0
-        self.hands = None
-        self.known_info = None
-        self.scored_cards = None
-        self.history = None
+    def __init__(self,
+        score = 0,
+        deck_size = 0,
+        discarded = [],
+        disclosures = 0,
+        mistakes_left = 0,
+        num_players = 0,
+        hands = [],
+        known_info = [],
+        scored_cards = [],
+        history = []):
+        self.score = score
+        self.deck_size = deck_size
+        self.discarded = discarded
+        self.disclosures = disclosures
+        self.mistakes_left = mistakes_left
+        self.num_players = num_players
+        self.hands = hands
+        self.known_info = known_info
+        self.scored_cards = scored_cards
+        self.history = history
