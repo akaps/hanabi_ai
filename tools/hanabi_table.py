@@ -6,6 +6,7 @@ from hanabi_moves import (HanabiPlayAction,
     HanabiDiscardAction,
     HanabiRankDiscloseAction,
     HanabiColorDiscloseAction)
+from hanabi_game_info import GameInfo
 
 NUM_DISCLOSURES = 8
 NUM_MISTAKES = 3
@@ -81,7 +82,7 @@ class HanabiTable:
         action = HanabiDiscardAction(player_id, card)
         self.history.append(action)
         return action
-    
+
     def update_hand(self, player_id):
         if len(self.deck) != 0:
             self.hands[player_id].add(self.deck.draw_card())
@@ -89,17 +90,17 @@ class HanabiTable:
             self.lastTurns -= 1
 
     def info_for_player(self, player_id):
-        res = {}
-        res["score"] = self.score()
-        res["deck_size"] = len(self.deck)
-        res["discarded"] = self.discard
-        res["disclosures"] = self.disclosures
-        res["mistakes_left"] = self.mistakes_left
-        res["num_players"] = self.num_players
-        res["hands"] = self.hands_for_player(player_id)
-        res["known_info"] = self.known_cards()
-        res["scored_cards"] = self.scored_cards
-        res["history"] = self.history
+        res = GameInfo()
+        res.score = self.score()
+        res.deck_size = len(self.deck)
+        res.discarded = self.discard
+        res.disclosures = self.disclosures
+        res.mistakes_left = self.mistakes_left
+        res.num_players = self.num_players
+        res.hands = self.hands_for_player(player_id)
+        res.known_info = self.known_cards()
+        res.scored_cards = self.scored_cards
+        res.history = self.history
         return res
 
     def hands_for_player(self, player_id):
@@ -122,7 +123,7 @@ class HanabiTable:
 
     def can_disclose_rank(self):
         return self.can_disclose()
-    
+
     def can_disclose_color(self, color):
         return (self.can_disclose() and
             color in "RGBWY*" and
