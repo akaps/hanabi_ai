@@ -19,11 +19,8 @@ class GameInfo:
         return self.disclosures < 8
 
     def is_safe(self, card):
-        scored = self.scored_cards
-        for key in scored:
-            if card[0] == key and (int)(card[1]) == scored[key] + 1:
-                return True
-        return False
+        [color, rank] = list(card)
+        return self.scored_cards[color] + 1 == (int)(rank)
 
     def next_player(self, player_id):
         return (player_id + 1) % self.num_players
