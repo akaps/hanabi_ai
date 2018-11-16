@@ -230,7 +230,7 @@ class HanabiGame:
             info = self.table.info_for_player(self.current_player)
             player_move = player.do_turn(self.current_player, info)
             if player_move.is_valid(info):
-                self.make_move(player_move)
+                player_move.execute(self.table)
                 pretty_print_info(info)
                 logger.debug(str(player_move))
                 self.current_player = (self.current_player + 1) % self.table.num_players
@@ -242,20 +242,6 @@ class HanabiGame:
 
     def game_history(self):
         return map(lambda action: str(action), self.table.history)
-
-    def make_move(self, player_move):
-        if isinstance(player_move, moves.HanabiPlayAction):
-            return self.table.play_card(self.current_player, player_move.card)
-        elif isinstance(player_move, moves.HanabiDiscardAction):
-            return self.table.discard_card(self.current_player, player_move.card)
-        elif issubclass(player_move.__class__, moves.HanabiDiscloseAction):
-            return self.play_disclose(player_move)
-
-    def play_disclose(self, player_move):
-        if isinstance(player_move, moves.HanabiDiscloseColorAction):
-            return self.table.disclose_color(self.current_player, player_move.player_id, player_move.color)
-        elif isinstance(player_move, moves.HanabiDiscloseRankAction):
-            return self.table.disclose_rank(self.current_player, player_move.player_id, player_move.rank)
 
     def disqualify(self, player_move):
         logger.warning('Expected format for play card:')

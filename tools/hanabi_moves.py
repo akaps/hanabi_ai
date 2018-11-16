@@ -10,6 +10,10 @@ class HanabiAction(object):
     def is_valid(self, game_info):
         pass
 
+    @abc.abstractmethod
+    def execute(self, table):
+        pass
+
 class HanabiCardAction(HanabiAction):
     def __init__(self, player_id, card):
         super(HanabiCardAction, self).__init__(player_id)
@@ -28,6 +32,9 @@ class HanabiPlayAction(HanabiCardAction):
     def is_valid(self, game_info):
         return True
 
+    def execute(self, table):
+        table.play_card(self.player_id, self.card)
+
 class HanabiDiscardAction(HanabiCardAction):
     def __init__(self, player_id, card):
         super(HanabiDiscardAction, self).__init__(player_id, card)
@@ -36,6 +43,9 @@ class HanabiDiscardAction(HanabiCardAction):
 
     def is_valid(self, game_info):
         return game_info.can_discard()
+
+    def execute(self, table):
+        table.discard_card(self.player_id, self.card)
 
 class HanabiDiscloseAction(HanabiAction):
     def __init__(self, player_id, to_whom):
@@ -70,6 +80,9 @@ class HanabiDiscloseColorAction(HanabiDiscloseAction):
         return (super(HanabiDiscloseColorAction, self).is_valid(game_info) and
             self.color in 'RWBGY*')
 
+    def execute(self, table):
+        table.disclose_color(self.player_id, self.to_whom, self.color)
+
 class HanabiDiscloseRankAction(HanabiDiscloseAction):
     def __init__(self, player_id, to_whom, rank):
         super(HanabiDiscloseRankAction, self).__init__(player_id, to_whom)
@@ -79,3 +92,6 @@ class HanabiDiscloseRankAction(HanabiDiscloseAction):
     def is_valid(self, game_info):
         return (super(HanabiDiscloseRankAction, self).is_valid(game_info) and
             self.rank in range(1,6))
+
+    def execute(self, table):
+        table.disclose_rank(self.player_id, self.to_whom, self.rank)
