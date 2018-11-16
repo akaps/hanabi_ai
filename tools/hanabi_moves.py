@@ -1,9 +1,14 @@
+import abc
+
 class HanabiAction(object):
+    __metaclass__ = abc.ABCMeta
+
     def __init__(self, player_id):
         self.player_id = player_id
 
+    @abc.abstractmethod
     def is_valid(self, game_info):
-        raise Exception('Cannot call superclass implementation')
+        pass
 
 class HanabiCardAction(HanabiAction):
     def __init__(self, player_id, card):
@@ -60,7 +65,6 @@ class HanabiDiscloseColorAction(HanabiDiscloseAction):
         super(HanabiDiscloseColorAction, self).__init__(player_id, to_whom)
         self.color = color
         self.disclosure_type = self.pluralize(self.color, self.count)
-
 
     def is_valid(self, game_info):
         return (super(HanabiDiscloseColorAction, self).is_valid(game_info) and
