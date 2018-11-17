@@ -18,16 +18,21 @@ class HanabiCardAction(HanabiAction):
     def __init__(self, player_id, card):
         super(HanabiCardAction, self).__init__(player_id)
         self.card = card
-        self.action_type = ''
+
+    @abc.abstractmethod
+    def action_type(self):
+        pass
 
     def __str__(self):
-        return "Player {id} {action} {card}".format(id = self.player_id, action = self.action_type, card = str(self.card))
+        return "Player {id} {action} {card}".format(id = self.player_id, action = self.action_type(), card = str(self.card))
 
 class HanabiPlayAction(HanabiCardAction):
 
     def __init__(self, player_id, card):
         super(HanabiPlayAction, self).__init__(player_id, card)
-        self.action_type = 'played'
+
+    def action_type(self):
+        return 'played'
 
     def is_valid(self, game_info):
         return True
@@ -38,8 +43,9 @@ class HanabiPlayAction(HanabiCardAction):
 class HanabiDiscardAction(HanabiCardAction):
     def __init__(self, player_id, card):
         super(HanabiDiscardAction, self).__init__(player_id, card)
-        self.action_type = 'discarded'
 
+    def action_type(self):
+        return 'discarded'
 
     def is_valid(self, game_info):
         return game_info.can_discard()
@@ -52,7 +58,13 @@ class HanabiDiscloseAction(HanabiAction):
         super(HanabiDiscloseAction, self).__init__(player_id)
         self.to_whom = to_whom
         self.count = 0
-        self.disclosure_type = ''
+
+    def increment_count(self):
+        self.count += 1
+
+    @abc.abstractmethod
+    def disclosure_type(self):
+        pass
 
     def pluralize(self, word, count):
         if count <= 1:
@@ -74,7 +86,9 @@ class HanabiDiscloseColorAction(HanabiDiscloseAction):
     def __init__(self, player_id, to_whom, color):
         super(HanabiDiscloseColorAction, self).__init__(player_id, to_whom)
         self.color = color
-        self.disclosure_type = self.pluralize(self.color, self.count)
+
+    def disclosure_type(self):
+        return self.pluralize(self.color, self.count)
 
     def is_valid(self, game_info):
         return (super(HanabiDiscloseColorAction, self).is_valid(game_info) and
@@ -87,7 +101,9 @@ class HanabiDiscloseRankAction(HanabiDiscloseAction):
     def __init__(self, player_id, to_whom, rank):
         super(HanabiDiscloseRankAction, self).__init__(player_id, to_whom)
         self.rank = rank
-        self.disclosure_type = self.pluralize(self.rank, self.count)
+
+    def disclosure_type(self):
+        return self.pluralize(self.rank, self.count)
 
     def is_valid(self, game_info):
         return (super(HanabiDiscloseRankAction, self).is_valid(game_info) and

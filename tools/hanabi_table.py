@@ -135,7 +135,7 @@ class HanabiTable:
         for card in self.hands[to_whom].hand:
             if card.rank == rank:
                 card.disclose_rank()
-                action.count += 1
+                action.increment_count()
         self.history.append(action)
         return action
 
@@ -144,7 +144,7 @@ class HanabiTable:
         action = HanabiDiscloseColorAction(player_id, to_whom, color)
         for card in self.hands[to_whom].hand:
             if card.disclose_color(color, self.is_rainbow_wild):
-                action.count += 1
+                action.increment_count()
         self.history.append(action)
         return action
 
