@@ -1,94 +1,113 @@
-class HanabiCardAction(object):
-    def __init__(self, player_id, card):
+import abc
+
+class HanabiAction(object):
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(self, player_id):
         self.player_id = player_id
+
+    @abc.abstractmethod
+    def is_valid(self, game_info):
+        pass
+
+    @abc.abstractmethod
+    def execute(self, table):
+        pass
+
+class HanabiCardAction(HanabiAction):
+    def __init__(self, player_id, card):
+        super(HanabiCardAction, self).__init__(player_id)
         self.card = card
 
-    def __str__(self):
-        return "Player {id} {action} {card}".format(id = self.player_id, action = self.action(), card = str(self.card))
+    @abc.abstractmethod
+    def action_type(self):
+        pass
 
-    @classmethod
-    def action(self):
-        return "N/A"
+    def __str__(self):
+        return "Player {id} {action} {card}".format(id = self.player_id, action = self.action_type(), card = str(self.card))
 
 class HanabiPlayAction(HanabiCardAction):
-    
+
     def __init__(self, player_id, card):
         super(HanabiPlayAction, self).__init__(player_id, card)
 
-    @classmethod
-    def parse_move(self, move):
-        pass
+    def action_type(self):
+        return 'played'
 
-    @classmethod
-    def action(self):
-        return "played"
+    def is_valid(self, game_info):
+        return True
 
-    @staticmethod
-    def can_parse_move(move):
-        return (all(key in move for key in ("play_type", "card")) and
-            move["play_type"] is "play") 
+    def execute(self, table):
+        table.play_card(self.player_id, self.card)
 
 class HanabiDiscardAction(HanabiCardAction):
     def __init__(self, player_id, card):
         super(HanabiDiscardAction, self).__init__(player_id, card)
 
-    @classmethod
-    def action(self):
-        return "discarded"
+    def action_type(self):
+        return 'discarded'
 
-    @staticmethod
-    def can_parse_move(move):
-        return (all(key in move for key in ("play_type", "card")) and
-            move["play_type"] is "discard")
+    def is_valid(self, game_info):
+        return game_info.can_discard()
 
-class HanabiDiscloseAction(object):
-    def __init__(self, player_id, to_whom, count):
-        self.player_id = player_id
+    def execute(self, table):
+        table.discard_card(self.player_id, self.card)
+
+class HanabiDiscloseAction(HanabiAction):
+    def __init__(self, player_id, to_whom):
+        super(HanabiDiscloseAction, self).__init__(player_id)
         self.to_whom = to_whom
-        self.count = count
+        self.count = 0
+
+    def increment_count(self):
+        self.count += 1
+
+    @abc.abstractmethod
+    def disclosure_type(self):
+        pass
+
+    def pluralize(self, word, count):
+        if count <= 1:
+            return word
+        else:
+            return '{word}s'.format(word = word)
 
     def __str__(self):
         return "Player {id} told {whom} about {count} {disclosure} in their hand".format(
             id = self.player_id,
             whom = self.to_whom,
             count = self.count,
-            disclosure = self.disclosure())
+            disclosure = self.disclosure_type)
 
-    def disclosure(self):
-        return "N/A"
+    def is_valid(self, game_info):
+        return game_info.can_disclose()
 
-class HanabiColorDiscloseAction(HanabiDiscloseAction):
-    def __init__(self, player_id, to_whom, count, color):
-        super(HanabiColorDiscloseAction, self).__init__(player_id, to_whom, count)
+class HanabiDiscloseColorAction(HanabiDiscloseAction):
+    def __init__(self, player_id, to_whom, color):
+        super(HanabiDiscloseColorAction, self).__init__(player_id, to_whom)
         self.color = color
-    
-    def disclosure(self):
-        if self.count <= 1:
-            return self.color
-        else:
-            return "{color}s".format(color = self.color)
 
-    @staticmethod
-    def can_parse_move(move):
-        return (all(key in move for key in ("play_type", "player", "disclose_type", "color")) and
-            move["play_type"] is "disclose" and
-            move["disclose_type"] is "color" and
-            move["color"] in "RWBGY*")
+    def disclosure_type(self):
+        return self.pluralize(self.color, self.count)
 
-class HanabiRankDiscloseAction(HanabiDiscloseAction):
-    def __init__(self, player_id, to_whom, count, rank):
-        super(HanabiRankDiscloseAction, self).__init__(player_id, to_whom, count)
+    def is_valid(self, game_info):
+        return (super(HanabiDiscloseColorAction, self).is_valid(game_info) and
+            self.color in 'RWBGY*')
+
+    def execute(self, table):
+        table.disclose_color(self.player_id, self.to_whom, self.color)
+
+class HanabiDiscloseRankAction(HanabiDiscloseAction):
+    def __init__(self, player_id, to_whom, rank):
+        super(HanabiDiscloseRankAction, self).__init__(player_id, to_whom)
         self.rank = rank
 
-    def disclosure(self):
-        if self.count <= 1:
-            return self.rank
-        else:
-            return "{rank}s".format(rank = self.rank)
+    def disclosure_type(self):
+        return self.pluralize(self.rank, self.count)
 
-    @staticmethod
-    def can_parse_move(move):
-        return (all(key in move for key in ("play_type", "player", "disclose_type", "rank")) and
-            move["play_type"] is "disclose" and
-            move["disclose_type"] is "rank" and
-            move["rank"] in range (1,6))
+    def is_valid(self, game_info):
+        return (super(HanabiDiscloseRankAction, self).is_valid(game_info) and
+            self.rank in range(1,6))
+
+    def execute(self, table):
+        table.disclose_rank(self.player_id, self.to_whom, self.rank)

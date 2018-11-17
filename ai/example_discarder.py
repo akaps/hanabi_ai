@@ -1,4 +1,5 @@
 import tools.hanabi_table as game
+import tools.hanabi_moves as moves
 from hanabi_player import HanabiPlayer
 
 #To create an AI for Hanabi, make a new class in the ai folder,
@@ -8,15 +9,9 @@ class Discarder(HanabiPlayer):
         pass
 
     def do_turn(self, player_index, game_info):
-        if game_info.can_discard():
-            return {
-                'play_type' : 'discard',
-                'card' : 0
-                }
+        if game_info.disclosures < game.NUM_DISCLOSURES:
+            return moves.HanabiDiscardAction(player_index, 0)
         else:
-            return {
-                'play_type':'disclose',
-                'player' : game_info.next_player(player_index),
-                'disclose_type' : 'rank',
-                'rank' : 1
-            }
+            return moves.HanabiDiscloseRankAction(player_index,
+                game_info.next_player(player_index),
+                1)

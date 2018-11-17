@@ -13,10 +13,7 @@ import numpy
 import matplotlib.pyplot as plt
 from sets import Set
 from logging.handlers import RotatingFileHandler
-from tools.hanabi_moves import (HanabiDiscardAction,
-    HanabiPlayAction,
-    HanabiColorDiscloseAction,
-    HanabiRankDiscloseAction)
+import tools.hanabi_moves as moves
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -232,51 +229,19 @@ class HanabiGame:
             player = self.players[self.current_player]
             info = self.table.info_for_player(self.current_player)
             player_move = player.do_turn(self.current_player, info)
-            move = self.parse_turn(player_move)
-            pretty_print_info(info)
-            logger.debug(str(move))
-            self.current_player = (self.current_player + 1) % self.table.num_players
+            if player_move.is_valid(info):
+                player_move.execute(self.table)
+                pretty_print_info(info)
+                logger.debug(str(player_move))
+                self.current_player = (self.current_player + 1) % self.table.num_players
+            else:
+                self.disqualify(player_move)
         for move in self.game_history():
             logger.debug(move)
         logger.info('Final score: {score}'.format(score = self.table.score()))
 
     def game_history(self):
         return map(lambda action: str(action), self.table.history)
-
-    def is_valid_move(self, player_move):
-        return player_move is not None and (
-            self.is_valid_play_move(player_move) or
-            self.is_valid_discard_move(player_move) or
-            self.is_valid_disclose_move(player_move))
-
-    def is_valid_play_move(self, player_move):
-        return HanabiPlayAction.can_parse_move(player_move)
-
-    def is_valid_discard_move(self, player_move):
-        return HanabiDiscardAction.can_parse_move(player_move) and self.table.can_discard()
-
-    def is_valid_disclose_move(self, player_move):
-        return (self.table.can_disclose() and
-            (HanabiColorDiscloseAction.can_parse_move(player_move) or
-            HanabiRankDiscloseAction.can_parse_move(player_move)))
-
-    def parse_turn(self, player_move):
-        if not self.is_valid_move(player_move):
-            self.disqualify(player_move)
-        move = player_move['play_type']
-        if move == 'play':
-            return self.table.play_card(self.current_player, player_move['card'])
-        elif move == 'discard':
-            return self.table.discard_card(self.current_player, player_move['card'])
-        elif move == 'disclose':
-            return self.play_disclose(player_move)
-
-    def play_disclose(self, player_move):
-        disclose_type = player_move['disclose_type']
-        if disclose_type == 'color':
-            return self.table.disclose_color(self.current_player, player_move['player'], player_move['color'])
-        elif disclose_type == 'rank':
-            return self.table.disclose_rank(self.current_player, player_move['player'], player_move['rank'])
 
     def disqualify(self, player_move):
         logger.warning('Expected format for play card:')
