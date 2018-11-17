@@ -11,7 +11,6 @@ class PlayGameparserTests(unittest.TestCase):
     def test_game_simple(self):
         args = ['single', 'Discarder']
         parsed = playgame.parse_args(args)
-        print(parsed)
         self.assertEqual(1, len(parsed.players))
         self.assertEquals(0, parsed.variant)
         self.assertFalse(parsed.verbose)

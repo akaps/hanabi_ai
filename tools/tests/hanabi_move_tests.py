@@ -1,45 +1,36 @@
 import unittest
 from tools.hanabi_moves import (HanabiDiscardAction,
     HanabiPlayAction,
-    HanabiColorDiscloseAction,
-    HanabiRankDiscloseAction)
+    HanabiDiscloseColorAction,
+    HanabiDiscloseRankAction)
+from tools.hanabi_game_info import GameInfo
 
 class HanabiMoveTests(unittest.TestCase):
 
     def setUp(self):
-        self.well_formed_play = {'play_type':'play', 'card':1}
-        self.malformed_play = {'play_type':'play'}
-        self.well_formed_discard = {'play_type':'discard', 'card':1}
-        self.malformed_discard = {}
-        self.well_formed_color_disclose = {'play_type':'disclose', 'player':0, 'disclose_type':'color', 'color':'R'}
-        self.malformed_color_disclose = {'play_type':'disclose', 'player':0, 'disclose_type':'color', 'color':'S'}
-        self.well_formed_rank_disclose = {'play_type':'disclose', 'player':0, 'disclose_type':'rank', 'rank':2}
-        self.malformed_rank_disclose = {'play_type':'disclose', 'player':0, 'disclose_type':'RANK', 'rank':7}
+        self.play = HanabiPlayAction(0, 1)
+        self.discard = HanabiDiscardAction(0, 1)
+        self.color_disclose = HanabiDiscloseColorAction(0, 1, 'R')
+        self.rank_disclose = HanabiDiscloseRankAction(0, 1, 1)
+        self.game_info = GameInfo()
 
     def test_is_valid_play_move(self):
-        self.assertTrue(HanabiPlayAction.can_parse_move(self.well_formed_play))
-        self.assertFalse(HanabiPlayAction.can_parse_move(self.malformed_play))
-        self.assertFalse(HanabiPlayAction.can_parse_move(self.well_formed_discard))
+        self.assertTrue(self.play.is_valid(self.game_info))
 
     def test_is_valid_discard_move(self):
-        self.assertTrue(HanabiDiscardAction.can_parse_move(self.well_formed_discard))
-        self.assertTrue(HanabiDiscardAction.can_parse_move(self.well_formed_discard))
-        self.assertFalse(HanabiDiscardAction.can_parse_move(self.malformed_discard))
-        self.assertFalse(HanabiDiscardAction.can_parse_move(self.well_formed_play))
+        self.game_info.disclosures = 0
+        self.assertTrue(self.discard.is_valid(self.game_info))
+
+    def test_is_valid_discard_move_cannot_discrd(self):
+        self.game_info.disclosures = 8
+        self.assertFalse(self.discard.is_valid(self.game_info))
 
     def test_is_valid_disclose_move(self):
-        self.assertTrue(HanabiColorDiscloseAction.can_parse_move(self.well_formed_color_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.well_formed_rank_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.malformed_color_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.malformed_rank_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.well_formed_discard))
+        self.game_info.disclosures = 8
+        self.assertTrue(self.color_disclose.is_valid(self.game_info))
+        self.assertTrue(self.rank_disclose.is_valid(self.game_info))
 
-    def test_is_valid_disclose_color(self):
-        self.assertTrue(HanabiColorDiscloseAction.can_parse_move(self.well_formed_color_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.malformed_color_disclose))
-        self.assertFalse(HanabiColorDiscloseAction.can_parse_move(self.well_formed_rank_disclose))
-
-    def test_is_valid_disclose_rank(self):
-        self.assertTrue(HanabiRankDiscloseAction.can_parse_move(self.well_formed_rank_disclose))
-        self.assertFalse(HanabiRankDiscloseAction.can_parse_move(self.malformed_rank_disclose))
-        self.assertFalse(HanabiRankDiscloseAction.can_parse_move(self.well_formed_color_disclose))
+    def test_is_valid_disclose_move_cannot_disclose(self):
+        self.game_info.disclosures = 0
+        self.assertFalse(self.color_disclose.is_valid(self.game_info))
+        self.assertFalse(self.rank_disclose.is_valid(self.game_info))

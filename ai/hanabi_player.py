@@ -17,11 +17,10 @@ class HanabiPlayer:
             "scored_cards": dictionary of highest scored card per pile. Uses first letter of a color as key (i.e. "R")
             "history": list of moves objects made throughout the game. All are defined in hanabi_moves.py
 
-        @return a dictionary of the command to do. Uses the following formatting:
-            {'play_type':'play', 'card':<number>}
-            {'play_type':'discard', 'card':<number>}
-            {'play_type':'disclose', 'player':<player_id>, 'disclose_type':'color', 'color':<color>}
-            {'play_type':'disclose', 'player':<player_id>, 'disclose_type':'rank', 'rank':<number>}
+        @return an Action of the command to do. The Actions are
+            HanabiPlayAction: plays a card
+            HanabiDiscardAction: discards a card
+            HanabiDiscloseColorAction: discloses a color to a specified player
+            HanabiDiscloseRankAction: discloses a rank to a specified player
         """
         pass
-        
