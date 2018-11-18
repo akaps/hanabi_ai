@@ -9,4 +9,4 @@ script:
   - nosetests
   - ./sample_tournament.sh
   - ./sample.sh
-  - pylint hanabi_ai
+  - pylint hanabi_ai tests

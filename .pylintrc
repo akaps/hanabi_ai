@@ -54,7 +54,33 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=all
+disable=bad-continuation,
+      missing-docstring,
+      no-else-return,
+      too-few-public-methods,
+      line-too-long,
+      old-style-class,
+      no-init,
+      bad-whitespace,
+      too-many-instance-attributes,
+      dangerous-default-value,
+      too-many-arguments,
+      superfluous-parens,
+      missing-final-newline,
+      relative-import,
+      invalid-name,
+      unused-import,
+      bad-indentation,
+      len-as-condition,
+      useless-super-delegation,
+      trailing-whitespace,
+      wrong-import-order,
+      no-self-use,
+      #issues only found in tests
+      redundant-unittest-assert,
+      ungrouped-imports,
+      too-many-statements,
+      duplicate-code
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -79,7 +105,7 @@ evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / stateme
 # Set the output format. Available formats are text, parseable, colorized, json
 # and msvs (visual studio).You can also give a reporter class, eg
 # mypackage.mymodule.MyReporterClass.
-output-format=text
+output-format=parseable
 
 # Tells whether to display a full report or only the messages
 reports=no
