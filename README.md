@@ -14,8 +14,8 @@ sample.sh
 ```
 To get help info for running your own simulations
 ```
-python playgame.py -h
-python playgame.py single -h
+python hanabi_ai/playgame.py -h
+python hanabi_ai/playgame.py single -h
 ```
 
 ### Tournament Mode
@@ -27,7 +27,7 @@ sample_tournament.sh
 ```
 to get help info for setting up your own tournament
 ```
-python playgame.py tournament -h
+python hanabi_ai/playgame.py tournament -h
 ```
 
 ### Variants
