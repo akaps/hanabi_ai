@@ -3,8 +3,8 @@ import unittest
 from sets import Set
 from playgame import HanabiGame
 from argparse import Namespace
-from tools.hanabi_deck import HanabiVariant
-from ai.hanabi_player import HanabiPlayer
+from hanabi_ai.model.hanabi_deck import HanabiVariant
+from hanabi_ai.players.hanabi_player import HanabiPlayer
 
 class PlayGameparserTests(unittest.TestCase):
 
@@ -72,10 +72,10 @@ class PlayGameTests(unittest.TestCase):
         pass
 
     def test_validate_players(self):
-        players = ['ai.example_discarder.Discarder', #valid player
-                    'ai.example.missing.Missing', #missing player
+        players = ['hanabi_ai.players.example_discarder.Discarder', #valid player
+                    'hanabi_ai.players.example.missing.Missing', #missing player
                     'MockBadPlayer'] #player that does not implement HanabiPlayer
-        prepped_players = ['ai.example_discarder.Discarder']
+        prepped_players = ['hanabi_ai.players.example_discarder.Discarder']
         self.assertEqual(prepped_players, playgame.validate_players(players))
 
     def test_disqualify_player_scored(self):
@@ -151,5 +151,5 @@ class PlayGameTests(unittest.TestCase):
         self.assertTrue('E' in winners)
 
     def test_prep_players(self):
-        init_players = playgame.prep_players(['ai.example_discarder.Discarder'])
+        init_players = playgame.prep_players(['hanabi_ai.players.example_discarder.Discarder'])
         self.assertTrue(isinstance(init_players[0], HanabiPlayer))

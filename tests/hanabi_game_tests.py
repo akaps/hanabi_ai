@@ -1,15 +1,18 @@
 import unittest
 from playgame import HanabiGame
 from argparse import Namespace
-from tools.hanabi_deck import HanabiVariant
-import tools.hanabi_moves as moves
-from tools.hanabi_game_info import GameInfo
+from hanabi_ai.model.hanabi_deck import HanabiVariant
+import hanabi_ai.model.hanabi_moves as moves
+from hanabi_ai.model.hanabi_game_info import GameInfo
 
 def prep_args():
     args = Namespace()
     args.seed = 0
     args.variant = HanabiVariant.basic
-    args.players = ["ai.example_discarder.Discarder", "ai.example_discarder.Discarder"]
+    player_name = 'hanabi_ai.players.example_discarder.Discarder'
+    args.players = [
+        player_name,
+        player_name]
     args.seed = 0
     return args
 

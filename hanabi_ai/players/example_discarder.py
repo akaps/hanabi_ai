@@ -1,6 +1,6 @@
-import tools.hanabi_table as game
-import tools.hanabi_moves as moves
-from hanabi_player import HanabiPlayer
+import hanabi_ai.model.hanabi_table as game
+import hanabi_ai.model.hanabi_moves as moves
+from hanabi_ai.players.hanabi_player import HanabiPlayer
 
 #To create an AI for Hanabi, make a new class in the ai folder,
 #extend HanabiPlayer, and implement do_turn

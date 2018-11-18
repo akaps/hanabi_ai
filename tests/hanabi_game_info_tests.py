@@ -1,5 +1,5 @@
 import unittest
-from tools.hanabi_game_info import GameInfo
+from hanabi_ai.model.hanabi_game_info import GameInfo
 
 class GameInfoTests(unittest.TestCase):
     def setUp(self):
