@@ -1,9 +1,9 @@
 import unittest
-from tools.hanabi_table import HanabiTable
-from tools.hanabi_hand import HanabiHand
-from tools.hanabi_card import HanabiCard, HanabiColor
-from hanabi_table_tests import diagnose
-from tools.hanabi_deck import HanabiVariant
+from hanabi_ai.model.hanabi_table import HanabiTable
+from hanabi_ai.model.hanabi_hand import HanabiHand
+from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
+from tests.hanabi_table_tests import diagnose
+from hanabi_ai.model.hanabi_deck import HanabiVariant
 
 class HanabiTableVariant3Tests(unittest.TestCase):
     def setUp(self):

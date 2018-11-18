@@ -1,6 +1,6 @@
 import unittest
-from tools.hanabi_hand import HanabiHand
-from tools.hanabi_card import HanabiCard, HanabiColor
+from hanabi_ai.model.hanabi_hand import HanabiHand
+from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
 
 class HanabiHandTests(unittest.TestCase):
     def setUp(self):

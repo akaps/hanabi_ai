@@ -2,10 +2,10 @@ import argparse
 import time
 import os
 from pydoc import locate
-from tools.hanabi_table import HanabiTable
-from tools.hanabi_card import HanabiColor
-from tools.hanabi_deck import HanabiVariant
-from ai.hanabi_player import HanabiPlayer
+from hanabi_ai.model.hanabi_table import HanabiTable
+from hanabi_ai.model.hanabi_card import HanabiColor
+from hanabi_ai.model.hanabi_deck import HanabiVariant
+from hanabi_ai.players.hanabi_player import HanabiPlayer
 import sys
 import logging
 import itertools
@@ -13,7 +13,7 @@ import numpy
 import matplotlib.pyplot as plt
 from sets import Set
 from logging.handlers import RotatingFileHandler
-import tools.hanabi_moves as moves
+import hanabi_ai.model.hanabi_moves as moves
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)

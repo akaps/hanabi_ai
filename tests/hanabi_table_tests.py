@@ -1,8 +1,8 @@
 import unittest
-from tools.hanabi_table import HanabiTable
-from tools.hanabi_hand import HanabiHand
-from tools.hanabi_card import HanabiCard, HanabiColor
-from tools.hanabi_deck import HanabiVariant
+from hanabi_ai.model.hanabi_table import HanabiTable
+from hanabi_ai.model.hanabi_hand import HanabiHand
+from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
+from hanabi_ai.model.hanabi_deck import HanabiVariant
 
 def diagnose(table):
     print("Player 0")
