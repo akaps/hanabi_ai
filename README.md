@@ -48,12 +48,10 @@ Python 2.7
 
 A step by step series of examples that tell you how to get a development env running
 
-Install nose and enum34
+Install required packages
 
 ```
-pip install nose
-pip install enum34
-pip install matplotlib
+pip install nose enum34 matplotlib pylint
 ```
 
 ## Running the tests
@@ -67,4 +65,9 @@ nosetests
 To run an individual test, provide the filepath
 ```
 nosetests path_to_test.py
+```
+
+To run pylint on the project
+```
+pylint hanabi_ai tests
 ```
