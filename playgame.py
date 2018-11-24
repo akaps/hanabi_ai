@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 import argparse
 import time
 import os
@@ -10,7 +13,6 @@ import sys
 import logging
 import itertools
 import numpy
-import matplotlib.pyplot as plt
 from sets import Set
 from logging.handlers import RotatingFileHandler
 import hanabi_ai.model.hanabi_moves as moves
