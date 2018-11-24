@@ -11,10 +11,12 @@ import sys
 import logging
 import itertools
 import numpy
-import matplotlib.pyplot as plt
+import matplotlib
 from sets import Set
 from logging.handlers import RotatingFileHandler
 import hanabi_ai.model.hanabi_moves as moves
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt #pylint: disable=wrong-import-position
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
