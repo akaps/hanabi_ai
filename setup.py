@@ -7,6 +7,6 @@ setup(name='hanabi_ai',
       author_email='ari.kaps@gmail.com',
       url='https://github.com/akaps/hanabi_ai',
       packages=['hanabi_ai', 'hanabi_ai.model', 'hanabi_ai.players', 'hanabi_ai.tests'],
-      scripts=['hanabi_ai/sample.sh',
-               'hanabi_ai/sample_tournament.sh'],
+      scripts=['sample.sh',
+               'sample_tournament.sh'],
      )

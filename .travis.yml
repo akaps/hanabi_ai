@@ -8,6 +8,6 @@ install:
 # command to run tests
 script:
   - nosetests
-  - hanabi_ai/sample_tournament.sh
-  - hanabi_ai/sample.sh
+  - sample_tournament.sh
+  - sample.sh
   - pylint hanabi_ai
