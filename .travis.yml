@@ -10,4 +10,4 @@ script:
   - nosetests
   - hanabi_ai/sample_tournament.sh
   - hanabi_ai/sample.sh
-  - pylint hanabi_ai tests
+  - pylint hanabi_ai
