@@ -119,7 +119,7 @@ class HanabiTable(object):
         return res
 
     def can_disclose(self):
-       return self.disclosures > 0
+        return self.disclosures > 0
 
     def can_disclose_rank(self):
         return self.can_disclose()

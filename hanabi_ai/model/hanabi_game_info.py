@@ -10,16 +10,16 @@ class GameInfo(object):
                  known_info=None,
                  scored_cards=None,
                  history=None):
-                 self.score = score
-                 self.deck_size = deck_size
-                 self.discarded = discarded
-                 self.disclosures = disclosures
-                 self.mistakes_left = mistakes_left
-                 self.num_players = num_players
-                 self.hands = hands
-                 self.known_info = known_info
-                 self.scored_cards = scored_cards
-                 self.history = history
+        self.score = score
+        self.deck_size = deck_size
+        self.discarded = discarded
+        self.disclosures = disclosures
+        self.mistakes_left = mistakes_left
+        self.num_players = num_players
+        self.hands = hands
+        self.known_info = known_info
+        self.scored_cards = scored_cards
+        self.history = history
 
     #helper methods
     def can_disclose(self):
