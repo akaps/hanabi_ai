@@ -1,7 +1,6 @@
 import unittest
 from hanabi_ai.model.hanabi_table import HanabiTable
-from hanabi_ai.model.hanabi_hand import HanabiHand
-from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
+from hanabi_ai.model.hanabi_card import HanabiColor
 from hanabi_ai.model.hanabi_deck import HanabiVariant
 
 def diagnose(table):

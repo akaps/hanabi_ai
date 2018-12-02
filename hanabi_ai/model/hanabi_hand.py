@@ -1,5 +1,3 @@
-from hanabi_card import HanabiCard
-
 class HanabiHand(object):
     def __init__(self):
         self.hand = []

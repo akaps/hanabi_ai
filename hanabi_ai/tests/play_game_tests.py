@@ -1,9 +1,6 @@
 import hanabi_ai.play_game as play_game
 import unittest
 from sets import Set
-from hanabi_ai.play_game import HanabiGame
-from argparse import Namespace
-from hanabi_ai.model.hanabi_deck import HanabiVariant
 from hanabi_ai.players.hanabi_player import HanabiPlayer
 
 class PlayGameparserTests(unittest.TestCase):
