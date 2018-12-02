@@ -11,7 +11,6 @@ class Discarder(HanabiPlayer):
     def do_turn(self, player_index, game_info):
         if game_info.disclosures < game.NUM_DISCLOSURES:
             return moves.HanabiDiscardAction(player_index, 0)
-        else:
-            return moves.HanabiDiscloseRankAction(player_index,
-                game_info.next_player(player_index),
-                1)
+        return moves.HanabiDiscloseRankAction(player_index,
+                                              game_info.next_player(player_index),
+                                              1)

@@ -1,6 +1,5 @@
 import unittest
 from hanabi_ai.model.hanabi_deck import HanabiDeck
-from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
 
 class HanabiDeckTests(unittest.TestCase):
     def setUp(self):

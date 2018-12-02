@@ -1,9 +1,6 @@
-import hanabi_ai.play_game as play_game
 import unittest
 from sets import Set
-from hanabi_ai.play_game import HanabiGame
-from argparse import Namespace
-from hanabi_ai.model.hanabi_deck import HanabiVariant
+import hanabi_ai.play_game as play_game
 from hanabi_ai.players.hanabi_player import HanabiPlayer
 
 class PlayGameparserTests(unittest.TestCase):
@@ -63,7 +60,7 @@ class PlayGameparserTests(unittest.TestCase):
         self.assertEquals(parsed.command, 'tournament')
         self.assertEquals(4, parsed.per_round)
 
-class MockBadPlayer:
+class MockBadPlayer(object):
     pass
 
 class PlayGameTests(unittest.TestCase):
@@ -73,8 +70,8 @@ class PlayGameTests(unittest.TestCase):
 
     def test_validate_players(self):
         players = ['hanabi_ai.players.example_discarder.Discarder', #valid player
-                    'hanabi_ai.players.example.missing.Missing', #missing player
-                    'MockBadPlayer'] #player that does not implement HanabiPlayer
+                   'hanabi_ai.players.example.missing.Missing', #missing player
+                   'MockBadPlayer'] #player that does not implement HanabiPlayer
         prepped_players = ['hanabi_ai.players.example_discarder.Discarder']
         self.assertEqual(prepped_players, play_game.validate_players(players))
 
@@ -91,7 +88,7 @@ class PlayGameTests(unittest.TestCase):
         self.assertEqual(1, len(disqualified))
         self.assertTrue('D' not in scores)
 
-    def test_disqualify_player__not_scored(self):
+    def test_disqualify_not_scored(self):
         scores = {
             'A' : 0,
             'B' : 20, #C did not have a game yet
@@ -104,7 +101,7 @@ class PlayGameTests(unittest.TestCase):
         self.assertEqual(1, len(disqualified))
         self.assertTrue('C' not in scores)
 
-    def test_disqualify_player__multiple(self):
+    def test__multiple_disqualifies(self):
         scores = {
             'A' : 0,
             'B' : 20, #C did not have a game yet
@@ -114,11 +111,13 @@ class PlayGameTests(unittest.TestCase):
         disqualified = Set()
         play_game.disqualify_player(disqualified, scores, 'A')
         play_game.disqualify_player(disqualified, scores, 'E')
-        self.assertTrue('E', 'A' in disqualified)
+        self.assertTrue('A' in disqualified)
+        self.assertTrue('E' in disqualified)
         self.assertEqual(2, len(disqualified))
-        self.assertTrue('A', 'E' not in scores)
+        self.assertFalse('A' in scores)
+        self.assertFalse('E' in scores)
 
-    def test_determine_winner_one_winner(self):
+    def test_determine_one_winner(self):
         results = {
             'A' : {'mean': 20, 'variance': 2},
             'B' : {'mean': 22, 'variance': 7},
