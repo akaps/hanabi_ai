@@ -202,7 +202,7 @@ def parse_args(args):
     return parser.parse_args(args)
 
 def prep_players(player_names):
-    return map(lambda player_name: locate(player_name)(), player_names)
+    return [locate(name)() for name in player_names]
 
 class HanabiGame(object):
     def __init__(self, players, seed, variant):
@@ -225,7 +225,7 @@ class HanabiGame(object):
             LOGGER.debug('Mistakes left: {mistakes}'.format(mistakes=info.mistakes_left))
 
         player_details = 'Game with {players}'.format(
-            players=map(lambda(player): player.__class__.__name__, self.players))
+            players=[player.__class__.__name__ for player in self.players])
         LOGGER.info(player_details)
 
         while not self.table.is_game_over():
@@ -244,7 +244,7 @@ class HanabiGame(object):
         LOGGER.info('Final score: {score}'.format(score=self.table.score()))
 
     def game_history(self):
-        return map(lambda action: str(action), self.table.history)
+        return [str(action) for action in self.table.history]
 
     def disqualify(self, player_move):
         LOGGER.warning('Expected format for play card:')
