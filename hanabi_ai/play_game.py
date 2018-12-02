@@ -48,7 +48,7 @@ def disqualify_player(disqualified, tournament_scores, player):
     for disqualify in disqualified:
         if disqualify in tournament_scores:
             del tournament_scores[disqualify]
-    logger.warning('removed player {player} from tournament'.format(player = disqualified))
+    logger.warning('removed player {player} from tournament'.format(player=disqualified))
 
 def ensure_path(path):
     directories_from_path = os.path.dirname(path)
@@ -81,8 +81,8 @@ def run_tournament(args):
         for key, val in tournament_scores.iteritems()
         }
 
-    logger.info('Scores: {scores}'.format(scores = tournament_scores))
-    logger.info('Results: {results}'.format(results = tournament_results))
+    logger.info('Scores: {scores}'.format(scores=tournament_scores))
+    logger.info('Results: {results}'.format(results=tournament_results))
     determine_winner(tournament_results)
     if args.show_graphs:
         show_plot(tournament_scores)
@@ -93,7 +93,7 @@ def show_plot(scores):
     labels = [name for name in scores.keys()]
     ind = numpy.arange(len(labels))
     width = 0.35
-    plt.bar(ind, means, width, yerr = std)
+    plt.bar(ind, means, width, yerr=std)
     plt.ylabel('scores')
     plt.title('Scores by player')
     plt.xticks(ind, labels)
@@ -105,7 +105,7 @@ def determine_winner(results):
     average_winners = {key: val for key, val in results.items() if val['mean'] is winning_average}
     winning_variance = min(average_winners.itervalues())['variance']
     winners = [key for key, val in average_winners.items() if val['variance'] is winning_variance]
-    logger.info('Winner(s): {winners}'.format(winners = winners))
+    logger.info('Winner(s): {winners}'.format(winners=winners))
     return winners
 
 def run_one_configuration(args):
@@ -120,20 +120,20 @@ def run_one_game(players, seed, variant):
 
 def prep_logger(log_dir, verbose, log_stderr, count):
     formatter = logging.Formatter('[%(asctime)s] %(levelname)8s --- %(message)s ' +
-                                  '(%(filename)s:%(lineno)s)',datefmt='%Y-%m-%d %H:%M:%S')
+                                  '(%(filename)s:%(lineno)s)', datefmt='%Y-%m-%d %H:%M:%S')
     if verbose:
         logger.setLevel(logging.DEBUG)
     else:
         logger.setLevel(logging.INFO)
     if log_dir:
         ensure_path(log_dir)
-        fh = RotatingFileHandler(log_dir, mode = 'w', backupCount = count)
+        fh = RotatingFileHandler(log_dir, mode='w', backupCount=count)
         fh.setLevel(logging.DEBUG)
         logger.addHandler(fh)
         fh.setFormatter(formatter)
     if log_stderr:
         ensure_path(log_stderr)
-        efh = RotatingFileHandler(log_stderr, mode = 'w', backupCount = count)
+        efh = RotatingFileHandler(log_stderr, mode='w', backupCount=count)
         efh.setLevel(logging.ERROR)
         logger.addHandler(efh)
         efh.setFormatter(formatter)
@@ -145,62 +145,62 @@ def parse_args(args):
 
     #Positional arguments
     parent_parser.add_argument('players',
-                               nargs = '+',
-                               help = 'the players that will play Hanabi. '
+                               nargs='+',
+                               help='the players that will play Hanabi. '
                                'First 5 will play unless in tournament mode')
 
     #Optional arguments
     parent_parser.add_argument('-s', '--seed',
-                               default = int(round(time.time()*1000)),
-                               type = int,
-                               help = 'a specific seed for shuffling the deck')
+                               default=int(round(time.time()*1000)),
+                               type=int,
+                               help='a specific seed for shuffling the deck')
     parent_parser.add_argument('-r', '--variant',
-                               type = int,
-                               choices = [1, 2, 3],
-                               default = 0,
-                               dest = 'variant',
-                               help = 'play the selected variant')
+                               type=int,
+                               choices=[1, 2, 3],
+                               default=0,
+                               dest='variant',
+                               help='play the selected variant')
     parent_parser.add_argument('-i', '--game_iterations',
-                               type = int,
-                               default = 1,
-                               dest = 'iterations',
-                               help = 'number of times to play each game')
+                               type=int,
+                               default=1,
+                               dest='iterations',
+                               help='number of times to play each game')
     parent_parser.add_argument('-v', '--verbose',
-                               dest = 'verbose',
-                               action = 'store_true',
-                               help = 'log moves and game state as game is played')
+                               dest='verbose',
+                               action='store_true',
+                               help='log moves and game state as game is played')
     parent_parser.add_argument('-l', '--log_dir',
-                               dest = 'log_dir',
-                               default = None,
-                               help = 'save logs to file')
+                               dest='log_dir',
+                               default=None,
+                               help='save logs to file')
     parent_parser.add_argument('-e', '--log_stderr',
-                               dest = 'log_stderr',
-                               help = 'log errors to file')
+                               dest='log_stderr',
+                               help='log errors to file')
 
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(help = usage,
-                                       dest = 'command')
+    subparsers = parser.add_subparsers(help=usage,
+                                       dest='command')
 
     #single game-specific arguments
     subparsers.add_parser('single',
-                          help = 'run a single game of Hanabi',
-                          parents = [parent_parser])
+                          help='run a single game of Hanabi',
+                          parents=[parent_parser])
 
     #tournament mode-specific arguments
     tournament = subparsers.add_parser('tournament',
-                                       parents = [parent_parser],
-                                       help = 'run games for all combinations '
+                                       parents=[parent_parser],
+                                       help='run games for all combinations '
                                        'of players (no repeats)')
     tournament.add_argument('-p', '--players_per_game',
-                            dest = 'per_round',
-                            type = int,
-                            choices = [2, 3, 4, 5],
-                            default = 2,
-                            help = 'number of players per game in the tournament')
+                            dest='per_round',
+                            type=int,
+                            choices=[2, 3, 4, 5],
+                            default=2,
+                            help='number of players per game in the tournament')
     tournament.add_argument('-g', '--graphs',
-                            dest = 'show_graphs',
-                            action  = 'store_true',
-                            help = 'show graphical results of tournament')
+                            dest='show_graphs',
+                            action='store_true',
+                            help='show graphical results of tournament')
     return parser.parse_args(args)
 
 def prep_players(player_names):
@@ -215,19 +215,19 @@ class HanabiGame(object):
 
     def play_game(self):
         def pretty_print_info(info):
-            logger.debug('Player {player_id} sees:'.format(player_id = self.current_player))
-            logger.debug('Players: {players}'.format(players = info.num_players))
-            logger.debug('Cards in deck: {deck}'.format(deck = info.deck_size))
-            logger.debug('Discarded: {discard}'.format(discard = info.discarded))
-            logger.debug('Score: {score}'.format(score = info.score))
-            logger.debug('Progress: {scored}'.format(scored = info.scored_cards))
-            logger.debug('Sees: {visible}'.format(visible = info.hands))
-            logger.debug('Knows: {known}'.format(known = info.known_info))
-            logger.debug('Disclosures left: {disclosures}'.format(disclosures = info.disclosures))
-            logger.debug('Mistakes left: {mistakes}'.format(mistakes = info.mistakes_left))
+            logger.debug('Player {player_id} sees:'.format(player_id=self.current_player))
+            logger.debug('Players: {players}'.format(players=info.num_players))
+            logger.debug('Cards in deck: {deck}'.format(deck=info.deck_size))
+            logger.debug('Discarded: {discard}'.format(discard=info.discarded))
+            logger.debug('Score: {score}'.format(score=info.score))
+            logger.debug('Progress: {scored}'.format(scored=info.scored_cards))
+            logger.debug('Sees: {visible}'.format(visible=info.hands))
+            logger.debug('Knows: {known}'.format(known=info.known_info))
+            logger.debug('Disclosures left: {disclosures}'.format(disclosures=info.disclosures))
+            logger.debug('Mistakes left: {mistakes}'.format(mistakes=info.mistakes_left))
 
         player_details = 'Game with {players}'.format(
-            players = map(lambda(player): player.__class__.__name__, self.players))
+            players=map(lambda(player): player.__class__.__name__, self.players))
         logger.info(player_details)
 
         while not self.table.is_game_over():
@@ -243,7 +243,7 @@ class HanabiGame(object):
                 self.disqualify(player_move)
         for move in self.game_history():
             logger.debug(move)
-        logger.info('Final score: {score}'.format(score = self.table.score()))
+        logger.info('Final score: {score}'.format(score=self.table.score()))
 
     def game_history(self):
         return map(lambda action: str(action), self.table.history)
@@ -262,8 +262,8 @@ class HanabiGame(object):
         logger.warning('Expected format for disclose rank:')
         logger.warning('{"play_type":"disclose", "disclose_type":"rank, "rank":<number>}')
         logger.error('Received invalid move from player {player}: {move}'.format(
-            player = self.current_player,
-            move = player_move
+            player=self.current_player,
+            move=player_move
         ))
         raise InvalidHanabiMoveException('Received invalid move from player', self.current_player)
 

@@ -20,7 +20,7 @@ class HanabiTable(object):
         self.discard = HanabiDiscard()
         self.disclosures = NUM_DISCLOSURES
         self.mistakes_left = NUM_MISTAKES
-        self.hands = [HanabiHand() for _ in range (0, num_players)]
+        self.hands = [HanabiHand() for _ in range(0, num_players)]
         self.init_hands()
         self.scored_cards = {}
         self.init_tableau(variant)
@@ -47,7 +47,7 @@ class HanabiTable(object):
             3: 5,
             4: 4,
             5: 4,
-        } [num_players]
+        }[num_players]
 
     def is_game_over(self):
         return (self.mistakes_left == 0 or
@@ -149,11 +149,11 @@ class HanabiTable(object):
         return action
 
     def __str__(self):
-        res = "Score: {score}".format(score = self.score())
-        res += ", Cards remaining: {cards}".format(cards = len(self.deck))
-        res += ", Discarded: {discard}".format(discard = len(self.discard))
-        res += ", Disclosures left: {disclosures}".format(disclosures = self.disclosures)
-        res += ", Mistakes left: {mistakes}".format(mistakes = self.mistakes_left)
+        res = "Score: {score}".format(score=self.score())
+        res += ", Cards remaining: {cards}".format(cards=len(self.deck))
+        res += ", Discarded: {discard}".format(discard=len(self.discard))
+        res += ", Disclosures left: {disclosures}".format(disclosures=self.disclosures)
+        res += ", Mistakes left: {mistakes}".format(mistakes=self.mistakes_left)
         return res
 
     def score(self):

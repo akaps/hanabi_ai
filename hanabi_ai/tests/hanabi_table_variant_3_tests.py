@@ -10,22 +10,22 @@ class HanabiTableVariant3Tests(unittest.TestCase):
         self.table = HanabiTable(2, 1, HanabiVariant.rainbow_wild)
 
     def test_table_play_card_correct_rainbow(self):
-        self.table.play_card(0,0) #*1
+        self.table.play_card(0, 0) #*1
         self.assertEqual(1, self.table.score())
         self.assertEqual(1, self.table.info_for_player(0).scored_cards["*"])
 
     def test_table_play_card_incorrect_rainbow(self):
-        self.table.discard_card(0,0)
-        self.table.discard_card(0,0)
-        self.table.play_card(0,4) #W1
-        self.table.discard_card(0,0)
-        self.table.discard_card(1,0)
-        self.table.discard_card(1,0)
-        self.table.discard_card(1,0)
-        self.table.discard_card(1,0)
-        self.table.play_card(1,4) #R1
-        self.table.play_card(0,1) #R2
-        self.table.play_card(0,0) #*3
+        self.table.discard_card(0, 0)
+        self.table.discard_card(0, 0)
+        self.table.play_card(0, 4) #W1
+        self.table.discard_card(0, 0)
+        self.table.discard_card(1, 0)
+        self.table.discard_card(1, 0)
+        self.table.discard_card(1, 0)
+        self.table.discard_card(1, 0)
+        self.table.play_card(1, 4) #R1
+        self.table.play_card(0, 1) #R2
+        self.table.play_card(0, 0) #*3
         diagnose(self.table)
         self.assertEqual(3, self.table.score())
         self.assertEqual(1, self.table.info_for_player(0).scored_cards["W"])

@@ -25,9 +25,9 @@ class HanabiCardAction(HanabiAction):
 
     def __str__(self):
         return "Player {id} {action} {card}".format(
-            id = self.player_id,
-            action = self.action_type(),
-            card = str(self.card))
+            id=self.player_id,
+            action=self.action_type(),
+            card=str(self.card))
 
 class HanabiPlayAction(HanabiCardAction):
 
@@ -72,14 +72,14 @@ class HanabiDiscloseAction(HanabiAction):
     def pluralize(self, word, count):
         if count <= 1:
             return word
-        return '{word}s'.format(word = word)
+        return '{word}s'.format(word=word)
 
     def __str__(self):
         return "Player {id} told {whom} about {count} {disclosure} in their hand".format(
-            id = self.player_id,
-            whom = self.to_whom,
-            count = self.count,
-            disclosure = self.disclosure_type)
+            id=self.player_id,
+            whom=self.to_whom,
+            count=self.count,
+            disclosure=self.disclosure_type)
 
     def is_valid(self, game_info):
         return game_info.can_disclose()
@@ -109,7 +109,7 @@ class HanabiDiscloseRankAction(HanabiDiscloseAction):
 
     def is_valid(self, game_info):
         return (super(HanabiDiscloseRankAction, self).is_valid(game_info) and
-                self.rank in range(1,6))
+                self.rank in range(1, 6))
 
     def execute(self, table):
         table.disclose_rank(self.player_id, self.to_whom, self.rank)

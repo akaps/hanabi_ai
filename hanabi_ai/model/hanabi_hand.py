@@ -27,7 +27,7 @@ class HanabiHand(object):
             if card.rank == rank:
                 card.disclose_rank()
 
-    def disclose_color(self, color, is_rainbow_wild = False):
+    def disclose_color(self, color, is_rainbow_wild=False):
         for card in self.hand:
             card.disclose_color(color, is_rainbow_wild)
 

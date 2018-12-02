@@ -11,21 +11,21 @@ class HanabiTableVariant2Tests(unittest.TestCase):
 
     def test_table_play_card_correct_rainbow(self):
         #white 1
-        self.table.play_card(0,2)
-        self.table.discard_card(0,0)
-        self.table.discard_card(0,0)
-        self.table.discard_card(0,0)
+        self.table.play_card(0, 2)
+        self.table.discard_card(0, 0)
+        self.table.discard_card(0, 0)
+        self.table.discard_card(0, 0)
         #play rainbow 1, 2
-        self.table.play_card(0,4)
-        self.table.play_card(0,0)
+        self.table.play_card(0, 4)
+        self.table.play_card(0, 0)
         self.assertEqual(3, self.table.score())
 
     def test_table_play_card_incorrect_rainbow(self):
         #play white 1
-        self.table.play_card(0,2)
+        self.table.play_card(0, 2)
         self.assertEqual(1, self.table.score())
         #play rainbow 2, cannot since it is not wild
-        self.table.play_card(0,3)
+        self.table.play_card(0, 3)
         self.assertEqual(1, self.table.score())
         self.assertEqual(2, self.table.mistakes_left)
         self.assertTrue(HanabiCard(HanabiColor.RAINBOW, 2) in self.table.discard.discarded())
