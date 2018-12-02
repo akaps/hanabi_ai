@@ -8,7 +8,7 @@ class HanabiVariant(enum.IntEnum):
     sixth_suit_hard = 2
     rainbow_wild = 3
 
-class HanabiDeck:
+class HanabiDeck(object):
 
     def __init__(self, seed, variant = HanabiVariant.basic):
         colors = [HanabiColor.BLUE,

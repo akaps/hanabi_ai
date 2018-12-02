@@ -56,7 +56,6 @@ confidence=
 # --disable=W"
 disable=missing-docstring,
       too-few-public-methods,
-      old-style-class,
       no-init,
       bad-whitespace,
       too-many-instance-attributes,

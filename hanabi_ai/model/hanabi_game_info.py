@@ -1,4 +1,4 @@
-class GameInfo:
+class GameInfo(object):
     def __init__(self,
                  score = 0,
                  deck_size = 0,

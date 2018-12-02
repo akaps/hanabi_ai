@@ -1,4 +1,4 @@
-class HanabiDiscard:
+class HanabiDiscard(object):
     #probably should just be a variable, but I already wrote it /shrug
     def __init__(self):
         self.pile = []

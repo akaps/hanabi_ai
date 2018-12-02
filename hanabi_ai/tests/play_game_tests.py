@@ -63,7 +63,7 @@ class PlayGameparserTests(unittest.TestCase):
         self.assertEquals(parsed.command, 'tournament')
         self.assertEquals(4, parsed.per_round)
 
-class MockBadPlayer:
+class MockBadPlayer(object):
     pass
 
 class PlayGameTests(unittest.TestCase):

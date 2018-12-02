@@ -1,4 +1,4 @@
-class HanabiColor:
+class HanabiColor(object):
     RED = 'R'
     BLUE = 'B'
     GREEN = 'G'
@@ -6,7 +6,7 @@ class HanabiColor:
     YELLOW = 'Y'
     RAINBOW = '*'
 
-class HanabiCard:
+class HanabiCard(object):
     NONE_KNOWN = 0b00
     RANK_KNOWN = 0b01
     COLOR_KNOWN = 0b10

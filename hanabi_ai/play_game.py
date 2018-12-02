@@ -206,7 +206,7 @@ def parse_args(args):
 def prep_players(player_names):
     return map(lambda player_name: locate(player_name)(), player_names)
 
-class HanabiGame:
+class HanabiGame(object):
     def __init__(self, players, seed, variant):
         self.players = prep_players(players)
         self.table = HanabiTable(len(players), seed, variant)

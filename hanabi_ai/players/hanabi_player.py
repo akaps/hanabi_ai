@@ -1,4 +1,4 @@
-class HanabiPlayer:
+class HanabiPlayer(object):
     def do_turn(self, player_index, game_info):
         """
         evaluates and returns the next move to make for Hanabi
