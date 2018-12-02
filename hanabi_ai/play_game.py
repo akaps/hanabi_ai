@@ -20,7 +20,7 @@ LOGGER = logging.getLogger(__name__)
 
 class InvalidHanabiMoveException(Exception):
     def __init__(self, message, player_id):
-        self.message = message
+        super(InvalidHanabiMoveException, self).__init__(message)
         self.player_id = player_id
 
 def main(argv):

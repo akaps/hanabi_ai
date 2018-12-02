@@ -61,7 +61,6 @@ disable=missing-docstring,
       relative-import,
       no-self-use,
       #play_game rules
-      super-init-not-called,
       logging-format-interpolation,
       deprecated-lambda,
       unnecessary-lambda,
