@@ -60,7 +60,6 @@ disable=missing-docstring,
       too-many-instance-attributes,
       too-many-arguments,
       relative-import,
-      wrong-import-order,
       no-self-use,
       #play_game rules
       super-init-not-called,

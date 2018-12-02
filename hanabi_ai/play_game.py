@@ -1,19 +1,19 @@
-import matplotlib
-matplotlib.use('TkAgg')
-import matplotlib.pyplot as plt
 import argparse
 import time
 import os
 from pydoc import locate
-from hanabi_ai.model.hanabi_table import HanabiTable
-from hanabi_ai.model.hanabi_deck import HanabiVariant
-from hanabi_ai.players.hanabi_player import HanabiPlayer
 import sys
 import logging
 import itertools
-import numpy
 from sets import Set
 from logging.handlers import RotatingFileHandler
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+import numpy
+from hanabi_ai.model.hanabi_table import HanabiTable
+from hanabi_ai.model.hanabi_deck import HanabiVariant
+from hanabi_ai.players.hanabi_player import HanabiPlayer
 
 logging.basicConfig()
 LOGGER = logging.getLogger(__name__)

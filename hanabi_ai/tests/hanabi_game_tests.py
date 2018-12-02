@@ -1,6 +1,6 @@
 import unittest
-from hanabi_ai.play_game import HanabiGame
 from argparse import Namespace
+from hanabi_ai.play_game import HanabiGame
 from hanabi_ai.model.hanabi_deck import HanabiVariant
 import hanabi_ai.model.hanabi_moves as moves
 from hanabi_ai.model.hanabi_game_info import GameInfo
