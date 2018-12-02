@@ -111,9 +111,11 @@ class PlayGameTests(unittest.TestCase):
         disqualified = Set()
         play_game.disqualify_player(disqualified, scores, 'A')
         play_game.disqualify_player(disqualified, scores, 'E')
-        self.assertTrue('E', 'A' in disqualified)
+        self.assertTrue('A' in disqualified)
+        self.assertTrue('E' in disqualified)
         self.assertEqual(2, len(disqualified))
-        self.assertTrue('A', 'E' not in scores)
+        self.assertFalse('A' in scores)
+        self.assertFalse('E' in scores)
 
     def test_determine_one_winner(self):
         results = {
