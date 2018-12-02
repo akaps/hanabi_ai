@@ -47,8 +47,7 @@ class HanabiCard:
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.rank == other.rank and self.color == other.color
-        else:
-            return False
+        return False
 
     def __ne__(self, other):
         return not self.__eq__(other)

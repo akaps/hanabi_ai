@@ -69,8 +69,7 @@ class HanabiDiscloseAction(HanabiAction):
     def pluralize(self, word, count):
         if count <= 1:
             return word
-        else:
-            return '{word}s'.format(word = word)
+        return '{word}s'.format(word = word)
 
     def __str__(self):
         return "Player {id} told {whom} about {count} {disclosure} in their hand".format(
