@@ -62,7 +62,6 @@ disable=missing-docstring,
       no-self-use,
       #play_game rules
       logging-format-interpolation,
-      unnecessary-lambda,
       #issues only found in tests
       redundant-unittest-assert,
       ungrouped-imports,
