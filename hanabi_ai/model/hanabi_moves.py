@@ -24,7 +24,10 @@ class HanabiCardAction(HanabiAction):
         pass
 
     def __str__(self):
-        return "Player {id} {action} {card}".format(id = self.player_id, action = self.action_type(), card = str(self.card))
+        return "Player {id} {action} {card}".format(
+            id = self.player_id,
+            action = self.action_type(),
+            card = str(self.card))
 
 class HanabiPlayAction(HanabiCardAction):
 

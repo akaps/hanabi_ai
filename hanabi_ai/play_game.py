@@ -189,7 +189,8 @@ def parse_args(args):
     #tournament mode-specific arguments
     tournament = subparsers.add_parser('tournament',
                                        parents = [parent_parser],
-                                       help = 'run games for all combinations of players (no repeats)')
+                                       help = 'run games for all combinations '
+                                       'of players (no repeats)')
     tournament.add_argument('-p', '--players_per_game',
                             dest = 'per_round',
                             type = int,
