@@ -226,7 +226,8 @@ class HanabiGame:
             logger.debug('Disclosures left: {disclosures}'.format(disclosures = info.disclosures))
             logger.debug('Mistakes left: {mistakes}'.format(mistakes = info.mistakes_left))
 
-        player_details = 'Game with {players}'.format(players = map(lambda(player): player.__class__.__name__, self.players))
+        player_details = 'Game with {players}'.format(
+            players = map(lambda(player): player.__class__.__name__, self.players))
         logger.info(player_details)
 
         while not self.table.is_game_over():
