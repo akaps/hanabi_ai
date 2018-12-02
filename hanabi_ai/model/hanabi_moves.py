@@ -30,10 +30,6 @@ class HanabiCardAction(HanabiAction):
             card=str(self.card))
 
 class HanabiPlayAction(HanabiCardAction):
-
-    def __init__(self, player_id, card):
-        super(HanabiPlayAction, self).__init__(player_id, card)
-
     def action_type(self):
         return 'played'
 
@@ -44,9 +40,6 @@ class HanabiPlayAction(HanabiCardAction):
         table.play_card(self.player_id, self.card)
 
 class HanabiDiscardAction(HanabiCardAction):
-    def __init__(self, player_id, card):
-        super(HanabiDiscardAction, self).__init__(player_id, card)
-
     def action_type(self):
         return 'discarded'
 
