@@ -1,4 +1,5 @@
-python playgame.py "tournament" \
+python hanabi_ai/play_game.py \
+    "tournament" \
     "hanabi_ai.players.example_discarder.Discarder" \
     "hanabi_ai.players.example_discarder.Discarder" \
     "hanabi_ai.players.example_discarder.Discarder" \

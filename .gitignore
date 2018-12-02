@@ -1,4 +1,4 @@
 *.pyc
 .vscode
 .DS_Store
-*.txt*
+game_logs/

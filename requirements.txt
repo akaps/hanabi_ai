@@ -1,0 +1,4 @@
+nose
+enum34
+matplotlib
+pylint

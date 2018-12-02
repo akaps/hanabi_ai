@@ -3,10 +3,11 @@ python:
   - "2.7"
 # command to install dependencies
 install:
-  - pip install nose enum34 matplotlib pylint
+  - pip install -r requirements.txt
+  - pip install .
 # command to run tests
 script:
   - nosetests
-  - ./sample_tournament.sh
-  - ./sample.sh
-  - pylint hanabi_ai tests
+  - sample_tournament.sh
+  - sample.sh
+  - pylint hanabi_ai

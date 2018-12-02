@@ -2,7 +2,7 @@ import unittest
 from hanabi_ai.model.hanabi_table import HanabiTable
 from hanabi_ai.model.hanabi_hand import HanabiHand
 from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
-from tests.hanabi_table_tests import diagnose
+from hanabi_ai.tests.hanabi_table_tests import diagnose
 from hanabi_ai.model.hanabi_deck import HanabiVariant
 
 class HanabiTableVariant2Tests(unittest.TestCase):
