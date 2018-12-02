@@ -8,7 +8,7 @@ from logging.handlers import RotatingFileHandler
 import itertools
 from sets import Set
 import matplotlib
-matplotlib.use('TkAgg')
+matplotlib.use('TkAgg') #pylint: disable=wrong-import-position
 import matplotlib.pyplot as plt
 import numpy
 from hanabi_ai.model.hanabi_table import HanabiTable

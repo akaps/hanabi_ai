@@ -65,8 +65,7 @@ disable=missing-docstring,
       #issues only found in tests
       redundant-unittest-assert,
       too-many-statements,
-      duplicate-code,
-      wrong-import-position
+      duplicate-code
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
