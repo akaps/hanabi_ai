@@ -4,9 +4,9 @@ import os
 from pydoc import locate
 import sys
 import logging
+from logging.handlers import RotatingFileHandler
 import itertools
 from sets import Set
-from logging.handlers import RotatingFileHandler
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
