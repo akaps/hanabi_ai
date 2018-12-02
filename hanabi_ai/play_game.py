@@ -69,8 +69,8 @@ def run_tournament(args):
                     tournament_scores[player].append(score)
         except InvalidHanabiMoveException as err:
             disqualify_player(disqualified,
-                tournament_scores,
-                players[err.player_id])
+                              tournament_scores,
+                              players[err.player_id])
         finally:
             rotate_logs()
     tournament_results = {
@@ -145,60 +145,61 @@ def parse_args(args):
 
     #Positional arguments
     parent_parser.add_argument('players',
-                        nargs = '+',
-                        help = 'the players that will play Hanabi. First 5 will play unless in tournament mode')
+                               nargs = '+',
+                               help = 'the players that will play Hanabi. '
+                               'First 5 will play unless in tournament mode')
 
     #Optional arguments
     parent_parser.add_argument('-s', '--seed',
-                        default = int(round(time.time()*1000)),
-                        type = int,
-                        help = 'a specific seed for shuffling the deck')
+                               default = int(round(time.time()*1000)),
+                               type = int,
+                               help = 'a specific seed for shuffling the deck')
     parent_parser.add_argument('-r', '--variant',
-                        type = int,
-                        choices = [1, 2, 3],
-                        default = 0,
-                        dest = 'variant',
-                        help = 'play the selected variant')
+                               type = int,
+                               choices = [1, 2, 3],
+                               default = 0,
+                               dest = 'variant',
+                               help = 'play the selected variant')
     parent_parser.add_argument('-i', '--game_iterations',
-                        type = int,
-                        default = 1,
-                        dest = 'iterations',
-                        help = 'number of times to play each game')
+                               type = int,
+                               default = 1,
+                               dest = 'iterations',
+                               help = 'number of times to play each game')
     parent_parser.add_argument('-v', '--verbose',
-                        dest = 'verbose',
-                        action = 'store_true',
-                        help = 'log moves and game state as game is played')
+                               dest = 'verbose',
+                               action = 'store_true',
+                               help = 'log moves and game state as game is played')
     parent_parser.add_argument('-l', '--log_dir',
-                        dest = 'log_dir',
-                        default = None,
-                        help = 'save logs to file')
+                               dest = 'log_dir',
+                               default = None,
+                               help = 'save logs to file')
     parent_parser.add_argument('-e', '--log_stderr',
-                        dest = 'log_stderr',
-                        help = 'log errors to file')
+                               dest = 'log_stderr',
+                               help = 'log errors to file')
 
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help = usage,
-                        dest = 'command')
+                                       dest = 'command')
 
     #single game-specific arguments
     subparsers.add_parser('single',
-                        help = 'run a single game of Hanabi',
-                        parents = [parent_parser])
+                          help = 'run a single game of Hanabi',
+                          parents = [parent_parser])
 
     #tournament mode-specific arguments
     tournament = subparsers.add_parser('tournament',
-                        parents = [parent_parser],
-                        help = 'run games for all combinations of players (no repeats)')
+                                       parents = [parent_parser],
+                                       help = 'run games for all combinations of players (no repeats)')
     tournament.add_argument('-p', '--players_per_game',
-                        dest = 'per_round',
-                        type = int,
-                        choices = [2, 3, 4, 5],
-                        default = 2,
-                        help = 'number of players per game in the tournament')
+                            dest = 'per_round',
+                            type = int,
+                            choices = [2, 3, 4, 5],
+                            default = 2,
+                            help = 'number of players per game in the tournament')
     tournament.add_argument('-g', '--graphs',
-                        dest = 'show_graphs',
-                        action  = 'store_true',
-                        help = 'show graphical results of tournament')
+                            dest = 'show_graphs',
+                            action  = 'store_true',
+                            help = 'show graphical results of tournament')
     return parser.parse_args(args)
 
 def prep_players(player_names):

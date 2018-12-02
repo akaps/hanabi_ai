@@ -13,5 +13,5 @@ class Discarder(HanabiPlayer):
             return moves.HanabiDiscardAction(player_index, 0)
         else:
             return moves.HanabiDiscloseRankAction(player_index,
-                game_info.next_player(player_index),
-                1)
+                                                  game_info.next_player(player_index),
+                                                  1)

@@ -4,9 +4,9 @@ from hanabi_hand import HanabiHand
 from hanabi_card import HanabiColor
 from hanabi_game_info import GameInfo
 from hanabi_moves import (HanabiPlayAction,
-    HanabiDiscardAction,
-    HanabiDiscloseRankAction,
-    HanabiDiscloseColorAction)
+                          HanabiDiscardAction,
+                          HanabiDiscloseRankAction,
+                          HanabiDiscloseColorAction)
 
 NUM_DISCLOSURES = 8
 NUM_MISTAKES = 3
@@ -51,8 +51,8 @@ class HanabiTable:
 
     def is_game_over(self):
         return (self.mistakes_left == 0 or
-            (len(self.deck) == 0 and self.lastTurns == 0) or
-            self.score() == 25)
+                (len(self.deck) == 0 and self.lastTurns == 0) or
+                self.score() == 25)
 
     def play_card(self, player_id, card_index):
         card = self.hands[player_id].pop(card_index)
@@ -126,8 +126,8 @@ class HanabiTable:
 
     def can_disclose_color(self, color):
         return (self.can_disclose() and
-            color in "RGBWY*" and
-            (color != HanabiColor.RAINBOW or not self.is_rainbow_wild))
+                color in "RGBWY*" and
+                (color != HanabiColor.RAINBOW or not self.is_rainbow_wild))
 
     def disclose_rank(self, player_id, to_whom, rank):
         self.disclosures -= 1

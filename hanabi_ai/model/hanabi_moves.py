@@ -92,7 +92,7 @@ class HanabiDiscloseColorAction(HanabiDiscloseAction):
 
     def is_valid(self, game_info):
         return (super(HanabiDiscloseColorAction, self).is_valid(game_info) and
-            self.color in 'RWBGY*')
+                self.color in 'RWBGY*')
 
     def execute(self, table):
         table.disclose_color(self.player_id, self.to_whom, self.color)
@@ -107,7 +107,7 @@ class HanabiDiscloseRankAction(HanabiDiscloseAction):
 
     def is_valid(self, game_info):
         return (super(HanabiDiscloseRankAction, self).is_valid(game_info) and
-            self.rank in range(1,6))
+                self.rank in range(1,6))
 
     def execute(self, table):
         table.disclose_rank(self.player_id, self.to_whom, self.rank)

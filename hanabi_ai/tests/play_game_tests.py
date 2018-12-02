@@ -73,8 +73,8 @@ class PlayGameTests(unittest.TestCase):
 
     def test_validate_players(self):
         players = ['hanabi_ai.players.example_discarder.Discarder', #valid player
-                    'hanabi_ai.players.example.missing.Missing', #missing player
-                    'MockBadPlayer'] #player that does not implement HanabiPlayer
+                   'hanabi_ai.players.example.missing.Missing', #missing player
+                   'MockBadPlayer'] #player that does not implement HanabiPlayer
         prepped_players = ['hanabi_ai.players.example_discarder.Discarder']
         self.assertEqual(prepped_players, play_game.validate_players(players))
 

@@ -1,8 +1,8 @@
 import unittest
 from hanabi_ai.model.hanabi_moves import (HanabiDiscardAction,
-    HanabiPlayAction,
-    HanabiDiscloseColorAction,
-    HanabiDiscloseRankAction)
+                                          HanabiPlayAction,
+                                          HanabiDiscloseColorAction,
+                                          HanabiDiscloseRankAction)
 from hanabi_ai.model.hanabi_game_info import GameInfo
 
 class HanabiMoveTests(unittest.TestCase):
