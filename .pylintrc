@@ -59,7 +59,7 @@ disable=missing-docstring,
       too-many-instance-attributes,
       too-many-arguments,
       relative-import,
-      no-self-use,
+      ,
       #play_game rules
       logging-format-interpolation,
       #issues only found in tests

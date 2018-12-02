@@ -49,6 +49,11 @@ class HanabiDiscardAction(HanabiCardAction):
     def execute(self, table):
         table.discard_card(self.player_id, self.card)
 
+def pluralize(word, count):
+    if count <= 1:
+        return word
+    return '{word}s'.format(word=word)
+
 class HanabiDiscloseAction(HanabiAction):
     def __init__(self, player_id, to_whom):
         super(HanabiDiscloseAction, self).__init__(player_id)
@@ -61,11 +66,6 @@ class HanabiDiscloseAction(HanabiAction):
     @abc.abstractmethod
     def disclosure_type(self):
         pass
-
-    def pluralize(self, word, count):
-        if count <= 1:
-            return word
-        return '{word}s'.format(word=word)
 
     def __str__(self):
         return "Player {id} told {whom} about {count} {disclosure} in their hand".format(
@@ -83,7 +83,7 @@ class HanabiDiscloseColorAction(HanabiDiscloseAction):
         self.color = color
 
     def disclosure_type(self):
-        return self.pluralize(self.color, self.count)
+        return pluralize(self.color, self.count)
 
     def is_valid(self, game_info):
         return (super(HanabiDiscloseColorAction, self).is_valid(game_info) and
@@ -98,7 +98,7 @@ class HanabiDiscloseRankAction(HanabiDiscloseAction):
         self.rank = rank
 
     def disclosure_type(self):
-        return self.pluralize(self.rank, self.count)
+        return pluralize(self.rank, self.count)
 
     def is_valid(self, game_info):
         return (super(HanabiDiscloseRankAction, self).is_valid(game_info) and
