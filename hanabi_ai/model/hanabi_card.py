@@ -19,11 +19,11 @@ class HanabiCard(object):
         self.told_color = None
 
     def known(self):
-        UNKNOWN = '?'
+        unknown = '?'
         info = {
-            self.NONE_KNOWN : (UNKNOWN, UNKNOWN),
-            self.RANK_KNOWN : (UNKNOWN, self.rank),
-            self.COLOR_KNOWN : (self.told_color, UNKNOWN),
+            self.NONE_KNOWN : (unknown, unknown),
+            self.RANK_KNOWN : (unknown, self.rank),
+            self.COLOR_KNOWN : (self.told_color, unknown),
             self.FULLY_KNOWN : (self.told_color, self.rank),
         }[self.known_info]
         return "{color}{rank}".format(color=info[0], rank=info[1])

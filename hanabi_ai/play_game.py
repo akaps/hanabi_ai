@@ -18,7 +18,7 @@ from logging.handlers import RotatingFileHandler
 import hanabi_ai.model.hanabi_moves as moves
 
 logging.basicConfig()
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 class InvalidHanabiMoveException(Exception):
     def __init__(self, message, player_id):
@@ -39,7 +39,7 @@ def validate_players(players):
             isinstance(locate(player)(), HanabiPlayer)]
 
 def rotate_logs():
-    for handler in logger.handlers:
+    for handler in LOGGER.handlers:
         if handler.__class__ is RotatingFileHandler:
             handler.doRollover()
 
@@ -48,7 +48,7 @@ def disqualify_player(disqualified, tournament_scores, player):
     for disqualify in disqualified:
         if disqualify in tournament_scores:
             del tournament_scores[disqualify]
-    logger.warning('removed player {player} from tournament'.format(player=disqualified))
+    LOGGER.warning('removed player {player} from tournament'.format(player=disqualified))
 
 def ensure_path(path):
     directories_from_path = os.path.dirname(path)
@@ -81,8 +81,8 @@ def run_tournament(args):
         for key, val in tournament_scores.iteritems()
         }
 
-    logger.info('Scores: {scores}'.format(scores=tournament_scores))
-    logger.info('Results: {results}'.format(results=tournament_results))
+    LOGGER.info('Scores: {scores}'.format(scores=tournament_scores))
+    LOGGER.info('Results: {results}'.format(results=tournament_results))
     determine_winner(tournament_results)
     if args.show_graphs:
         show_plot(tournament_scores)
@@ -105,7 +105,7 @@ def determine_winner(results):
     average_winners = {key: val for key, val in results.items() if val['mean'] is winning_average}
     winning_variance = min(average_winners.itervalues())['variance']
     winners = [key for key, val in average_winners.items() if val['variance'] is winning_variance]
-    logger.info('Winner(s): {winners}'.format(winners=winners))
+    LOGGER.info('Winner(s): {winners}'.format(winners=winners))
     return winners
 
 def run_one_configuration(args):
@@ -122,21 +122,21 @@ def prep_logger(log_dir, verbose, log_stderr, count):
     formatter = logging.Formatter('[%(asctime)s] %(levelname)8s --- %(message)s ' +
                                   '(%(filename)s:%(lineno)s)', datefmt='%Y-%m-%d %H:%M:%S')
     if verbose:
-        logger.setLevel(logging.DEBUG)
+        LOGGER.setLevel(logging.DEBUG)
     else:
-        logger.setLevel(logging.INFO)
+        LOGGER.setLevel(logging.INFO)
     if log_dir:
         ensure_path(log_dir)
-        fh = RotatingFileHandler(log_dir, mode='w', backupCount=count)
-        fh.setLevel(logging.DEBUG)
-        logger.addHandler(fh)
-        fh.setFormatter(formatter)
+        file_handler = RotatingFileHandler(log_dir, mode='w', backupCount=count)
+        file_handler.setLevel(logging.DEBUG)
+        LOGGER.addHandler(file_handler)
+        file_handler.setFormatter(formatter)
     if log_stderr:
         ensure_path(log_stderr)
-        efh = RotatingFileHandler(log_stderr, mode='w', backupCount=count)
-        efh.setLevel(logging.ERROR)
-        logger.addHandler(efh)
-        efh.setFormatter(formatter)
+        error_file_handler = RotatingFileHandler(log_stderr, mode='w', backupCount=count)
+        error_file_handler.setLevel(logging.ERROR)
+        LOGGER.addHandler(error_file_handler)
+        error_file_handler.setFormatter(formatter)
 
 def parse_args(args):
     usage = 'plays games of Hanabi using the listed players'
@@ -215,20 +215,20 @@ class HanabiGame(object):
 
     def play_game(self):
         def pretty_print_info(info):
-            logger.debug('Player {player_id} sees:'.format(player_id=self.current_player))
-            logger.debug('Players: {players}'.format(players=info.num_players))
-            logger.debug('Cards in deck: {deck}'.format(deck=info.deck_size))
-            logger.debug('Discarded: {discard}'.format(discard=info.discarded))
-            logger.debug('Score: {score}'.format(score=info.score))
-            logger.debug('Progress: {scored}'.format(scored=info.scored_cards))
-            logger.debug('Sees: {visible}'.format(visible=info.hands))
-            logger.debug('Knows: {known}'.format(known=info.known_info))
-            logger.debug('Disclosures left: {disclosures}'.format(disclosures=info.disclosures))
-            logger.debug('Mistakes left: {mistakes}'.format(mistakes=info.mistakes_left))
+            LOGGER.debug('Player {player_id} sees:'.format(player_id=self.current_player))
+            LOGGER.debug('Players: {players}'.format(players=info.num_players))
+            LOGGER.debug('Cards in deck: {deck}'.format(deck=info.deck_size))
+            LOGGER.debug('Discarded: {discard}'.format(discard=info.discarded))
+            LOGGER.debug('Score: {score}'.format(score=info.score))
+            LOGGER.debug('Progress: {scored}'.format(scored=info.scored_cards))
+            LOGGER.debug('Sees: {visible}'.format(visible=info.hands))
+            LOGGER.debug('Knows: {known}'.format(known=info.known_info))
+            LOGGER.debug('Disclosures left: {disclosures}'.format(disclosures=info.disclosures))
+            LOGGER.debug('Mistakes left: {mistakes}'.format(mistakes=info.mistakes_left))
 
         player_details = 'Game with {players}'.format(
             players=map(lambda(player): player.__class__.__name__, self.players))
-        logger.info(player_details)
+        LOGGER.info(player_details)
 
         while not self.table.is_game_over():
             player = self.players[self.current_player]
@@ -237,31 +237,31 @@ class HanabiGame(object):
             if player_move.is_valid(info):
                 player_move.execute(self.table)
                 pretty_print_info(info)
-                logger.debug(str(player_move))
+                LOGGER.debug(str(player_move))
                 self.current_player = (self.current_player + 1) % self.table.num_players
             else:
                 self.disqualify(player_move)
         for move in self.game_history():
-            logger.debug(move)
-        logger.info('Final score: {score}'.format(score=self.table.score()))
+            LOGGER.debug(move)
+        LOGGER.info('Final score: {score}'.format(score=self.table.score()))
 
     def game_history(self):
         return map(lambda action: str(action), self.table.history)
 
     def disqualify(self, player_move):
-        logger.warning('Expected format for play card:')
-        logger.warning('{"play_type":"play", "card":<number>}')
+        LOGGER.warning('Expected format for play card:')
+        LOGGER.warning('{"play_type":"play", "card":<number>}')
 
-        logger.warning('Expected format for discard card:')
-        logger.warning('{"play_type":"discard", "card":<number>}')
+        LOGGER.warning('Expected format for discard card:')
+        LOGGER.warning('{"play_type":"discard", "card":<number>}')
 
-        logger.warning('Expected format for disclose color:')
-        logger.warning('{"play_type":"disclose", "disclose_type":"color, "color":<color>}')
-        logger.warning('"color" cannot be "*" in a Variant 3 game')
+        LOGGER.warning('Expected format for disclose color:')
+        LOGGER.warning('{"play_type":"disclose", "disclose_type":"color, "color":<color>}')
+        LOGGER.warning('"color" cannot be "*" in a Variant 3 game')
 
-        logger.warning('Expected format for disclose rank:')
-        logger.warning('{"play_type":"disclose", "disclose_type":"rank, "rank":<number>}')
-        logger.error('Received invalid move from player {player}: {move}'.format(
+        LOGGER.warning('Expected format for disclose rank:')
+        LOGGER.warning('{"play_type":"disclose", "disclose_type":"rank, "rank":<number>}')
+        LOGGER.error('Received invalid move from player {player}: {move}'.format(
             player=self.current_player,
             move=player_move
         ))

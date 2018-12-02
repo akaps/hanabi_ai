@@ -9,7 +9,7 @@ class HanabiTableVariant2Tests(unittest.TestCase):
     def setUp(self):
         self.table = HanabiTable(2, 1, HanabiVariant.sixth_suit_hard)
 
-    def test_table_play_card_correct_rainbow(self):
+    def test_play_correct_rainbow(self):
         #white 1
         self.table.play_card(0, 2)
         self.table.discard_card(0, 0)
@@ -20,7 +20,7 @@ class HanabiTableVariant2Tests(unittest.TestCase):
         self.table.play_card(0, 0)
         self.assertEqual(3, self.table.score())
 
-    def test_table_play_card_incorrect_rainbow(self):
+    def test_play_incorrect_rainbow(self):
         #play white 1
         self.table.play_card(0, 2)
         self.assertEqual(1, self.table.score())

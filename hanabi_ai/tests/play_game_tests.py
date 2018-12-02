@@ -91,7 +91,7 @@ class PlayGameTests(unittest.TestCase):
         self.assertEqual(1, len(disqualified))
         self.assertTrue('D' not in scores)
 
-    def test_disqualify_player__not_scored(self):
+    def test_disqualify_not_scored(self):
         scores = {
             'A' : 0,
             'B' : 20, #C did not have a game yet
@@ -104,7 +104,7 @@ class PlayGameTests(unittest.TestCase):
         self.assertEqual(1, len(disqualified))
         self.assertTrue('C' not in scores)
 
-    def test_disqualify_player__multiple(self):
+    def test__multiple_disqualifies(self):
         scores = {
             'A' : 0,
             'B' : 20, #C did not have a game yet
@@ -118,7 +118,7 @@ class PlayGameTests(unittest.TestCase):
         self.assertEqual(2, len(disqualified))
         self.assertTrue('A', 'E' not in scores)
 
-    def test_determine_winner_one_winner(self):
+    def test_determine_one_winner(self):
         results = {
             'A' : {'mean': 20, 'variance': 2},
             'B' : {'mean': 22, 'variance': 7},

@@ -9,11 +9,11 @@ class HanabiTableVariant1Tests(unittest.TestCase):
     def setUp(self):
         self.table = HanabiTable(2, 1, HanabiVariant.sixth_suit)
 
-    def test_table_play_card_correct_rainbow(self):
+    def test_play_correct_rainbow(self):
         self.table.play_card(0, 0)
         self.assertEqual(1, self.table.score())
 
-    def test_table_play_card_incorrect_rainbow(self):
+    def test_play_incorrect_rainbow(self):
         self.table.discard_card(0, 0)
         self.table.discard_card(0, 0)
         self.table.discard_card(0, 4)

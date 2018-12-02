@@ -15,7 +15,7 @@ class HanabiTable(object):
 
     def __init__(self, num_players, seed, variant):
         self.is_rainbow_wild = variant == HanabiVariant.rainbow_wild
-        self.num_players = self.lastTurns = num_players
+        self.num_players = self.last_turns = num_players
         self.deck = HanabiDeck(seed, variant)
         self.discard = HanabiDiscard()
         self.disclosures = NUM_DISCLOSURES
@@ -51,7 +51,7 @@ class HanabiTable(object):
 
     def is_game_over(self):
         return (self.mistakes_left == 0 or
-                (len(self.deck) == 0 and self.lastTurns == 0) or
+                (len(self.deck) == 0 and self.last_turns == 0) or
                 self.score() == 25)
 
     def play_card(self, player_id, card_index):
@@ -87,7 +87,7 @@ class HanabiTable(object):
         if len(self.deck) != 0:
             self.hands[player_id].add(self.deck.draw_card())
         else:
-            self.lastTurns -= 1
+            self.last_turns -= 1
 
     def info_for_player(self, player_id):
         res = GameInfo()

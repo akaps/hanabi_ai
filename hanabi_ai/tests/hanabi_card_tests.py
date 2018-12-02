@@ -64,7 +64,7 @@ class HanabiCardTests(unittest.TestCase):
         rainbow_card.disclose_color(HanabiColor.GREEN, True)
         self.assertEqual("*2", rainbow_card.known())
 
-    def test_rainbow_card_avoid_accidental_reveal(self):
+    def test_avoid_accidental_reveal(self):
         rainbow_card = HanabiCard(HanabiColor.RAINBOW, 2)
         self.assertEqual("??", rainbow_card.known())
         rainbow_card.disclose_color(HanabiColor.RED, True)

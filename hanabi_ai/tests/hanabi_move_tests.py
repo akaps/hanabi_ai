@@ -21,7 +21,7 @@ class HanabiMoveTests(unittest.TestCase):
         self.game_info.disclosures = 0
         self.assertTrue(self.discard.is_valid(self.game_info))
 
-    def test_is_valid_discard_move_cannot_discrd(self):
+    def test_discard_move_cannot_discrd(self):
         self.game_info.disclosures = 8
         self.assertFalse(self.discard.is_valid(self.game_info))
 
@@ -30,7 +30,7 @@ class HanabiMoveTests(unittest.TestCase):
         self.assertTrue(self.color_disclose.is_valid(self.game_info))
         self.assertTrue(self.rank_disclose.is_valid(self.game_info))
 
-    def test_is_valid_disclose_move_cannot_disclose(self):
+    def test_move_cannot_disclose(self):
         self.game_info.disclosures = 0
         self.assertFalse(self.color_disclose.is_valid(self.game_info))
         self.assertFalse(self.rank_disclose.is_valid(self.game_info))

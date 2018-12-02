@@ -42,7 +42,7 @@ class HanabiTableTests(unittest.TestCase):
         self.table.disclose_rank(0, 0, 4)
         self.assertEqual(["??", "??", "?4", "??", "??"], self.table.info_for_player(0).hands[0])
 
-    def test_table_is_game_over_too_many_mistakes(self):
+    def test_table_game_over_mistakes(self):
         self.assertFalse(self.table.is_game_over())
 
         self.table.play_card(0, 1)
@@ -57,7 +57,7 @@ class HanabiTableTests(unittest.TestCase):
         self.assertTrue(self.table.is_game_over())
         self.assertEqual(self.table.mistakes_left, 0)
 
-    def test_table_is_game_over_no_more_cards(self):
+    def test_game_over_no_more_cards(self):
         self.assertFalse(self.table.is_game_over())
         for i in range(0, 42):
             self.assertEqual(len(self.table.discard), i)
@@ -65,7 +65,7 @@ class HanabiTableTests(unittest.TestCase):
             self.table.discard_card(0, 0)
         self.assertTrue(self.table.is_game_over())
 
-    def test_table_is_game_over_game_won(self):
+    def test_game_over_and_won(self):
         self.table.play_card(1, 2)
         self.assertEquals(1, self.table.score())
         self.table.play_card(0, 0)
@@ -182,14 +182,14 @@ class HanabiTableTests(unittest.TestCase):
     def test_table_score(self):
         self.assertEqual(0, self.table.score())
 
-    def test_table_play_5_get_disclosure(self):
+    def test_play_5_get_disclosure(self):
         self.play_to_white_5()
         self.table.disclose_rank(0, 0, 0)
         self.assertEquals(7, self.table.disclosures)
         self.table.play_card(0, 0)
         self.assertEqual(8, self.table.disclosures)
 
-    def test_table_play_5_no_extra_disclosure(self):
+    def test_play_5_no_extra_disclosure(self):
         self.play_to_white_5()
         self.assertEquals(8, self.table.disclosures)
         self.table.play_card(0, 0)
