@@ -35,22 +35,7 @@ class HanabiTableVariant1Tests(unittest.TestCase):
 
     def test_table_info_for_player(self):
         info = self.table.info_for_player(0)
-        self.assertEqual(info.score, 0)
         self.assertEqual(info.deck_size, 50)
-        self.assertEqual(len(info.discarded), 0)
-        self.assertEqual(info.disclosures, 8)
-        self.assertEqual(info.mistakes_left, 3)
-        self.assertEqual(info.num_players, 2)
-        self.assertEqual(info.hands[0], ["??", "??", "??", "??", "??"])
-        self.assertEqual(info.hands[1], ["B2", "*5", "Y3", "R3", "Y3"])
-        self.assertEqual(info.known_info[0], ["??", "??", "??", "??", "??"])
-        self.assertEqual(info.known_info[1], ["??", "??", "??", "??", "??"])
-        self.assertEqual(info.scored_cards["R"], 0)
-        self.assertEqual(info.scored_cards["B"], 0)
-        self.assertEqual(info.scored_cards["G"], 0)
-        self.assertEqual(info.scored_cards["Y"], 0)
-        self.assertEqual(info.scored_cards["W"], 0)
-        self.assertEqual(info.scored_cards["*"], 0)
 
     def test_can_disclose_color(self):
         self.assertTrue(self.table.can_disclose_color('R'))
