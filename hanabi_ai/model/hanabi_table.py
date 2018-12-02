@@ -1,12 +1,12 @@
-from hanabi_deck import HanabiDeck, HanabiVariant
-from hanabi_discard_pile import HanabiDiscard
-from hanabi_hand import HanabiHand
-from hanabi_card import HanabiColor
-from hanabi_game_info import GameInfo
-from hanabi_moves import (HanabiPlayAction,
-                          HanabiDiscardAction,
-                          HanabiDiscloseRankAction,
-                          HanabiDiscloseColorAction)
+from hanabi_ai.model.hanabi_deck import HanabiDeck, HanabiVariant
+from hanabi_ai.model.hanabi_discard_pile import HanabiDiscard
+from hanabi_ai.model.hanabi_hand import HanabiHand
+from hanabi_ai.model.hanabi_card import HanabiColor
+from hanabi_ai.model.hanabi_game_info import GameInfo
+from hanabi_ai.model.hanabi_moves import (HanabiPlayAction,
+                                          HanabiDiscardAction,
+                                          HanabiDiscloseRankAction,
+                                          HanabiDiscloseColorAction)
 
 NUM_DISCLOSURES = 8
 NUM_MISTAKES = 3
