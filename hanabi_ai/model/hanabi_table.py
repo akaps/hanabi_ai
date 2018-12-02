@@ -84,7 +84,7 @@ class HanabiTable(object):
         return action
 
     def update_hand(self, player_id):
-        if len(self.deck) != 0:
+        if not self.deck.is_empty():
             self.hands[player_id].add(self.deck.draw_card())
         else:
             self.last_turns -= 1
