@@ -65,7 +65,6 @@ disable=missing-docstring,
       bad-indentation,
       len-as-condition,
       useless-super-delegation,
-      trailing-whitespace,
       wrong-import-order,
       no-self-use,
       #play_game rules
