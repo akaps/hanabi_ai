@@ -46,7 +46,7 @@ def disqualify_player(disqualified, tournament_scores, player):
     for disqualify in disqualified:
         if disqualify in tournament_scores:
             del tournament_scores[disqualify]
-    LOGGER.warning('removed player {player} from tournament'.format(player=disqualified))
+    LOGGER.warning('removed player %s from tournament', disqualified)
 
 def ensure_path(path):
     directories_from_path = os.path.dirname(path)
@@ -79,8 +79,8 @@ def run_tournament(args):
         for key, val in tournament_scores.iteritems()
         }
 
-    LOGGER.info('Scores: {scores}'.format(scores=tournament_scores))
-    LOGGER.info('Results: {results}'.format(results=tournament_results))
+    LOGGER.info('Scores: %s', tournament_scores)
+    LOGGER.info('Results: %s', tournament_results)
     determine_winner(tournament_results)
     if args.show_graphs:
         show_plot(tournament_scores)
@@ -103,7 +103,7 @@ def determine_winner(results):
     average_winners = {key: val for key, val in results.items() if val['mean'] is winning_average}
     winning_variance = min(average_winners.itervalues())['variance']
     winners = [key for key, val in average_winners.items() if val['variance'] is winning_variance]
-    LOGGER.info('Winner(s): {winners}'.format(winners=winners))
+    LOGGER.info('Winner(s): %s', winners)
     return winners
 
 def run_one_configuration(args):
@@ -213,16 +213,16 @@ class HanabiGame(object):
 
     def play_game(self):
         def pretty_print_info(info):
-            LOGGER.debug('Player {player_id} sees:'.format(player_id=self.current_player))
-            LOGGER.debug('Players: {players}'.format(players=info.num_players))
-            LOGGER.debug('Cards in deck: {deck}'.format(deck=info.deck_size))
-            LOGGER.debug('Discarded: {discard}'.format(discard=info.discarded))
-            LOGGER.debug('Score: {score}'.format(score=info.score))
-            LOGGER.debug('Progress: {scored}'.format(scored=info.scored_cards))
-            LOGGER.debug('Sees: {visible}'.format(visible=info.hands))
-            LOGGER.debug('Knows: {known}'.format(known=info.known_info))
-            LOGGER.debug('Disclosures left: {disclosures}'.format(disclosures=info.disclosures))
-            LOGGER.debug('Mistakes left: {mistakes}'.format(mistakes=info.mistakes_left))
+            LOGGER.debug('Player %s sees:', self.current_player)
+            LOGGER.debug('Players: %s', info.num_players)
+            LOGGER.debug('Cards in deck: %s', info.deck_size)
+            LOGGER.debug('Discarded: %s', info.discarded)
+            LOGGER.debug('Score: %s', info.score)
+            LOGGER.debug('Progress: %s', info.scored_cards)
+            LOGGER.debug('Sees: %s', info.hands)
+            LOGGER.debug('Knows: %s', info.known_info)
+            LOGGER.debug('Disclosures left: %s', info.disclosures)
+            LOGGER.debug('Mistakes left: %s', info.mistakes_left)
 
         player_details = 'Game with {players}'.format(
             players=[player.__class__.__name__ for player in self.players])
@@ -241,7 +241,7 @@ class HanabiGame(object):
                 self.disqualify(player_move)
         for move in self.game_history():
             LOGGER.debug(move)
-        LOGGER.info('Final score: {score}'.format(score=self.table.score()))
+        LOGGER.info('Final score: %s', self.table.score())
 
     def game_history(self):
         return [str(action) for action in self.table.history]
@@ -259,10 +259,9 @@ class HanabiGame(object):
 
         LOGGER.warning('Expected format for disclose rank:')
         LOGGER.warning('{"play_type":"disclose", "disclose_type":"rank, "rank":<number>}')
-        LOGGER.error('Received invalid move from player {player}: {move}'.format(
-            player=self.current_player,
-            move=player_move
-        ))
+        LOGGER.error('Received invalid move from player %s: %s',
+                     self.current_player,
+                     player_move)
         raise InvalidHanabiMoveException('Received invalid move from player', self.current_player)
 
 if __name__ == '__main__':
