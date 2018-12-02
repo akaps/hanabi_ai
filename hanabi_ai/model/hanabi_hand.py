@@ -1,16 +1,14 @@
-from hanabi_card import HanabiCard
-
-class HanabiHand:
+class HanabiHand(object):
     def __init__(self):
         self.hand = []
 
     def add(self, card):
         self.hand.append(card)
 
-    def show_cards(self, isOwned):
+    def show_cards(self, is_owned):
         res = []
         for card in self.hand:
-            if (isOwned):
+            if is_owned:
                 res.append(card.known())
             else:
                 res.append(str(card))
@@ -27,7 +25,7 @@ class HanabiHand:
             if card.rank == rank:
                 card.disclose_rank()
 
-    def disclose_color(self, color, is_rainbow_wild = False):
+    def disclose_color(self, color, is_rainbow_wild=False):
         for card in self.hand:
             card.disclose_color(color, is_rainbow_wild)
 

@@ -1,12 +1,11 @@
 import unittest
-from tools.hanabi_deck import HanabiDeck
-from tools.hanabi_card import HanabiCard, HanabiColor
+from hanabi_ai.model.hanabi_deck import HanabiDeck
 
 class HanabiDeckTests(unittest.TestCase):
     def setUp(self):
         self.simple_deck = HanabiDeck(1, False)
         self.rainbow_deck = HanabiDeck(1, True)
-    
+
     def test_simple_deck_is_empty(self):
         self.assertFalse(self.simple_deck.is_empty())
         for _ in range(0, 50):

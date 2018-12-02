@@ -1,6 +1,6 @@
 #sys.path.append("../")
 import unittest
-from tools.hanabi_card import HanabiCard, HanabiColor
+from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
 
 class HanabiCardTests(unittest.TestCase):
     def setUp(self):
@@ -10,7 +10,7 @@ class HanabiCardTests(unittest.TestCase):
         self.known_card.disclose_rank()
         self.rank_known_card = HanabiCard(HanabiColor.GREEN, 3)
         self.rank_known_card.disclose_rank()
-    
+
     def test_unknown_card_color(self):
         self.assertEqual(self.unknown_card.color, HanabiColor.RED)
 
@@ -64,7 +64,7 @@ class HanabiCardTests(unittest.TestCase):
         rainbow_card.disclose_color(HanabiColor.GREEN, True)
         self.assertEqual("*2", rainbow_card.known())
 
-    def test_rainbow_card_avoid_accidental_reveal(self):
+    def test_avoid_accidental_reveal(self):
         rainbow_card = HanabiCard(HanabiColor.RAINBOW, 2)
         self.assertEqual("??", rainbow_card.known())
         rainbow_card.disclose_color(HanabiColor.RED, True)

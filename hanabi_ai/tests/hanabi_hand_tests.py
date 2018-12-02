@@ -1,6 +1,6 @@
 import unittest
-from tools.hanabi_hand import HanabiHand
-from tools.hanabi_card import HanabiCard, HanabiColor
+from hanabi_ai.model.hanabi_hand import HanabiHand
+from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
 
 class HanabiHandTests(unittest.TestCase):
     def setUp(self):
@@ -9,30 +9,30 @@ class HanabiHandTests(unittest.TestCase):
         self.hand.add(HanabiCard(HanabiColor.GREEN, 5))
         self.hand.add(HanabiCard(HanabiColor.BLUE, 1))
 
-    def test_hand_cardAt(self):
+    def test_hand_card_at(self):
         self.assertEqual(self.hand.card_at(0), HanabiCard(HanabiColor.BLUE, 2))
 
-    def test_hand_removeCardAt(self):
+    def test_hand_remove_card_at(self):
         card = self.hand.remove_card_at(0)
         self.assertEqual(card, HanabiCard(HanabiColor.BLUE, 2))
 
-    def test_hand_addCard(self):
+    def test_hand_add_card(self):
         self.hand.add(HanabiCard(HanabiColor.WHITE, 1))
         self.assertEqual(self.hand.card_at(2), HanabiCard(HanabiColor.BLUE, 1))
 
-    def test_hand_knownCards(self):
+    def test_hand_known_cards(self):
         self.assertEqual(["??", "??", "??"], self.hand.show_cards(True))
         self.hand.disclose_rank(2)
         self.assertEqual(["?2", "??", "??"], self.hand.show_cards(True))
         self.hand.disclose_color(HanabiColor.BLUE)
         self.assertEqual(["B2", "??", "B?"], self.hand.show_cards(True))
 
-    def test_hand_discloseColor(self):
+    def test_hand_disclose_color(self):
         self.assertEqual(["??", "??", "??"], self.hand.show_cards(True))
         self.hand.disclose_color(HanabiColor.GREEN)
         self.assertEqual(["??", "G?", "??"], self.hand.show_cards(True))
 
-    def test_hand_discloseRank(self):
+    def test_hand_disclose_rank(self):
         self.assertEqual(["??", "??", "??"], self.hand.show_cards(True))
         self.hand.disclose_rank(5)
         self.assertEqual(["??", "?5", "??"], self.hand.show_cards(True))
