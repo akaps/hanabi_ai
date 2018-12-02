@@ -7,10 +7,10 @@ class HanabiHand(object):
     def add(self, card):
         self.hand.append(card)
 
-    def show_cards(self, isOwned):
+    def show_cards(self, is_owned):
         res = []
         for card in self.hand:
-            if (isOwned):
+            if is_owned:
                 res.append(card.known())
             else:
                 res.append(str(card))

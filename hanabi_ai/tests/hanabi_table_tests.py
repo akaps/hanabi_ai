@@ -5,12 +5,12 @@ from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
 from hanabi_ai.model.hanabi_deck import HanabiVariant
 
 def diagnose(table):
-    print("Player 0")
-    print(table.info_for_player(1).hands[0])
-    print("Player 1")
-    print(table.info_for_player(0).hands[1])
-    print(str(table))
-    print(table.scored_cards)
+    print 'Player 0'
+    print table.info_for_player(1).hands[0]
+    print 'Player 1'
+    print table.info_for_player(0).hands[1]
+    print str(table)
+    print table.scored_cards
 
 class HanabiTableTests(unittest.TestCase):
     def setUp(self):
