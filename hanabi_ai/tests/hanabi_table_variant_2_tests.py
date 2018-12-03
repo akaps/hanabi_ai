@@ -2,23 +2,26 @@ import unittest
 from hanabi_ai.model.hanabi_table import HanabiTable
 from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
 from hanabi_ai.model.hanabi_deck import HanabiVariant
+from hanabi_ai.tests.hanabi_table_tests import diagnose
 
 class HanabiTableVariant2Tests(unittest.TestCase):
     def setUp(self):
         self.table = HanabiTable(2, 6, HanabiVariant.sixth_suit_hard)
 
     def test_play_correct_rainbow(self):
-        self.table.play_card(0, 1)
+        diagnose(self.table)
+        self.table.play_card(0, 2)
+        for _ in range(0, 44):
+            self.table.discard_card(1, 0)
         self.table.play_card(1, 4)
-        self.table.play_card(0, 4)
-        self.assertEqual(3, self.table.score())
+        self.assertEqual(2, self.table.score())
 
     def test_play_incorrect_rainbow(self):
-        self.table.play_card(1, 4)
-        self.table.play_card(1, 3)
+        self.table.play_card(0, 2)
+        self.table.play_card(0, 4)
         self.assertEqual(1, self.table.score())
         self.assertEqual(2, self.table.mistakes_left)
-        self.assertTrue(HanabiCard(HanabiColor.RAINBOW, 3) in self.table.discard.discarded())
+        self.assertTrue(HanabiCard(HanabiColor.RAINBOW, 2) in self.table.discard.discarded())
 
     def test_table_disclose_color(self):
         self.assertEqual(["??", "??", "??", "??", "??"], self.table.info_for_player(0).hands[0])

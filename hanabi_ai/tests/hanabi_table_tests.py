@@ -144,18 +144,13 @@ class HanabiTableTests(unittest.TestCase):
         self.assertEqual(8, self.table.disclosures)
 
     def play_to_white_5(self):
-        self.table.play_card(0, 0)
-        self.table.play_card(1, 2)
-        self.table.play_card(1, 4)
-        self.table.play_card(1, 0)
-        self.table.discard_card(0, 3)
-        self.assertEqual(8, self.table.disclosures)
-        self.table.discard_card(0, 3)
-        self.table.discard_card(1, 1)
-        self.table.play_card(0, 4)
         self.table.play_card(0, 3)
+        for _ in range(0, 5):
+            self.table.discard_card(0, 0)
         self.table.play_card(0, 4)
-        self.table.play_card(1, 4)
+        for _ in range(0, 3):
+            self.table.discard_card(0, 0)
+        self.table.play_card(0, 1)
         self.table.play_card(1, 0)
 
 if __name__ == '__main__':
