@@ -48,10 +48,15 @@ Python 2.7
 
 A step by step series of examples that tell you how to get a development env running
 
-Install required packages
+1. Install required packages
 
 ```
-pip install nose enum34 matplotlib pylint
+pip install -r requirements.txt
+```
+
+2. Install hanabi_ai as an editable package
+```
+pip install --editable .
 ```
 
 ## Running the tests
@@ -69,5 +74,5 @@ nosetests path_to_test.py
 
 To run pylint on the project
 ```
-pylint hanabi_ai tests
+pylint hanabi_ai
 ```
