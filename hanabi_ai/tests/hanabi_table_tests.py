@@ -66,17 +66,17 @@ class HanabiTableTests(unittest.TestCase):
 
     def test_game_over_and_won(self):
         self.table.play_card(1, 2)
-        self.assertEquals(1, self.table.score())
+        self.assertEqual(1, self.table.score())
         self.table.play_card(0, 0)
-        self.assertEquals(2, self.table.score())
+        self.assertEqual(2, self.table.score())
         self.table.play_card(0, 4)
-        self.assertEquals(3, self.table.score())
+        self.assertEqual(3, self.table.score())
         self.table.scored_cards[HanabiColor.RED] = 5
         self.table.scored_cards[HanabiColor.BLUE] = 5
         self.table.scored_cards[HanabiColor.GREEN] = 5
         self.table.scored_cards[HanabiColor.YELLOW] = 5
         self.table.scored_cards[HanabiColor.WHITE] = 5
-        self.assertEquals(25, self.table.score())
+        self.assertEqual(25, self.table.score())
         self.assertTrue(self.table.is_game_over())
 
     def test_table_str(self):
@@ -133,13 +133,13 @@ class HanabiTableTests(unittest.TestCase):
     def test_play_5_get_disclosure(self):
         self.play_to_white_5()
         self.table.disclose_rank(0, 0, 0)
-        self.assertEquals(7, self.table.disclosures)
+        self.assertEqual(7, self.table.disclosures)
         self.table.play_card(0, 0)
         self.assertEqual(8, self.table.disclosures)
 
     def test_play_5_no_extra_disclosure(self):
         self.play_to_white_5()
-        self.assertEquals(8, self.table.disclosures)
+        self.assertEqual(8, self.table.disclosures)
         self.table.play_card(0, 0)
         self.assertEqual(8, self.table.disclosures)
 
@@ -149,7 +149,7 @@ class HanabiTableTests(unittest.TestCase):
         self.table.play_card(1, 4)
         self.table.play_card(1, 0)
         self.table.discard_card(0, 3)
-        self.assertEquals(8, self.table.disclosures)
+        self.assertEqual(8, self.table.disclosures)
         self.table.discard_card(0, 3)
         self.table.discard_card(1, 1)
         self.table.play_card(0, 4)

@@ -1,4 +1,4 @@
-class HanabiPlayer(object):
+class HanabiPlayer:
     def do_turn(self, player_index, game_info):
         """
         evaluates and returns the next move to make for Hanabi
@@ -29,4 +29,3 @@ class HanabiPlayer(object):
             HanabiDiscloseColorAction: discloses a color to a specified player
             HanabiDiscloseRankAction: discloses a rank to a specified player
         """
-        pass

@@ -1,6 +1,6 @@
 import abc
 
-class HanabiAction(object):
+class HanabiAction:
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, player_id):

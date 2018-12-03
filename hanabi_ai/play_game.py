@@ -75,7 +75,7 @@ def run_tournament(args):
             'mean': numpy.mean(val),
             'variance' : numpy.var(val)
             }
-        for key, val in tournament_scores.iteritems()
+        for key, val in tournament_scores.items()
         }
 
     LOGGER.info('Scores: %s', tournament_scores)
@@ -203,7 +203,7 @@ def parse_args(args):
 def prep_players(player_names):
     return [locate(name)() for name in player_names]
 
-class HanabiGame(object):
+class HanabiGame:
     def __init__(self, players, seed, variant):
         self.players = prep_players(players)
         self.table = HanabiTable(len(players), seed, variant)

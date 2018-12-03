@@ -11,7 +11,7 @@ from hanabi_ai.model.hanabi_moves import (HanabiPlayAction,
 NUM_DISCLOSURES = 8
 NUM_MISTAKES = 3
 
-class HanabiTable(object):
+class HanabiTable:
 
     def __init__(self, num_players, seed, variant):
         self.is_rainbow_wild = variant == HanabiVariant.rainbow_wild

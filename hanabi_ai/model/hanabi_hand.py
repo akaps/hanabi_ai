@@ -1,4 +1,4 @@
-class HanabiHand(object):
+class HanabiHand:
     def __init__(self):
         self.hand = []
 
