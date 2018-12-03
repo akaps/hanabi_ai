@@ -100,7 +100,7 @@ def show_plot(scores):
 def determine_winner(results):
     winning_average = max(results.values())['mean']
     average_winners = {key: val for key, val in results.items() if val['mean'] is winning_average}
-    winning_variance = min(average_winners.itervalues())['variance']
+    winning_variance = min(average_winners.values())['variance']
     winners = [key for key, val in average_winners.items() if val['variance'] is winning_variance]
     LOGGER.info('Winner(s): %s', winners)
     return winners
