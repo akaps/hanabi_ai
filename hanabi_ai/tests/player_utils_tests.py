@@ -15,10 +15,10 @@ class PlayerUtilsTests(unittest.TestCase):
         self.info_player_0.num_players = 2
 
     def test_discard_oldest_can_discard(self):
-        actual = utils.discard_oldest_first(1, self.info_player_0)
-        self.assertIsInstance(actual, moves.HanabiDiscardAction)
-        self.assertEqual(1, actual.player_id)
-        self.assertEqual(0, actual.card)
+        res = utils.discard_oldest_first(1, self.info_player_0)
+        self.assertIsInstance(res, moves.HanabiDiscardAction)
+        self.assertEqual(1, res.player_id)
+        self.assertEqual(0, res.card)
 
     def test_discard_oldest_cannot(self):
         self.info_player_0.disclosures = 8
@@ -26,10 +26,10 @@ class PlayerUtilsTests(unittest.TestCase):
 
     def test_play_safe_card_can_play(self):
         self.info_player_0.known_info[0][1] = 'R1'
-        actual = utils.play_safe_card(0, self.info_player_0)
-        self.assertIsInstance(actual, moves.HanabiPlayAction)
-        self.assertEqual(0, actual.player_id)
-        self.assertEqual(1, actual.card)
+        res = utils.play_safe_card(0, self.info_player_0)
+        self.assertIsInstance(res, moves.HanabiPlayAction)
+        self.assertEqual(0, res.player_id)
+        self.assertEqual(1, res.card)
 
     def test_play_safe_card_cannot_play(self):
         self.assertIsNone(utils.play_safe_card(0, self.info_player_0))
@@ -39,25 +39,43 @@ class PlayerUtilsTests(unittest.TestCase):
         self.assertIsNone(utils.tell_randomly(0, self.info_player_0, 12))
 
     def test_tell_randomly_color(self):
-        actual = utils.tell_randomly(0, self.info_player_0, 12)
-        self.assertIsInstance(actual, moves.HanabiDiscloseColorAction)
-        self.assertEqual(0, actual.player_id)
-        self.assertEqual(1, actual.to_whom)
-        self.assertEqual('R', actual.color)
+        res = utils.tell_randomly(0, self.info_player_0, 12)
+        self.assertIsInstance(res, moves.HanabiDiscloseColorAction)
+        self.assertEqual(0, res.player_id)
+        self.assertEqual(1, res.to_whom)
+        self.assertEqual('R', res.color)
 
     def test_tell_randomly_rank(self):
-        actual = utils.tell_randomly(0, self.info_player_0, 26)
-        self.assertIsInstance(actual, moves.HanabiDiscloseRankAction)
-        self.assertEqual(0, actual.player_id)
-        self.assertEqual(1, actual.to_whom)
-        self.assertEqual(3, actual.rank)
+        res = utils.tell_randomly(0, self.info_player_0, 26)
+        self.assertIsInstance(res, moves.HanabiDiscloseRankAction)
+        self.assertEqual(0, res.player_id)
+        self.assertEqual(1, res.to_whom)
+        self.assertEqual(3, res.rank)
 
     def test_cannot_discard_randomly(self):
         self.info_player_0.disclosures = 8
         self.assertIsNone(utils.discard_randomly(0, self.info_player_0, 26))
 
     def test_discard_randomly(self):
-        actual = utils.discard_randomly(0, self.info_player_0, 26)
-        self.assertIsInstance(actual, moves.HanabiDiscardAction)
-        self.assertEqual(0, actual.player_id)
-        self.assertEqual(1, actual.card)
+        res = utils.discard_randomly(0, self.info_player_0, 26)
+        self.assertIsInstance(res, moves.HanabiDiscardAction)
+        self.assertEqual(0, res.player_id)
+        self.assertEqual(1, res.card)
+
+    def test_tell_unknown_cannot(self):
+        self.info_player_0.known_info[1] = ['R1', 'W3']
+        self.assertIsNone(utils.tell_unknown(0, self.info_player_0, 3))
+
+    def test_tell_unknown_rank(self):
+        res = utils.tell_unknown(0, self.info_player_0, 6)
+        self.assertIsInstance(res, moves.HanabiDiscloseRankAction)
+        self.assertEqual(0, res.player_id)
+        self.assertEqual(1, res.to_whom)
+        self.assertEqual(3, res.rank)
+
+    def test_tell_unknown_color(self):
+        res = utils.tell_unknown(0, self.info_player_0, 3)
+        self.assertIsInstance(res, moves.HanabiDiscloseColorAction)
+        self.assertEqual(0, res.player_id)
+        self.assertEqual(1, res.to_whom)
+        self.assertEqual('R', res.color)

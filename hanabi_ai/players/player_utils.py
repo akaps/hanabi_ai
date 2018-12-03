@@ -1,6 +1,12 @@
 import random
 import hanabi_ai.model.hanabi_moves as moves
 
+def color(card):
+    return card[0]
+
+def rank(card):
+    return (int)(card[1])
+
 #actions
 def discard_oldest_first(player_id, game_info):
     if game_info.can_discard():
@@ -29,11 +35,11 @@ def tell_randomly(player_id, game_info, seed=None):
             return moves.HanabiDiscloseRankAction(
                 player_id,
                 next_id,
-                (int)(choice[1]))
+                rank(choice))
         return moves.HanabiDiscloseColorAction(
             player_id,
             next_id,
-            choice[0])
+            color(choice))
     return None
 
 def discard_randomly(player_id, game_info, seed=None):
@@ -42,4 +48,25 @@ def discard_randomly(player_id, game_info, seed=None):
         return moves.HanabiDiscardAction(
             player_id,
             random.randint(0, game_info.cards_in_hand() - 1))
+    return None
+
+def tell_unknown(player_id, game_info, seed=None):
+    next_player = game_info.next_player(player_id)
+    random.seed(seed)
+    res = []
+    for card_index in range(0, len(game_info.known_info[next_player])):
+        card_color = game_info.known_info[next_player][card_index][0]
+        if card_color == '?':
+            res.append(moves.HanabiDiscloseColorAction(
+                player_id,
+                next_player,
+                color(game_info.hands[next_player][card_index])))
+        card_rank = game_info.known_info[next_player][card_index][1]
+        if card_rank == '?':
+            res.append(moves.HanabiDiscloseRankAction(
+                player_id,
+                next_player,
+                rank(game_info.hands[next_player][card_index])))
+    if res:
+        return random.choice(res)
     return None
