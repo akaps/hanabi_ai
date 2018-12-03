@@ -2,9 +2,9 @@
 
 Runner for an AI competition based on the card game Hanabi
 
-## Status of Master
+## Status of Python 3 Migration
 
-[![Build Status](https://travis-ci.com/akaps/hanabi_ai.svg?branch=master)](https://travis-ci.com/akaps/hanabi_ai)
+[![Build Status](https://travis-ci.com/akaps/hanabi_ai.svg?branch=python3)](https://travis-ci.com/akaps/hanabi_ai)
 
 ## Getting Started
 
