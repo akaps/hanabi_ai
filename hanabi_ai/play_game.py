@@ -98,7 +98,7 @@ def show_plot(scores):
     plt.show()
 
 def determine_winner(results):
-    winning_average = max(results.itervalues())['mean']
+    winning_average = max(results.values())['mean']
     average_winners = {key: val for key, val in results.items() if val['mean'] is winning_average}
     winning_variance = min(average_winners.itervalues())['variance']
     winners = [key for key, val in average_winners.items() if val['variance'] is winning_variance]
