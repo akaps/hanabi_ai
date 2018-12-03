@@ -23,7 +23,7 @@ class HanabiTableVariant3Tests(unittest.TestCase):
         self.assertEqual(1, self.table.info_for_player(0).scored_cards["*"])
 
     def test_table_disclose_color(self):
-        self.table.disclose_color(0, 0, HanabiColor.BLUE)
+        self.table.disclose_color(0, 0, HanabiColor.RED)
         self.assertEqual(["B?", "B?", "B?", "B?", "B?"], self.table.info_for_player(0).hands[0])
         self.table.disclose_color(0, 0, HanabiColor.RED)
         self.assertEqual(["*?", "B?", "B?", "B?", "*?"], self.table.info_for_player(0).hands[0])

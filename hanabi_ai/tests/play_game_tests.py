@@ -1,5 +1,4 @@
 import unittest
-from sets import Set
 import hanabi_ai.play_game as play_game
 from hanabi_ai.players.hanabi_player import HanabiPlayer
 
@@ -82,7 +81,7 @@ class PlayGameTests(unittest.TestCase):
             'D' : 50,
             'E' : 20
         }
-        disqualified = Set()
+        disqualified = set()
         play_game.disqualify_player(disqualified, scores, 'D')
         self.assertTrue('D' in disqualified)
         self.assertEqual(1, len(disqualified))
@@ -95,7 +94,7 @@ class PlayGameTests(unittest.TestCase):
             'D' : 50,
             'E' : 20
         }
-        disqualified = Set()
+        disqualified = set()
         play_game.disqualify_player(disqualified, scores, 'C')
         self.assertTrue('C' in disqualified)
         self.assertEqual(1, len(disqualified))
@@ -108,7 +107,7 @@ class PlayGameTests(unittest.TestCase):
             'D' : 50,
             'E' : 20
         }
-        disqualified = Set()
+        disqualified = set()
         play_game.disqualify_player(disqualified, scores, 'A')
         play_game.disqualify_player(disqualified, scores, 'E')
         self.assertTrue('A' in disqualified)

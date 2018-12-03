@@ -4,12 +4,12 @@ from hanabi_ai.model.hanabi_card import HanabiColor
 from hanabi_ai.model.hanabi_deck import HanabiVariant
 
 def diagnose(table):
-    print 'Player 0'
-    print table.info_for_player(1).hands[0]
-    print 'Player 1'
-    print table.info_for_player(0).hands[1]
-    print str(table)
-    print table.scored_cards
+    print('Player 0')
+    print(table.info_for_player(1).hands[0])
+    print('Player 1')
+    print(table.info_for_player(0).hands[1])
+    print(str(table))
+    print(table.scored_cards)
 
 class HanabiTableTests(unittest.TestCase):
     def setUp(self):
@@ -34,12 +34,12 @@ class HanabiTableTests(unittest.TestCase):
     def test_table_disclose_color(self):
         self.assertEqual(["??", "??", "??", "??", "??"], self.table.info_for_player(0).hands[0])
         self.table.disclose_color(0, 0, HanabiColor.RED)
-        self.assertEqual(["??", "??", "??", "??", "R?"], self.table.info_for_player(0).hands[0])
+        self.assertEqual(["R?", "??", "R?", "??", "??"], self.table.info_for_player(0).hands[0])
 
     def test_table_disclose_rank(self):
         self.assertEqual(["??", "??", "??", "??", "??"], self.table.info_for_player(0).hands[0])
-        self.table.disclose_rank(0, 0, 4)
-        self.assertEqual(["??", "??", "?4", "??", "??"], self.table.info_for_player(0).hands[0])
+        self.table.disclose_rank(0, 0, 3)
+        self.assertEqual(["??", "??", "??", "??", "?3"], self.table.info_for_player(0).hands[0])
 
     def test_table_game_over_mistakes(self):
         self.assertFalse(self.table.is_game_over())
@@ -117,7 +117,7 @@ class HanabiTableTests(unittest.TestCase):
         self.assertEqual(info.mistakes_left, 3)
         self.assertEqual(info.num_players, 2)
         self.assertEqual(info.hands[0], ["??", "??", "??", "??", "??"])
-        self.assertEqual(info.hands[1], ["R2", "W4", "W1", "Y1", "G3"])
+        self.assertEqual(info.hands[1], ["W4", "Y5", "B1", "G5", "W1"])
         self.assertEqual(info.known_info[0], ["??", "??", "??", "??", "??"])
         self.assertEqual(info.known_info[1], ["??", "??", "??", "??", "??"])
         self.assertEqual(info.scored_cards["R"], 0)

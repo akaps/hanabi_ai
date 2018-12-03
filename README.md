@@ -42,7 +42,7 @@ Hanabi has 3 variants to increase difficulty, included in the rules sheet. They 
 
 ### Prerequisites
 
-Python 2.7
+Python 3.7
 
 ### Installing
 

@@ -22,8 +22,8 @@ class HanabiTableVariant2Tests(unittest.TestCase):
 
     def test_table_disclose_color(self):
         self.assertEqual(["??", "??", "??", "??", "??"], self.table.info_for_player(0).hands[0])
-        self.table.disclose_color(0, 0, HanabiColor.GREEN)
-        self.assertEqual(["??", "G?", "G?", "??", "??"], self.table.info_for_player(0).hands[0])
+        self.table.disclose_color(0, 0, HanabiColor.RED)
+        self.assertEqual(["R?", "??", "??", "??", "??"], self.table.info_for_player(0).hands[0])
 
     def test_table_info_for_player(self):
         info = self.table.info_for_player(1)

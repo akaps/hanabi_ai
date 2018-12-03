@@ -6,7 +6,6 @@ import sys
 import logging
 from logging.handlers import RotatingFileHandler
 import itertools
-from sets import Set
 import matplotlib
 matplotlib.use('TkAgg') #pylint: disable=wrong-import-position
 import matplotlib.pyplot as plt
@@ -56,7 +55,7 @@ def ensure_path(path):
 def run_tournament(args):
     tournament_scores = dict.fromkeys(args.players, [])
     pairings = list(itertools.combinations(args.players, args.per_round))
-    disqualified = Set()
+    disqualified = set()
     for players in pairings:
         if set(players).issubset(disqualified):
             continue
