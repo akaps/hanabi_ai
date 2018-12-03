@@ -9,23 +9,23 @@ class PlayGameparserTests(unittest.TestCase):
         args = ['single', 'Discarder']
         parsed = play_game.parse_args(args)
         self.assertEqual(1, len(parsed.players))
-        self.assertEquals(0, parsed.variant)
+        self.assertEqual(0, parsed.variant)
         self.assertFalse(parsed.verbose)
-        self.assertEquals(None, parsed.log_dir)
-        self.assertEquals(None, parsed.log_stderr)
-        self.assertEquals(1, parsed.iterations)
-        self.assertEquals(parsed.command, 'single')
+        self.assertEqual(None, parsed.log_dir)
+        self.assertEqual(None, parsed.log_stderr)
+        self.assertEqual(1, parsed.iterations)
+        self.assertEqual(parsed.command, 'single')
 
     def test_game_iterations(self):
         args = ['single', 'Discarder', '-i', '10']
         parsed = play_game.parse_args(args)
-        self.assertEquals(10, parsed.iterations)
-        self.assertEquals(parsed.command, 'single')
+        self.assertEqual(10, parsed.iterations)
+        self.assertEqual(parsed.command, 'single')
 
     def test_game_variant(self):
         args = ['single', 'Discarder', '-r', '3']
         parsed = play_game.parse_args(args)
-        self.assertEquals(3, parsed.variant)
+        self.assertEqual(3, parsed.variant)
 
     def test_game_verbose(self):
         args = ['single', 'Discarder', '-v']
@@ -35,30 +35,30 @@ class PlayGameparserTests(unittest.TestCase):
     def test_game_log_dir(self):
         args = ['single', 'Discarder', '-l', 'results.txt']
         parsed = play_game.parse_args(args)
-        self.assertEquals('results.txt', parsed.log_dir)
+        self.assertEqual('results.txt', parsed.log_dir)
 
     def test_game_log_stderr(self):
         args = ['single', 'Discarder', '-e', 'errors.txt']
         parsed = play_game.parse_args(args)
-        self.assertEquals('errors.txt', parsed.log_stderr)
+        self.assertEqual('errors.txt', parsed.log_stderr)
 
     def test_game_seed(self):
         args = ['single', 'Discarder', '-s', '76']
         parsed = play_game.parse_args(args)
-        self.assertEquals(76, parsed.seed)
+        self.assertEqual(76, parsed.seed)
 
     def test_tournament_simple(self):
         args = ['tournament', 'Discarder',]
         parsed = play_game.parse_args(args)
-        self.assertEquals(2, parsed.per_round)
-        self.assertEquals(parsed.command, 'tournament')
-        self.assertEquals(1, parsed.iterations)
+        self.assertEqual(2, parsed.per_round)
+        self.assertEqual(parsed.command, 'tournament')
+        self.assertEqual(1, parsed.iterations)
 
     def test_tournament_per_round(self):
         args = ['tournament', 'Discarder', '-p', '4']
         parsed = play_game.parse_args(args)
-        self.assertEquals(parsed.command, 'tournament')
-        self.assertEquals(4, parsed.per_round)
+        self.assertEqual(parsed.command, 'tournament')
+        self.assertEqual(4, parsed.per_round)
 
 class MockBadPlayer(object):
     pass

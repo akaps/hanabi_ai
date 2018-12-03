@@ -34,3 +34,9 @@ class GameInfo(object):
 
     def next_player(self, player_id):
         return (player_id + 1) % self.num_players
+
+    def cards_in_hand(self):
+        return len(self.hands[0])
+
+    def player_hand(self, player_id):
+        return self.known_info[player_id]
