@@ -1,6 +1,6 @@
 import unittest
-from hanabi_ai.model.hanabi_discard_pile import HanabiDiscard
-from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
+from hanabi_ai.model.discard_pile import HanabiDiscard
+from hanabi_ai.model.card import HanabiCard, HanabiColor
 
 class HanabiDiscardTests(unittest.TestCase):
 

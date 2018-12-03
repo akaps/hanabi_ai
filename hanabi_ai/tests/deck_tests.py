@@ -1,5 +1,5 @@
 import unittest
-from hanabi_ai.model.hanabi_deck import HanabiDeck
+from hanabi_ai.model.deck import HanabiDeck
 
 class HanabiDeckTests(unittest.TestCase):
     def setUp(self):

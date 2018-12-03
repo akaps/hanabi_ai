@@ -1,7 +1,7 @@
 import unittest
 from sets import Set
 import hanabi_ai.play_game as play_game
-from hanabi_ai.players.hanabi_player import HanabiPlayer
+from hanabi_ai.players.player import HanabiPlayer
 
 class PlayGameparserTests(unittest.TestCase):
 

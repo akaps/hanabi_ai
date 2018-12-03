@@ -11,9 +11,9 @@ import matplotlib
 matplotlib.use('TkAgg') #pylint: disable=wrong-import-position
 import matplotlib.pyplot as plt
 import numpy
-from hanabi_ai.model.hanabi_table import HanabiTable
-from hanabi_ai.model.hanabi_deck import HanabiVariant
-from hanabi_ai.players.hanabi_player import HanabiPlayer
+from hanabi_ai.model.table import HanabiTable
+from hanabi_ai.model.deck import HanabiVariant
+from hanabi_ai.players.player import HanabiPlayer
 
 logging.basicConfig()
 LOGGER = logging.getLogger(__name__)

@@ -1,6 +1,5 @@
-#sys.path.append("../")
 import unittest
-from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
+from hanabi_ai.model.card import HanabiCard, HanabiColor
 
 class HanabiCardTests(unittest.TestCase):
     def setUp(self):
