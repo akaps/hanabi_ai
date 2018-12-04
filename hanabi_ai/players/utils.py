@@ -1,5 +1,5 @@
 import random
-import hanabi_ai.model.hanabi_moves as moves
+import hanabi_ai.model.moves as moves
 
 def color(card):
     return card[0]

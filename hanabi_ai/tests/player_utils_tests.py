@@ -1,7 +1,7 @@
 import unittest
-import hanabi_ai.players.player_utils as utils
-import hanabi_ai.model.hanabi_moves as moves
-from hanabi_ai.model.hanabi_game_info import GameInfo
+import hanabi_ai.players.utils as utils
+import hanabi_ai.model.moves as moves
+from hanabi_ai.model.game_info import GameInfo
 
 class PlayerUtilsTests(unittest.TestCase):
     def setUp(self):
