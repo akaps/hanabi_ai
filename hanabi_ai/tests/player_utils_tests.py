@@ -9,7 +9,11 @@ class PlayerUtilsTests(unittest.TestCase):
         self.info_player_0.hands = [['??', '??'], ['R1', 'W3']]
         self.info_player_0.known_info = [['??', '??'], ['??', '??']]
         self.info_player_0.scored_cards = {
-            'R' : 0
+            'R' : 0,
+            'W' : 0,
+            'Y' : 0,
+            'G' : 0,
+            'B' : 0
         }
         self.info_player_0.disclosures = 4
         self.info_player_0.num_players = 2
@@ -79,3 +83,14 @@ class PlayerUtilsTests(unittest.TestCase):
         self.assertEqual(0, res.player_id)
         self.assertEqual(1, res.to_whom)
         self.assertEqual('R', res.color)
+
+    def test_tell_playable(self):
+        res = utils.tell_playable(0, self.info_player_0, 3)
+        self.assertIsInstance(res, moves.HanabiDiscloseColorAction)
+        self.assertEqual(0, res.player_id)
+        self.assertEqual(1, res.to_whom)
+        self.assertEqual('Q', res.color)
+
+    def test_tell_playable_none(self):
+        res = utils.tell_playable(1, self.info_player_0, 2)
+        self.assertIsNone(res)
