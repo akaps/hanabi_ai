@@ -1,6 +1,6 @@
 import random
 import enum
-from hanabi_ai.model.hanabi_card import HanabiCard, HanabiColor
+from hanabi_ai.model.card import HanabiCard, HanabiColor
 
 class HanabiVariant(enum.IntEnum):
     basic = 0

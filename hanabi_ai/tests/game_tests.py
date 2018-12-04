@@ -1,9 +1,9 @@
 import unittest
 from argparse import Namespace
 from hanabi_ai.play_game import HanabiGame
-from hanabi_ai.model.hanabi_deck import HanabiVariant
-import hanabi_ai.model.hanabi_moves as moves
-from hanabi_ai.model.hanabi_game_info import GameInfo
+from hanabi_ai.model.deck import HanabiVariant
+import hanabi_ai.model.moves as moves
+from hanabi_ai.model.game_info import GameInfo
 
 def prep_args():
     args = Namespace()

@@ -1,7 +1,7 @@
 import unittest
-from hanabi_ai.model.hanabi_table import HanabiTable
-from hanabi_ai.model.hanabi_card import HanabiColor
-from hanabi_ai.model.hanabi_deck import HanabiVariant
+from hanabi_ai.model.table import HanabiTable
+from hanabi_ai.model.card import HanabiColor
+from hanabi_ai.model.deck import HanabiVariant
 
 class HanabiTableVariant3Tests(unittest.TestCase):
     def setUp(self):
