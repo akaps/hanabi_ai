@@ -94,3 +94,10 @@ class PlayerUtilsTests(unittest.TestCase):
     def test_tell_playable_none(self):
         res = utils.tell_playable(1, self.info_player_0, 2)
         self.assertIsNone(res)
+
+    def test_tell_anyone_playable_terminates(self):
+        res = utils.tell_anyone_about_useful_card(0, self.info_player_0, 6)
+        self.assertIsInstance(res, moves.HanabiDiscloseRankAction)
+        self.assertEqual(0, res.player_id)
+        self.assertEqual(1, res.to_whom)
+        self.assertEqual(1, res.rank)

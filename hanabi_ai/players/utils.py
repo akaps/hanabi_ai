@@ -96,3 +96,12 @@ def tell_playable(player_id, game_info, seed=None):
         if res:
             return random.choice(res)
     return None
+
+def tell_anyone_about_useful_card(player_id, game_info, seed=None):
+    action = tell_playable(player_id, game_info, seed)
+    curr_player = game_info.next_player(player_id)
+    while not action and curr_player != player_id:
+        action = tell_playable(curr_player, game_info, seed)
+        action.player_id = player_id
+        curr_player = game_info.next_player(curr_player)
+    return action
