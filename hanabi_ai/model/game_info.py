@@ -30,7 +30,8 @@ class GameInfo(object):
 
     def is_safe(self, card):
         [color, rank] = list(card)
-        return self.scored_cards[color] + 1 == (int)(rank)
+        return (color != '?' and
+                self.scored_cards[color] + 1 == (int)(rank))
 
     def next_player(self, player_id):
         return (player_id + 1) % self.num_players

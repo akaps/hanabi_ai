@@ -89,7 +89,7 @@ class PlayerUtilsTests(unittest.TestCase):
         self.assertIsInstance(res, moves.HanabiDiscloseColorAction)
         self.assertEqual(0, res.player_id)
         self.assertEqual(1, res.to_whom)
-        self.assertEqual('Q', res.color)
+        self.assertEqual('R', res.color)
 
     def test_tell_playable_none(self):
         res = utils.tell_playable(1, self.info_player_0, 2)

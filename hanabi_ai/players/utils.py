@@ -79,15 +79,15 @@ def tell_playable(player_id, game_info, seed=None):
         res = []
         for card_index in range(0, game_info.cards_in_hand()):
             card = game_info.hands[next_player][card_index]
-            print card
             if game_info.is_safe(card):
-                if color(card) == '?':
+                card_info = game_info.known_info[next_player][card_index]
+                if card_info[0] == '?':
                     res.append(moves.HanabiDiscloseColorAction(
                         player_id,
                         next_player,
                         color(card)
                     ))
-                if rank(card) == '?':
+                if card_info[1] == '?':
                     res.append(moves.HanabiDiscloseRankAction(
                         player_id,
                         next_player,
@@ -95,4 +95,4 @@ def tell_playable(player_id, game_info, seed=None):
                     ))
         if res:
             return random.choice(res)
-        return None
+    return None
